@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
+
+/* ============================================
+   GLOBAL STYLES & VARIABLES
+============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'DM Serif Text', serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme Variables - Dark Mode (Default) */
+:root {
+    --bg-color: #121212;
+    --text-color: #fff;
+    --text-color-finfo: #000000;
+    --accent-color: #2daa9e;
+    --header-link-color: #51938B;  
+    --container-bg: #f7f7f7;
+    --logo-fill: #2daa9e;
+    --carousel-dot-bg: #555555;
+    --carousel-dot-active: #2daa9e;
+    --carousel-nav-bg: rgba(0, 0, 0, 0.5);
+    
+    /* Font family variables */
+    --font-primary: 'DM Serif Text', serif;
+    --font-headings: 'DM Serif Display', serif;
+}
+
+/* Theme Variables - Light Mode */
+[data-theme="light"] {
+    --bg-color: #fff;
+    --text-color: #51938B;
+    --text-color-finfo: #fff;
+    --accent-color: #38A9A0;
+    --header-link-color: #38A9A0;
+    --container-bg: #1e1e1e;
+    --logo-fill: #38A9A0;
+    --carousel-dot-bg: #cccccc;
+    --carousel-dot-active: #38A9A0;
+    --carousel-nav-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Base Styles */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1700px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   HEADER & NAVIGATION
+============================================ */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.logo {
+    width: 100px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+nav {
+    display: flex;
+    gap: 40px;
+}
+
+nav a {
+    color: var(--header-link-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 3px;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* 'JOIN US' button Styles */
+.join-btn {
+    display: inline-block;
+    padding: 3px 20px;
+    background-color: #51938B;  
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 20px;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.join-btn:hover {
+    background-color: #38A9A0;
+    transform: scale(1.05);
+}
+
+
+/* Theme Switch Styles */
+.theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.theme-icon {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: var(--accent-color);
+    border-radius: 34px;
+    cursor: pointer;
+}
+
+.switch-circle {
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
+}
+
+[data-theme="light"] .switch-circle {
+    transform: translateX(30px);
+}
