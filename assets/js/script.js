@@ -1,24 +1,52 @@
-// Theme toggle functionality
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
-const html = document.documentElement;
+// ============================================
+// Theme Toggle Functionality
+// ============================================
+let themeToggle, themeIcon;
+let mobileThemeToggle, mobileThemeIcon;
 
-// Check for saved theme preference, default to dark
-const savedTheme = localStorage.getItem('theme') || 'dark';
-html.setAttribute('data-theme', savedTheme);
-updateThemeIcon(savedTheme);
+function initThemeToggle() {
+    // Get references to theme elements
+    themeToggle = document.getElementById('themeToggle');
+    themeIcon = document.getElementById('themeIcon');
+    mobileThemeToggle = document.getElementById('mobileThemeToggle');
+    mobileThemeIcon = document.getElementById('mobileThemeIcon');
+    
+    // Check for saved theme preference, default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Update icons based on current theme
+    updateThemeIcons(savedTheme);
+    
+    // Add event listeners to theme toggles
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    if (mobileThemeToggle) {
+        mobileThemeToggle.addEventListener('click', toggleTheme);
+    }
+}
 
-// Toggle theme when switch is clicked
-themeToggle.addEventListener('click', () => {
+function toggleTheme() {
+    const html = document.documentElement;
     const currentTheme = html.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
     html.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
-});
+    updateThemeIcons(newTheme);
+}
 
-// Update theme icon based on mode
-function updateThemeIcon(theme) {
-    themeIcon.textContent = theme === 'dark' ? '☾' : '☀';
+function updateThemeIcons(theme) {
+    const moonIcon = '☾';
+    const sunIcon = '☀';
+    
+    if (themeIcon) {
+        themeIcon.textContent = theme === 'dark' ? moonIcon : sunIcon;
+    }
+    
+    if (mobileThemeIcon) {
+        mobileThemeIcon.textContent = theme === 'dark' ? moonIcon : sunIcon;
+    }
 }
