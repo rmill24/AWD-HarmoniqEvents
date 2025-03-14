@@ -810,3 +810,96 @@ input {
     cursor: pointer;
     margin-top: 15px;
 }
+/* ============================================
+   8. FOOTER
+============================================ */
+footer {
+    background-color: #51938B;
+    color: white;
+}
+
+.footer-container {
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding-top: 3%;
+}
+
+/* Footer logo and sections */
+.footer-logo {
+    max-width: 226px;
+    max-height: 132px;
+}
+
+.footer-title {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.footer-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* Footer navigation */
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+    font-family: var(--font-primary);
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Footer Bottom Bar */
+.bottom-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+.bottom-bar p{
+    font-size: 0.8em;
+}
+
+.bottom-bar a {
+    font-size: 0.8em;
+    gap: 10px;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
