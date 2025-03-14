@@ -104,3 +104,20 @@ function initMobileMenu() {
 function redirectToSignup() {
     window.location.href = "../../index.html#signup-form";
 }
+
+// ============================================
+// Initialize Everything When DOM is Ready
+// ============================================
+function initializeAll() {
+    initThemeToggle();
+    initMobileMenu();
+}
+ 
+// Check if DOM is already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAll);
+} else {
+    // DOM is already loaded
+    initializeAll();
+}
+ 
