@@ -241,3 +241,75 @@ nav a:hover::after {
     list-style: none;
     align-items: center;
 }
+/* ============================================
+   4. HERO SECTION
+============================================ */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    height: 100vh;
+    margin: 0 5%;
+}
+
+.hero p {
+    margin-bottom: 30px;
+}
+
+.content {
+    max-width: 50%;
+    color: var(--text-color);
+}
+
+/* Headings and text */
+h1 {
+    font-size: 3.5em;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: var(--quote-color);
+}
+
+p {
+    font-family: var(--font-primary);        
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--text-color-p);
+    opacity: 0.9;
+}
+
+/* CTA Button Styles */
+.cta-button {
+    display: inline-block;
+    background-color: #51938b;
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: var(--font-primary);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Device Mockup Styles */
+.device-mockup {
+    max-width: 65%;
+}
+
+.device-mockup img {
+    width: auto;
+    height: 250px;
+}
+
+#iphone {
+    max-width: 400px;
+}
