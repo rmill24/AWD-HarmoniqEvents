@@ -101,3 +101,6 @@ function initMobileMenu() {
         }
     }
 }
+function redirectToSignup() {
+    window.location.href = "../../index.html#signup-form";
+}
