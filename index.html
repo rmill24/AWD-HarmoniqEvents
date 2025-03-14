@@ -8,25 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <section class="logo">
-                <img src="./assets/img/logo.png" alt="Harmoniq Events Logo">
-            </section>
-            <nav>
-                <a href="#">HOME</a>
-                <a href="#">PLANNING</a>
-                <a href="#">ABOUT US</a>
-                <button class="join-btn">JOIN US</button>
-            </nav>
-            <section class="theme-switch">
-                <span class="theme-icon" id="themeIcon">☾</span>
-                <div class="switch" id="themeToggle">
-                    <div class="switch-circle"></div>
-                </div>
-            </section>
-        </header>
-    </div>
+    <!-- Header Section -->
+    <header>
+        <section class="logo">
+            <img src="./assets/img/logo.png" alt="Harmoniq Events Logo">
+        </section>
+        
+        <nav>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#">HOME</a></li>
+                <li><a href="#services">SERVICES</a></li>
+                <li><a href="./pages/about-us/index.html">ABOUT US</a></li>
+                <li><button class="join-btn" onclick="redirectToSignup()">JOIN US</button></li>
+                <!-- Mobile-only theme switch that appears in hamburger menu -->
+                <li class="mobile-theme-option">
+                    <span class="theme-icon" id="mobileThemeIcon">☾</span>
+                    <div class="switch" id="mobileThemeToggle">
+                        <div class="switch-circle"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Desktop-only theme switch -->
+        <section class="desktop-theme-switch theme-switch">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <div class="switch" id="themeToggle">
+                <div class="switch-circle"></div>
+            </div>
+        </section>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
 
     <script src="./assets/js/script.js"></script>
 </body>
