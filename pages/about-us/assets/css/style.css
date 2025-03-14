@@ -1,0 +1,262 @@
+/* ============================================
+   TABLE OF CONTENTS
+   1. IMPORTS & RESET
+   2. THEME VARIABLES & BASE STYLES
+   3. HEADER & NAVIGATION
+   4. ABOUT PAGE SPECIFIC
+   5. TEAM SECTION
+   6. FOOTER
+   7. MEDIA QUERIES (CONSOLIDATED)
+      - Mobile (up to 667px)
+      - Tablet (668px - 1024px)
+      - Medium (1025px - 1440px)
+      - Large (1441px+)
+============================================ */
+ 
+/* ============================================
+   1. IMPORTS & RESET
+============================================ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
+ 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-secondary);
+    transition: background-color 0.3s, color 0.3s;
+    scroll-behavior: smooth;
+}
+ 
+/* ============================================
+   2. THEME VARIABLES & BASE STYLES
+============================================ */
+/* Theme Variables - Dark Mode (Default) */
+:root {
+    --bg-color: #121212;
+    --text-color: #fff;
+    --text-color-finfo: #000000;
+    --accent-color: #2daa9e;
+    --header-link-color: #51938B;  
+    --container-bg2: #2F5D63;
+    --line-color: #B3D5D0;
+   
+    /* Font family variables */
+    --font-primary: 'Inter', serif;
+    --font-secondary:'DM Serif Display', serif;
+    --font-accent: 'Newsreader', serif;
+}
+ 
+/* Theme Variables - Light Mode */
+[data-theme="light"] {
+    --bg-color: #fff;
+    --text-color: #51938B;
+    --text-color2: #000000;
+    --text-color-finfo: #fff;
+    --accent-color: #38A9A0;
+    --header-link-color: #38A9A0;
+    --container-bg2: #B3D5D0;
+    --line-color: #2F5D63;
+}
+ 
+/* Base Typography */
+h1, h2, h3, .footer-title {
+    font-family: var(--font-secondary);
+    font-weight: normal;
+}
+ 
+hr {
+    border: 0;
+    border-top: 1px solid var(--line-color);
+    margin: 0 4%;
+}
+ 
+body, p, button, input, a {
+    font-family: var(--font-primary);
+}
+ 
+/* Base Layout */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+ 
+.container {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+ 
+/* ============================================
+   3. HEADER & NAVIGATION
+============================================ */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+ 
+.logo {
+    width: 100px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ 
+.logo img {
+    width: 100%;
+    height: auto;
+}
+ 
+/* Navigation Links */
+nav {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+ 
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 3px;
+    font-family: var(--font-accent);
+}
+ 
+/* Navigation link hover effect */
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--header-link-color);
+    transition: width 0.3s;
+}
+ 
+nav a:hover::after {
+    width: 100%;
+}
+ 
+/* 'JOIN US' button Styles */
+.join-btn {
+    display: inline-block;
+    padding: 8px 30px;
+    background-color: #51938B;  
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 20px;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: var(--font-accent);
+}
+ 
+.join-btn:hover {
+    background-color: #38A9A0;
+    transform: scale(1.05);
+}
+ 
+/* Theme Switch Styles */
+.theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+ 
+.theme-icon {
+    color: #51938B;
+    font-size: 1.5em;
+}
+ 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: #51938B;
+    border-radius: 34px;
+    cursor: pointer;
+}
+ 
+.switch-circle {
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
+}
+ 
+[data-theme="light"] .switch-circle {
+    transform: translateX(30px);
+}
+ 
+/* Mobile/desktop theme switch visibility */
+.mobile-theme-option {
+    display: none; /* Hidden on desktop */
+    padding: 0 25px;
+}
+ 
+@media (max-width: 768px) {
+    header {
+        padding: 15px;
+    }
+   
+    nav {
+        position: static;
+    }
+   
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        flex-direction: column;
+        background-color: var(--bg-color);
+        padding: 20px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        width: 250px;
+        display: none;
+        z-index: 200;
+        gap: 20px;
+    }
+   
+    .nav-links.active {
+        display: flex;
+    }
+   
+    .menu-toggle {
+        display: block;
+        cursor: pointer;
+        font-size: 1.5em;
+        color: #51938b;
+    }
+   
+    /* Show mobile theme switch in hamburger menu, hide desktop one */
+    .mobile-theme-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+   
+    .desktop-theme-switch {
+        display: none;
+    }
+}
