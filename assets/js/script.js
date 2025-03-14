@@ -382,3 +382,9 @@ function initPasswordToggle() {
     });
 }
 
+// ============================================
+// Signup Redirect Function
+// ============================================
+function redirectToSignup() {
+    window.location.href = "index.html#signup-form";
+}
