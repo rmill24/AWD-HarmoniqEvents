@@ -50,3 +50,55 @@ function updateThemeIcons(theme) {
         mobileThemeIcon.textContent = theme === 'dark' ? moonIcon : sunIcon;
     }
 }
+
+// ============================================
+// Mobile Menu Functionality
+// ============================================
+function initMobileMenu() {
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const menuOverlay = document.getElementById('menuOverlay');
+    
+    // Create overlay if it doesn't exist
+    let overlay = menuOverlay;
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'menuOverlay';
+        overlay.className = 'menu-overlay';
+        document.body.appendChild(overlay);
+    }
+    
+    if (menuToggle && navLinks) {
+        // Toggle menu when clicked
+        menuToggle.addEventListener('click', function(event) {
+            event.stopPropagation();
+            navLinks.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking on a link
+        const links = navLinks.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Close menu when clicking outside
+        overlay.addEventListener('click', closeMenu);
+        
+        // Close menu when pressing escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+    }
+    
+    function closeMenu() {
+        if (navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+}
