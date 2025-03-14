@@ -8,26 +8,289 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <section class="logo">
-                <img src="./assets/img/logo.png" alt="Harmoniq Events Logo">
-            </section>
-            <nav>
-                <a href="#">HOME</a>
-                <a href="#">PLANNING</a>
-                <a href="#">ABOUT US</a>
-                <button class="join-btn">JOIN US</button>
-            </nav>
-            <section class="theme-switch">
-                <span class="theme-icon" id="themeIcon">☾</span>
-                <div class="switch" id="themeToggle">
-                    <div class="switch-circle"></div>
+    <!-- Header Section -->
+    <header>
+        <section class="logo">
+            <img src="./assets/img/logo.png" alt="Harmoniq Events Logo">
+        </section>
+        
+        <nav>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#">HOME</a></li>
+                <li><a href="#services">SERVICES</a></li>
+                <li><a href="./pages/about-us/index.html">ABOUT US</a></li>
+                <li><button class="join-btn" onclick="redirectToSignup()">JOIN US</button></li>
+                <!-- Mobile-only theme switch that appears in hamburger menu -->
+                <li class="mobile-theme-option">
+                    <span class="theme-icon" id="mobileThemeIcon">☾</span>
+                    <div class="switch" id="mobileThemeToggle">
+                        <div class="switch-circle"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Desktop-only theme switch -->
+        <section class="desktop-theme-switch theme-switch">
+            <span class="theme-icon" id="themeIcon">☾</span>
+            <div class="switch" id="themeToggle">
+                <div class="switch-circle"></div>
+            </div>
+        </section>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+                <article class="content">
+                    <h1>EFFORTLESS EVENT PLANNING AT YOUR FINGERTIPS</h1>
+                    <p>Streamline your events with powerful scheduling, guest tracking, and vendor coordination—all in one place!</p>
+                    <button class="cta-button">Get Started</button>
+                </article>
+        
+                <div id="iphone" class="device-mockup">
+                    <img src="./assets/img/iphone.png" alt="Mobile app screenshot showing the event planning interface">
+                </div>
+                <div id="macbook" class="device-mockup">
+                    <img src="./assets/img/macbook.png" alt="Mobile app screenshot showing the event planning interface">
                 </div>
             </section>
-        </header>
+            <!-- Features Carousel Section -->
+        <section class="carousel-container" id ="services">
+            <section class="carousel" id="featuresCarousel">
+                <div class="carousel-slide">
+                    <div class="feature-card">
+                        <section class="feature-visual">
+                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                        </section>
+                        
+                        <section class="feature-info">
+                            <h2>EVENT PLANNING</h2>
+                        </section>
+                    </div>
+                </div>
+                
+                <section class="carousel-slide">
+                    <div class="feature-card">
+                        <section class="feature-visual">
+                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                        </section>
+                        <article class="feature-info">
+                            <h2>EVENT SCHEDULING</h2>
+                        </article>
+                    </div>
+                </section>
+                
+                <section class="carousel-slide">
+                    <div class="feature-card">
+                        <section class="feature-visual">
+                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                        </section>
+                        <article class="feature-info">
+                            <h2>GUEST MANAGEMENT</h2>
+                        </article>
+                    </div>
+                </section>
+            </section>
+            
+            <div class="carousel-dots" id="carouselDots">
+                <button class="carousel-dot active" data-index="0"></button>
+                <button class="carousel-dot" data-index="1"></button>
+                <button class="carousel-dot" data-index="2"></button>
+            </div>
+        </section>
+        </div>
+    <!-- Testimonials Carousel Section -->
+    <div class="carousel-container">
+        <div class="carousel-track" id="carousel-track">
+          <!-- Card 1 -->
+          <div class="carousel-card">
+            <div class="card-bg card-bg-dark"></div>
+            <div class="lightbulb-icon">💡</div>
+            <div class="card-content">
+              <div class="avatar-container">
+                <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Destiny" alt="avatar" />
+              </div>
+              <div class="review-content">
+                <div class="stars">★★★★★</div>
+                <h3 class="review-title">Review title</h3>
+                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 2 -->
+          <div class="carousel-card">
+            <div class="card-bg card-bg-medium"></div>
+            <div class="lightbulb-icon">💡</div>
+            <div class="card-content">
+              <div class="avatar-container">
+                <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Riley" alt="avatar" />
+              </div>
+              <div class="review-content">
+                <div class="stars">★★★★★</div>
+                <h3 class="review-title">Review title</h3>
+                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 3 -->
+          <div class="carousel-card">
+            <div class="card-bg card-bg-light"></div>
+            <div class="lightbulb-icon">💡</div>
+            <div class="card-content">
+              <div class="avatar-container">
+                <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Avery" alt="avatar" />
+              </div>
+              <div class="review-content">
+                <div class="stars">★★★★★</div>
+                <h3 class="review-title">Review title</h3>
+                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 4 -->
+          <div class="carousel-card">
+            <div class="card-bg card-bg-dark"></div>
+            <div class="lightbulb-icon">💡</div>
+            <div class="card-content">
+              <div class="avatar-container">
+                <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Easton" alt="Avatar" class="avatar">
+              </div>
+              <div class="review-content">
+                <div class="stars">★★★★☆</div>
+                <h3 class="review-title">Great Experience</h3>
+                <p class="review-body">The product exceeded my expectations in almost every way. Would definitely recommend!</p>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Card 5 -->
+          <div class="carousel-card">
+            <div class="card-bg card-bg-medium"></div>
+            <div class="lightbulb-icon">💡</div>
+            <div class="card-content">
+              <div class="avatar-container">
+                <img
+  src="https://api.dicebear.com/9.x/adventurer/svg?seed=Kimberly"
+  alt="avatar" />
+              </div>
+              <div class="review-content">
+                <div class="stars">★★★★★</div>
+                <h3 class="review-title">Excellent Service</h3>
+                <p class="review-body">Customer support was fantastic and helped me resolve all my issues quickly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="nav-buttons">
+          <button class="nav-button" id="prev-button"></button>
+          <button class="nav-button" id="next-button"></button>
+        </div>
+    
+        <div class="indicators" id="indicators">
+          <div class="indicator active" data-index="0"></div>
+          <div class="indicator" data-index="1"></div>
+          <div class="indicator" data-index="2"></div>
+        </div>
+      </div>
+      <!-- Signup Section -->
+    <section id="signup-form" class="signup">
+        <div class="txt">
+        <h1>Ready to turn your
+            vision into reality?</h1>
+        <p>Let's plan together!</p>
     </div>
+    <div class="form-container">
+        <h2>Sign Up</h2>
+        <p class="login-text">Already a member? <a href="#">Log in</a></p>
+        <hr>
+        <form>
+            <label for="username">Username</label>
+            <input type="username" id="username" placeholder="Enter your username" required>
 
+            <label for="password">Password</label>
+            <div class="password-field">
+                <input type="password" id="password" placeholder="Enter password">
+                <i id="togglePassword" class="fa-solid fa-eye toggle-password"></i>
+            </div>
+                <label>Type</label>
+                <div class="radio-group">
+                  <label><input type="radio" name="type" value="user"> User</label>
+                  <label><input type="radio" name="type" value="vendor"> Vendor</label>
+                </div>
+            <button type="submit" class="signup-btn">Sign Up</button>
+
+            <div class="social-login"></div>
+                
+
+                </div>                
+            </div>
+        </form>
+    </div>
+    </section>
+</main>
+        <!-- Footer Section -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <img src="./assets/img/logo-white.png" alt="Harmoniq Events Logo" class="footer-logo">
+            </div>
+            
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <ul>
+                    <li><a href="#">Mission</a></li>
+                    <li><a href="#">Vision</a></li>
+                    <li><a href="#">Team</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Features</h3>
+                <ul>
+                    <li><a href="#">Event Planning</a></li>
+                    <li><a href="#">Event Scheduling</a></li>
+                    <li><a href="#">Guest Management</a></li>
+                    <li><a href="#">Vendor Coordination</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Social</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path fill="#5bada0" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path fill="#5bada0" d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path fill="#5bada0" d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-bar">
+            <p>© Harmoniq Events 2025</p>
+            <p>Terms of Service</p>
+            <a href="#" class="back-to-top">
+                Back to top <i class="fa-solid fa-circle-arrow-up"></i>
+            </a>
+        </div>
+    </footer>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>

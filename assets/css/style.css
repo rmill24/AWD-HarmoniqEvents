@@ -1,49 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
+/* ============================================
+   TABLE OF CONTENTS
+   1. IMPORTS & RESET
+   2. THEME VARIABLES & BASE STYLES
+   3. HEADER & NAVIGATION
+   4. HERO SECTION
+   5. FEATURE CAROUSEL
+   6. TESTIMONIALS CAROUSEL
+   7. SIGNUP FORM
+   8. FOOTER
+   9. MEDIA QUERIES
+============================================ */
 
 /* ============================================
-   GLOBAL STYLES & VARIABLES
+   1. IMPORTS & RESET
 ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'DM Serif Text', serif;
+    font-family: 'Inter', serif;
     transition: background-color 0.3s, color 0.3s;
+    scroll-behavior: smooth;
 }
 
+/* ============================================
+   2. THEME VARIABLES & BASE STYLES
+============================================ */
 /* Theme Variables - Dark Mode (Default) */
 :root {
+    /* Color variables */
     --bg-color: #121212;
     --text-color: #fff;
-    --text-color-finfo: #000000;
-    --accent-color: #2daa9e;
-    --header-link-color: #51938B;  
-    --container-bg: #f7f7f7;
-    --logo-fill: #2daa9e;
+    --nav-color: #2daa9e;
+    --header-link-color: var(--color-primary);
+    --login-text-color: #fff;
+    --login-text-a: #B3D5D0;
+    --quote-color: white;
+    /* Container backgrounds */
+    --signup-bg: #444444;
+    /* UI element colors */
     --carousel-dot-bg: #555555;
     --carousel-dot-active: #2daa9e;
-    --carousel-nav-bg: rgba(0, 0, 0, 0.5);
+    --carousel-nav-bg: rgba(56, 169, 160, 0.5);
+
+    /* Color Variables */
+    --color-primary: #51938b;
+    --color-secondary: #B3D5D0;
+    --color-accent: #2F5D63;
     
     /* Font family variables */
-    --font-primary: 'DM Serif Text', serif;
-    --font-headings: 'DM Serif Display', serif;
+    --font-primary: 'Inter', serif;
+    --font-secondary:'DM Serif Display', serif;
+    --font-accent: 'Newsreader', serif;
+    
+    /* Testimonial carousel variables */
+    --cards-to-show: 3; /* Default number of cards to show */
+    --gap-calculated: 2em; /* Should match the gap in .carousel-track */
 }
+
 
 /* Theme Variables - Light Mode */
 [data-theme="light"] {
+    /* Light mode color overrides */
     --bg-color: #fff;
-    --text-color: #51938B;
-    --text-color-finfo: #fff;
-    --accent-color: #38A9A0;
+    --text-color: var(--color-primary);
+    --nav-color: #38A9A0;
     --header-link-color: #38A9A0;
-    --container-bg: #1e1e1e;
-    --logo-fill: #38A9A0;
+    --login-text-color: var(--color-accent);
+    --login-text-a: var(--color-accent);
+    --signup-bg: var(--color-secondary);
     --carousel-dot-bg: #cccccc;
     --carousel-dot-active: #38A9A0;
-    --carousel-nav-bg: rgba(0, 0, 0, 0.3);
+    --quote-color: var(--color-accent);
 }
 
-/* Base Styles */
+/* Base Typography */
+h1, h2, h3, .footer-title {
+    font-family: var(--font-secondary);
+    font-weight: normal;
+}
+
+body, p, button, input {
+    font-family: var(--font-primary);
+}
+
+/* Base Layout */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -51,13 +94,14 @@ body {
 }
 
 .container {
-    max-width: 1700px;
-    margin: 0 auto;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 /* ============================================
-   HEADER & NAVIGATION
+   3. HEADER & NAVIGATION
 ============================================ */
+/* Main header container */
 header {
     display: flex;
     justify-content: space-between;
@@ -71,6 +115,7 @@ header {
     width: 100%;
 }
 
+/* Logo styling */
 .logo {
     width: 100px;
     height: 60px;
@@ -84,20 +129,24 @@ header {
     height: auto;
 }
 
+/* Navigation Links */
 nav {
     display: flex;
     gap: 40px;
+    justify-content: center;
 }
 
 nav a {
-    color: var(--header-link-color);
+    color: var(--text-color);
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     text-transform: uppercase;
     position: relative;
     padding-bottom: 3px;
+    font-family: var(--font-accent);
 }
 
+/* Navigation link hover effect */
 nav a::after {
     content: '';
     position: absolute;
@@ -105,7 +154,7 @@ nav a::after {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: var(--accent-color);
+    background-color: var(--header-link-color);
     transition: width 0.3s;
 }
 
@@ -116,22 +165,22 @@ nav a:hover::after {
 /* 'JOIN US' button Styles */
 .join-btn {
     display: inline-block;
-    padding: 3px 20px;
+    padding: 8px 30px;
     background-color: #51938B;  
     color: white;
-    font-size: 1rem;
+    font-size: 1em;
     font-weight: bold;
     text-decoration: none;
     border-radius: 20px;
     border: none;
     transition: background-color 0.3s, transform 0.2s;
+    font-family: var(--font-accent);
 }
 
 .join-btn:hover {
     background-color: #38A9A0;
     transform: scale(1.05);
 }
-
 
 /* Theme Switch Styles */
 .theme-switch {
@@ -142,8 +191,8 @@ nav a:hover::after {
 }
 
 .theme-icon {
-    color: var(--accent-color);
-    font-size: 1.5rem;
+    color: #51938B;
+    font-size: 1.5em;
 }
 
 .switch {
@@ -151,7 +200,7 @@ nav a:hover::after {
     display: inline-block;
     width: 60px;
     height: 30px;
-    background-color: var(--accent-color);
+    background-color: #51938B;
     border-radius: 34px;
     cursor: pointer;
 }
@@ -169,4 +218,1103 @@ nav a:hover::after {
 
 [data-theme="light"] .switch-circle {
     transform: translateX(30px);
+}
+
+/* Mobile/desktop theme switch visibility */
+.mobile-theme-option {
+    display: none; /* Hidden on desktop */
+    padding: 0 25px;
+}
+
+/* Hamburger Menu Button */
+.menu-toggle {
+    display: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Navigation Links for Mobile */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+/* ============================================
+   4. HERO SECTION
+============================================ */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    height: 100vh;
+    margin: 0 5%;
+}
+
+.hero p {
+    margin-bottom: 30px;
+}
+
+.content {
+    max-width: 50%;
+    color: var(--text-color);
+}
+
+/* Headings and text */
+h1 {
+    font-size: 3.5em;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: var(--quote-color);
+}
+
+p {
+    font-family: var(--font-primary);        
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--text-color-p);
+    opacity: 0.9;
+}
+
+/* CTA Button Styles */
+.cta-button {
+    display: inline-block;
+    background-color: #51938b;
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: var(--font-primary);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Device Mockup Styles */
+.device-mockup {
+    max-width: 65%;
+}
+
+.device-mockup img {
+    width: auto;
+    height: 250px;
+}
+
+#iphone {
+    max-width: 400px;
+}
+/* ============================================
+   5. FEATURE CAROUSEL SECTION
+============================================ */
+.carousel-container {
+    padding-top: 40px;
+    position: relative;
+    margin: 40px auto;
+    overflow: visible;
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Main carousel structure */
+.carousel {
+    display: flex;
+    width: 100%;
+    scroll-behavior: smooth;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    flex: 0 0 100%;
+}
+
+/* Feature Card Design */
+.feature-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: var(--color-primary);
+    padding: 40px;
+}
+
+/* Feature info section */
+.feature-info {
+    margin-top: 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    color: var(--text-color-finfo);
+    align-items: center;
+    text-align: center;
+}
+
+.feature-info h2 {
+    font-size: 1.8em;
+    font-family: var(--font-accent);
+    color: white;
+}
+
+/* Feature visual section */
+.feature-visual {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--feature-visual-bg);
+    border-radius: 20px 0 0 20px;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: var(--carousel-nav-bg);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Carousel dots navigation */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+    border: none;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--carousel-dot-bg);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.carousel-dot.active {
+    background-color: #51938b;
+    border: none;
+}
+/* ============================================
+   6. TESTIMONIALS CAROUSEL
+============================================ */
+/* Testimonial carousel variables */
+:root {
+    --cards-to-show: 3; /* Default number of cards to show */
+    --gap-calculated: 2em; /* Should match the gap in .carousel-track */
+}
+
+/* Main carousel structure */
+.carousel-track {
+    display: flex;
+    overflow-x: visible;
+    scroll-behavior: smooth;
+    gap: 2em;
+    padding: 2em 1em;
+    margin: 2em 0;
+}
+
+.carousel-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Card styling */
+.carousel-card {
+    flex: 0 0 auto;
+    position: relative;
+    border-radius: 1.5em;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    background: white;
+    transform-style: preserve-3d;
+    width: calc((100% / var(--cards-to-show)) - var(--gap-calculated)); 
+}
+
+/* Card hover effects */
+.carousel-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Card background styles */
+.card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.9;
+    background-blend-mode: multiply;
+}
+
+/* Card background variations */
+.card-bg-dark {
+    background: linear-gradient(135deg, #2D4F56 0%, #1E363C 100%);
+}
+
+.card-bg-medium {
+    background: linear-gradient(135deg, #4A7A7A 0%, #386A6A 100%);
+}
+
+.card-bg-light {
+    background: linear-gradient(135deg, #93C0C0 0%, #7BA8A8 100%);
+}
+
+/* Card content */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em 1.5em;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        transparent 25%, 
+        rgba(255, 255, 255, 0.95) 25%, 
+        rgba(255, 255, 255, 0.98) 100%);
+    position: relative;
+    z-index: 2;
+}
+
+/* Avatar container */
+.avatar-container {
+    width: 6em;
+    height: 6em;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.5em;
+    position: relative;
+    z-index: 1;
+    border: 3px solid transparent;
+    background: linear-gradient(45deg, #4A7A7A, #93C0C0) border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover {
+    transform: scale(1.05);
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Review content */
+.review-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5em;
+    width: 100%;
+    flex: 1;
+    background: white;
+    border-radius: 1em 1em 0 0;
+}
+
+/* Star ratings */
+.stars {
+    margin-bottom: 1em;
+    font-size: 1.4em;
+    letter-spacing: 2px;
+    color: #FFD700;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.2);
+}
+
+/* Review title and body */
+.review-title {
+    font-weight: 700;
+    margin-bottom: 0.75em;
+    text-align: center;
+    color: #2D4F56;
+    font-size: 1.25em;
+    letter-spacing: 0.5px;
+    font-family: var(--font-primary);
+}
+
+.review-body {
+    text-align: center;
+    color: #666;
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+    font-weight: 400;
+    padding: 0 1em;
+}
+
+/* Card animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.carousel-card {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+    margin: 2em 0;
+}
+
+.nav-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #2D4F56;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation arrows */
+.nav-button::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: currentColor;
+    mask-size: contain;
+    mask-position: center;
+}
+
+#prev-button::before {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+#next-button::before {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+/* Button hover effects */
+.nav-button:hover {
+    background: #4A7A7A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+/* Indicators container */
+.indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.8em;
+    margin-bottom: 2em;
+}
+
+/* Individual indicator dots */
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #93C0C0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+}
+
+/* Indicator states */
+.indicator.active {
+    background: #2D4F56;
+    transform: scale(1.3);
+}
+
+.indicator:hover:not(.active) {
+    background: #4A7A7A;
+    transform: scale(1.1);
+}
+/* ============================================
+   7. SIGNUP FORM
+============================================ */
+.signup {
+    display: flex;
+    height: 70vh;
+    text-align: center;
+    padding: 2em;
+    justify-content: space-evenly;
+}
+
+.txt {
+    align-self: center;
+    max-width: 50%;
+}
+
+.txt h1 {
+    font-style: italic;
+    font-size: 3rem;
+}
+
+.txt p {
+    font-size: 1.5em;
+    color: var(--color-primary);
+}
+
+/* Form Container */
+.form-container {
+    background: var(--signup-bg);
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 350px;
+    min-height: 460px;
+    text-align: center;
+    align-self: center;
+
+}
+
+.form-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--quote-color);
+}
+
+.form-container hr {
+    border: 0;
+    border-top: 1px solid white;
+}
+
+/* Login text link */
+.login-text {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.login-text a {
+    color: var(--login-text-a);
+    text-decoration: none;
+}
+
+.login-text a:hover {
+    text-decoration: underline;
+}
+
+/* Form elements */
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    margin: 10px 0 5px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: small;
+    font-family: var(--font-primary);
+    color: var(--login-text-color);
+}
+
+input {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+}
+
+/* Password field with toggle */
+.password-field {
+    position: relative;
+    width: 100%;
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 35px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #2F5D63;
+    font-size: 18px;
+}
+  .radio-group {
+    display: flex;
+    gap: 50px;
+  }
+
+  input[type="radio"] {
+    margin-right: 5px; 
+  }
+  
+  .radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+  }
+  
+
+/* Signup button */
+.signup-btn {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+/* ============================================
+   8. FOOTER
+============================================ */
+footer {
+    background-color: #51938B;
+    color: white;
+}
+
+.footer-container {
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding-top: 3%;
+}
+
+/* Footer logo and sections */
+.footer-logo {
+    max-width: 226px;
+    max-height: 132px;
+}
+
+.footer-title {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.footer-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* Footer navigation */
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+    font-family: var(--font-primary);
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Footer Bottom Bar */
+.bottom-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+.bottom-bar p{
+    font-size: 0.8em;
+}
+
+.bottom-bar a {
+    font-size: 0.8em;
+    gap: 10px;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+/* ============================================
+   9. MEDIA QUERIES
+============================================ */
+/* Mobile (max-width: 667px) */
+@media (max-width: 667px) {
+    /* Header & Navigation - Mobile */
+    header {
+        padding: 10px 15px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-areas: "menu logo theme";
+        align-items: center;
+    }
+    
+    .logo {
+        grid-area: logo;
+        width: 80px;
+        height: 50px;
+        margin: 0 auto;
+        justify-self: center;
+    }
+    
+    .theme-switch {
+        grid-area: theme;
+        justify-self: end;
+        margin-right: 0;
+        gap: 5px;
+    }
+    
+    .menu-toggle {
+        display: block;
+        grid-area: menu;
+        justify-self: start;
+        font-size: 1.8em;
+        z-index: 1000;
+        cursor: pointer;
+        color: var(--text-color);
+    }
+    
+    /* Theme Switch sizing */
+    .switch {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .switch-circle {
+        height: 22px;
+        width: 22px;
+    }
+    
+    [data-theme="light"] .switch-circle {
+        transform: translateX(24px);
+    }
+    
+    .theme-icon {
+        font-size: 1.2em;
+    }
+    
+    /* Mobile navigation */
+    .nav-links {
+        position: fixed;
+        flex-direction: column;
+        background-color: var(--bg-color);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        top: 0;
+        left: -100%; 
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        padding-top: 80px;
+        padding-bottom: 20px;
+        transition: left 0.3s ease; 
+        z-index: 900;
+        display: flex;
+    }
+    
+    .nav-links.active {
+        left: 0; 
+    }
+    
+    /* Theme switching */
+    .mobile-theme-option {
+        display: none; 
+    }
+    
+    .desktop-theme-switch {
+        display: flex; 
+    }
+    
+    /* Hero Section - Mobile */
+    .hero {
+        flex-direction: column;
+        height: auto;
+        margin-top: 10%;
+    }
+    
+    .content {
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    p {
+        font-size: 1em;
+    }
+    
+    .device-mockup {
+        max-width: 100%;
+        text-align: center;
+    }
+    
+    .device-mockup img {
+        height: auto;
+        max-width: 80%;
+    }
+    
+    /* Feature Cards - Mobile */
+    
+    .feature-card {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+    }
+    
+    .feature-visual {
+        border-radius: 20px 20px 0 0;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+    }
+    
+    /* Testimonials Carousel - Mobile */
+    .carousel-container {
+        padding: 0 10px;
+    }
+    
+    .carousel-track {
+        gap: 1em;
+        padding: 1em 0.5em;
+    }
+    
+    .carousel-card {
+        width: 85%;
+        min-width: 250px;
+    }
+    
+    :root {
+        --cards-to-show: 1;
+    }
+    
+    .carousel-prev {
+        left: -10px;
+    }
+    
+    .carousel-next {
+        right: -10px;
+    }
+    
+    .nav-button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    /* Signup Form - Mobile */
+    .signup {
+        flex-direction: column;
+        height: auto;
+        padding: 40px 15px;
+    }
+    
+    .txt {
+        max-width: 80%;
+        margin-bottom: 30px;
+    }
+
+    .txt h1 {
+        font-size: 2em;
+    }
+
+    .txt p {
+        font-size: 1.25em;
+    }
+    
+    /* Footer - Mobile */
+    
+    .footer-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        margin: 0 15px;
+    }
+    
+    /* First section (logo) */
+    .footer-container > div:first-child {
+        width: 100%;
+        order: -1;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    /* Other sections */
+    .footer-section:not(:first-child) {
+        width: 30%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .footer-section h3 {
+        font-size: 1em;
+        margin-bottom: 8px;
+        text-align: left;
+    }
+    
+    .footer-section ul li {
+        margin-bottom: 4px;
+        font-size: 0.7em;
+        text-align: left;
+    }
+    
+    .footer-logo {
+        height: 66px;
+        width: 113px;
+    }
+
+    .bottom-bar p {
+        font-size: 0.7em;
+    }
+    
+    .social-icon {
+        width: 15px;
+        height: 15px;
+    }
+    
+    /* Very small screens */
+    @media (max-width: 375px) {
+        .nav-links {
+            width: 85%;
+            max-width: 260px;
+        }
+    
+        .menu-toggle {
+            font-size: 1.8em;
+        }
+    }
+}
+
+/* Tablet (668px - 1024px) */
+@media (min-width: 668px) and (max-width: 1024px) {
+    /* Header & Navigation - Tablet */
+    header {
+        padding: 15px;
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-areas: "logo nav theme menu";
+    }
+    
+    .logo {
+        grid-area: logo;
+        width: 90px;
+        height: 55px;
+    }
+    
+    nav {
+        grid-area: nav;
+        justify-content: center;
+        gap: 25px;
+    }
+    
+    .theme-switch {
+        grid-area: theme;
+        gap: 8px;
+    }
+    
+    .menu-toggle {
+        display: none; /* Hide hamburger on tablets */
+    }
+    
+    /* Navigation links - Tablet */
+    .nav-links {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        background: none;
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        box-shadow: none;
+        justify-content: center;
+        height: auto;
+        right: 0;
+    }
+    
+    .nav-links li {
+        margin: 0;
+    }
+    
+    nav a {
+        font-size: 1em;
+    }
+    
+    .join-btn {
+        padding: 2px 18px;
+        font-size: 0.9em;
+    }
+    
+    /* Theme Switch - Tablet */
+    .switch {
+        width: 55px;
+        height: 28px;
+    }
+    
+    .switch-circle {
+        height: 24px;
+        width: 24px;
+    }
+    
+    [data-theme="light"] .switch-circle {
+        transform: translateX(27px);
+    }
+    
+    .theme-icon {
+        font-size: 1.3em;
+    }
+    
+    .mobile-theme-option {
+        display: none;
+    }
+    
+    .desktop-theme-switch {
+        display: flex;
+    }
+    
+    /* Content sections - Tablet */
+    main, .content, .device-mockup {
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .content {
+        max-width: 50%;
+    }
+    
+    .device-mockup {
+        max-width: 45%;
+    }
+    
+    h1 {
+        font-size: 2.8em;
+    }
+    
+    /* Feature cards - Tablet */
+    .feature-card {
+        flex-direction: column;
+    }
+    
+    .feature-visual {
+        border-radius: 0 20px 20px 0;
+    }
+    
+    /* Footer - Tablet */
+    .footer-container {
+        flex-direction: row;
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    .footer-logo {
+        height: 88px;
+        width: 150px;
+    }
+    
+    .form-container {
+        max-width: 350px;
+        padding: 25px;
+    }
+}
+
+/* Medium screens (1025px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    /* Medium screen styles */
+    .container {
+        padding: 0 30px;
+    }
+    
+    h1 {
+        font-size: 3em;
+    }
+    
+    .feature-card {
+        max-width: 900px;
+    }
+    
+    .feature-info {
+        padding: 50px;
+    }
+    
+    nav {
+        gap: 50px;
+    }
+    
+    .carousel-container {
+        max-width: 900px;
+    }
+    
+    .form-container {
+        max-width: 400px;
+    }
 }
