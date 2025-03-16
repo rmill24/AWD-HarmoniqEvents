@@ -316,6 +316,11 @@ nav a:hover::after {
     margin-bottom: 2%;
     font-size: 1.1em;
 }
+
+.team-section h1{
+    font-size: 2em;
+    margin-bottom: 10px;
+} 
  
 /* Fix the container to spread items evenly */
 .team-container {
@@ -410,6 +415,10 @@ nav a:hover::after {
 @media (max-width: 667px) {
     .team-section {
         padding: 30px 20px;
+    }
+
+    .team-section h1 {
+        font-size: 1.5em;
     }
    
     .team-container {
@@ -640,10 +649,6 @@ nav a:hover::after {
         text-align: center;
     }
  
-    .team-section h1{
-        margin-bottom: 10px;
-    }
- 
     .team-section p {
         margin-bottom: 10%;
         font-size: 1em;
@@ -776,11 +781,6 @@ nav a:hover::after {
         font-size: 2.8em;
     }
    
-    .team-section h1 {
-        font-size: 2em;
-        margin-bottom: 10px;
-    }
-   
     .footer-container {
         flex-direction: row;
         text-align: left;
@@ -801,15 +801,9 @@ nav a:hover::after {
     nav {
         gap: 50px;
     }
- 
-    .team-section h1 {
-        font-size: 2em;
-        margin-bottom: 10px;
-    }
-   
-   
+
 }
- 
+
 /* Large screens (1441px+) */
 @media (min-width: 1441px) {
     .footer-container {
