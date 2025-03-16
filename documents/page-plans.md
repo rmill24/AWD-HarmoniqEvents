@@ -3,8 +3,31 @@
   <summary>Table of Contents</summary>
   <ol>
       <li>
-      <a href="#shared-page-plans">Shared Page Plans</a>
+      <a href="#project-plan">Project Plan</a>
     </li>
+        <ul>
+            <li>
+            <a href="#persona">Persona</a>
+            </li>
+            <li>
+            <a href="#ux-flow">UX Flow</a>
+            </li>
+            <li>
+            <a href="#layout-and-navigation">Layout and Navigation</a>
+            </li>
+            <li>
+            <a href="#target-audience">Target Audience</a>
+            </li>
+            <li>
+            <a href="#target-screens">Target Screens</a>
+            </li>
+            <li>
+            <a href="#testing-and-deployment">Testing and Deployment</a>
+            </li>
+            <li>
+            <a href="#design-choices">Design Choices</a>
+            </li>
+        </ul>
     <li>
       <a href="#landing-page-plan">Landing Page Plan</a>
     </li>
@@ -19,7 +42,48 @@
 
 ---
 
-# Shared Page Plans
+# Project Plan
+
+## Persona
+
+**Name:** Vio Vivere\
+**Age:** 29 years old\
+**Background:**
+* A professional event planner who thrives on organizing memorable events and managing intricate details.
+* Enjoys bringing visions to life.
+
+**Key Characteristics:**
+* Practical and creative
+* Seeks easy-to-use and intuitive tools
+
+---
+
+## UX Flow
+1. **User Authentication:**
+   - **Login/Registration:**
+
+2. **Organizer Workflow:**
+   - **Organizer Dashboard:** Show quick stats: Upcoming events and tasks, guest count, and accepted vendor requests.
+   - **Navigation Menu:** Quick links to manage events, manage tasks, manage guests, and vendor requests.
+
+3. **Vendor Workflow:**
+   - **Vendor Dashboard:** Show quick stats: Service requests from organizers and active collaborations.
+   - **Approval System:** Show list of pending requests from organizers.
+
+---
+
+## Layout and Navigation
+* **Navigation Bar (Organizer):**
+  + **Dashboard:** Upcoming events and tasks, guest count, and accepted vendor requests.
+  + **Events:** Form for adding new events.
+  + **Tasks:** View of tasks and modal task management.
+  + **Guests:** View of guests and modal guest management.
+
+* **Navigation Bar (Vendor):**
+  + **Dashboard:** Service requests from organizers and active collaborations.
+  + **Requests:** View of pending requests from organizers with approval system.
+
+---
 
 ## Target Audience
 <ul>
@@ -28,6 +92,8 @@
     <li>Party hosts</li>
 </ul>
 
+---
+
 ## Target Screens
 <ul>
     <li>Desktop (1920x1080)</li>
@@ -35,6 +101,8 @@
     <li>Tablet (1024x768)</li>
     <li>Mobile (375x667)</li>
 </ul>
+
+---
 
 ## Testing & Deployment
 
@@ -51,6 +119,8 @@ Deployment:
     <li>Hosting: Github Pages</li>
     <li>Version Control: Git, GitHub</li>
 </ul>
+
+---
 
 ## Design choices
 
@@ -84,7 +154,7 @@ The website has both light and dark themes, the latter being the default.
 
 ## Page Structure
 
-The landing page will consist of five sections:
+The landing page will consist of six sections:
 
 <ul>
     <li>Header</li>
@@ -99,6 +169,8 @@ The landing page will consist of five sections:
 
 #### Header Section
 This section contains the logo, navigation links, and the theme toggle.
+
+---
 
 #### Hero Section
 This section contains the headline and supporting subheadline, along with image snippets of the website's offerings. The call to action button will lead to a sign up form at the bottom of the page.
@@ -118,8 +190,12 @@ This section contains a card carousel of reviews or testimonials from other clie
 #### Sign Up Form Section
 This section contains an inviting phrase and the sign up form that the call-to-action button from the hero section will lead to.
 
+---
+
 #### Footer Section
-This section contains links to About Us, Services, and Contacts.
+This section contains links to About Us, Services, and Social Links.
+
+---
 
 ## Styling
 Animations & Effects
