@@ -454,7 +454,6 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     });
   });
   
-  
 
 // ============================================
 // Initialize Everything When DOM is Ready
