@@ -475,8 +475,6 @@ closeModal.addEventListener("click", () => {
   loginModal.style.display = "none";
 });
 
-
-// Handle Login Form Submission
 // ============================================
 // Login Form Handling
 // ============================================
@@ -513,9 +511,11 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         document.getElementById("login-modal").classList.add("hidden");
 
         if (userType === "organizer"){
-            window.location.href = "/pages/dashboard/index.html";
+            localStorage.setItem("organizerId", result.organizerId);
+            window.location.href = "/pages/organizer-home/index.html";
         } else {
-            window.location.href = "/pages/vendor-dashboard/index.html";
+            localStorage.setItem("vendorId", result.vendorId);
+            window.location.href = "/pages/vendor-home/index.html";
         }
 
       } else {

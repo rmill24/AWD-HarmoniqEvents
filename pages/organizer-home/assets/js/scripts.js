@@ -89,6 +89,30 @@ function initMobileMenu() {
     }
 }
 
+// ============================================
+// Welcome message
+// ============================================
+// Example for organizer-home/index.html
+document.addEventListener("DOMContentLoaded", () => {
+    const organizerId = localStorage.getItem("organizerId");
+
+    if (!organizerId) {
+        alert("You are not logged in. Please log in first.");
+        window.location.href = "/index.html"; // Redirect to login page
+        return;
+    }
+
+    // Fetch Organizer Data (Optional, if you want to retrieve data from API)
+    fetch(`https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/${organizerId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Organizer Data:", data);
+            document.getElementById("user-name").textContent = `${data.name}`;
+        })
+        .catch(error => console.error("Error fetching organizer data:", error));
+});
+
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded');
