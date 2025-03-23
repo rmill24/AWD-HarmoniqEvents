@@ -210,28 +210,60 @@
         <h2>Sign Up</h2>
         <p class="login-text">Already a member? <a href="#">Log in</a></p>
         <hr>
-        <form>
-            <label for="username">Username</label>
-            <input type="username" id="username" placeholder="Enter your username" required>
+        <form id="signup-form">
+    <label for="name">Name</label>
+    <input type="name" id="name" placeholder="Enter your name" required>
 
-            <label for="password">Password</label>
-            <div class="password-field">
-                <input type="password" id="password" placeholder="Enter password">
-                <i id="togglePassword" class="fa-solid fa-eye toggle-password"></i>
-            </div>
-                <label>Type</label>
-                <div class="radio-group">
-                  <label><input type="radio" name="type" value="user"> User</label>
-                  <label><input type="radio" name="type" value="vendor"> Vendor</label>
-                </div>
-            <button type="submit" class="signup-btn">Sign Up</button>
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
 
-            <div class="social-login"></div>
-                
+    <label for="password">Password</label>
+    <div class="password-field">
+        <input type="password" id="password" placeholder="Enter password">
+        <i id="togglePassword" class="fa-solid fa-eye toggle-password"></i>
+    </div>
 
-                </div>                
-            </div>
-        </form>
+    <label>Type</label>
+    <div class="radio-group">
+        <label><input type="radio" name="type" value="organizer" checked> Organizer</label>
+        <label><input type="radio" name="type" value="vendor"> Vendor</label>
+    </div>
+
+    <!-- Dropdown for Vendors -->
+    <div id="vendor-options" style="display: none;">
+        <label for="service-type">Service Type</label>
+        <select id="service-type" required>
+            <option value="">Select a service</option>
+            <option value="catering">Catering</option>
+            <option value="photography">Photography</option>
+            <option value="venue manager">Venue Manager</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="music">Music</option>
+            <option value="decoration">Decoration</option>
+            <option value="bartender">Bartender</option>
+            <option value="marketing">Marketing</option>
+            <option value="transportation">Transportation</option>
+        </select>
+    </div>
+
+    <!-- Venue Details Section -->
+    <div id="venue-details" style="display: none;">
+        <label for="venue-name">Venue Name</label>
+        <input type="text" id="venue-name" placeholder="Enter venue name">
+
+        <label for="venue-location">Location</label>
+        <input type="text" id="venue-location" placeholder="Enter location">
+
+        <label for="venue-capacity">Capacity</label>
+        <input type="number" id="venue-capacity" placeholder="Enter capacity">
+
+        <label for="venue-amenities">Amenities</label>
+        <input type="text" id="venue-amenities" placeholder="Enter amenities">
+    </div>
+
+    <button type="submit" class="signup-btn">Sign Up</button>
+</form>
+
     </div>
     </section>
 </main>
