@@ -477,35 +477,57 @@ closeModal.addEventListener("click", () => {
 
 
 // Handle Login Form Submission
+// ============================================
+// Login Form Handling
+// ============================================
 document.getElementById("login-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
-
-  try {
-    const response = await fetch("https://event-management-api-racelle-millagracias-projects.vercel.app/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      alert("Login successful!");
-      console.log("Login response:", result);
-      loginModal.classList.add("hidden");
-      loginModal.style.display = "none";
-    } else {
-      alert("Login failed. Please check your credentials.");
-      console.error("Error:", result);
+    e.preventDefault();
+  
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+  
+    // Ask the user whether they are an Organizer or Vendor
+    const userType = prompt("Are you logging in as an 'organizer' or 'vendor'?").toLowerCase();
+  
+    if (userType !== "organizer" && userType !== "vendor") {
+      alert("Invalid user type. Please enter 'organizer' or 'vendor'.");
+      return;
     }
-  } catch (error) {
-    alert("Network Error. Please try again.");
-    console.error("Network Error:", error);
-  }
-});
+  
+    const url = userType === "organizer"
+      ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/login"
+      : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors/login";
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert(`Login successful!`);
+        console.log("Login response:", result);
+        document.getElementById("login-modal").classList.add("hidden");
+
+        if (userType === "organizer"){
+            window.location.href = "/pages/dashboard/index.html";
+        } else {
+            window.location.href = "/pages/vendor-dashboard/index.html";
+        }
+
+      } else {
+        alert("Login failed. Please check your credentials.");
+        console.error("Error:", result);
+      }
+    } catch (error) {
+      alert("Network Error. Please try again.");
+      console.error("Network Error:", error);
+    }
+  });
+  
 
 
 
