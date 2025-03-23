@@ -390,7 +390,7 @@ function initPasswordToggle() {
 // Signup Redirect Function
 // ============================================
 function redirectToSignup() {
-  window.location.href = "index.html#signup-form";
+  window.location.href = "index.html#signup-section";
 }
 
 // ============================================
@@ -454,6 +454,60 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     });
   });
   
+
+// ============================================
+// Login Form Handling
+// ============================================
+
+// Show/Hide Login Modal
+const loginModal = document.getElementById("login-modal");
+const loginLink = document.getElementById("login-link");
+const closeModal = document.querySelector(".close");
+
+loginLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  loginModal.classList.remove("hidden");
+  loginModal.style.display = "flex"; // Important: Make sure the modal uses flex for centering
+});
+
+closeModal.addEventListener("click", () => {
+  loginModal.classList.add("hidden");
+  loginModal.style.display = "none";
+});
+
+
+// Handle Login Form Submission
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+
+  try {
+    const response = await fetch("https://event-management-api-racelle-millagracias-projects.vercel.app/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Login successful!");
+      console.log("Login response:", result);
+      loginModal.classList.add("hidden");
+      loginModal.style.display = "none";
+    } else {
+      alert("Login failed. Please check your credentials.");
+      console.error("Error:", result);
+    }
+  } catch (error) {
+    alert("Network Error. Please try again.");
+    console.error("Network Error:", error);
+  }
+});
+
+
 
 // ============================================
 // Initialize Everything When DOM is Ready

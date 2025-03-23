@@ -7,8 +7,9 @@
    5. FEATURE CAROUSEL
    6. TESTIMONIALS CAROUSEL
    7. SIGNUP FORM
-   8. FOOTER
-   9. MEDIA QUERIES
+   8. LOGIN FORM
+   9. FOOTER
+   10. MEDIA QUERIES
 ============================================ */
 
 /* ============================================
@@ -813,7 +814,7 @@ select {
 }
 
 /* Signup button */
-.signup-btn {
+.signup-btn, .login-btn {
     background-color: var(--color-primary);
     color: white;
     border: none;
@@ -823,8 +824,47 @@ select {
     margin-top: 15px;
     font-size: 1em;
 }
+
 /* ============================================
-   8. FOOTER
+   8. LOGIN FORM
+============================================ */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.modal-content {
+    background-color: var(--signup-bg);
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 80%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ============================================
+   9. FOOTER
 ============================================ */
 footer {
     background-color: #51938B;
@@ -917,7 +957,7 @@ footer {
     text-decoration: none;
 }
 /* ============================================
-   9. MEDIA QUERIES
+   10. MEDIA QUERIES
 ============================================ */
 /* Mobile (max-width: 667px) */
 @media (max-width: 667px) {

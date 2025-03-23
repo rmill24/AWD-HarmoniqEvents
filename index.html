@@ -200,7 +200,7 @@
         </div>
       </div>
       <!-- Signup Section -->
-    <section id="signup-form" class="signup">
+    <section id="signup-section" class="signup">
         <div class="txt">
         <h1>Ready to turn your
             vision into reality?</h1>
@@ -208,7 +208,22 @@
     </div>
     <div class="form-container">
         <h2>Sign Up</h2>
-        <p class="login-text">Already a member? <a href="#">Log in</a></p>
+        <p class="login-text">Already a member? <a href="#" id="login-link">Log in</a></p>
+        <div id="login-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="login-form">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+        
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+        
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+            </div>
+        </div>
         <hr>
         <form id="signup-form">
     <label for="name">Name</label>
