@@ -51,11 +51,47 @@ function updateThemeIcons(theme) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize theme toggle functionality
-    initThemeToggle();
+// Mobile menu functionality
+function initMobileMenu() {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const signOut = document.querySelector('.fa-sign-out-alt');
     
-    // Initialize any other functionality
-    // initMobileMenu();
-    // initOtherFeatures();
+    if (!menuToggle || !sidebar || !overlay) {
+        console.error('Menu elements not found');
+        return;
+    }
+    
+    // Toggle menu on hamburger click
+    menuToggle.addEventListener('click', function() {
+        menuToggle.classList.toggle('active');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    });
+    
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', function() {
+        menuToggle.classList.remove('active');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+    
+    // Close menu when clicking sign out icon
+    if (signOut) {
+        signOut.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            // Add sign out functionality here
+            console.log('Signing out...');
+        });
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    initThemeToggle();
+    initMobileMenu();
 });

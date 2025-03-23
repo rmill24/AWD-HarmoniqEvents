@@ -5,91 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HMQ | Dashboard</title>
     <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="./assets/img/logo-white.png" type="image/png">
 </head>
 <body>
     <header>
-        <img src="./assets/img/logo.png" alt="">
-        <h2>Main Menu</h2>
-        <nav>
-            <ul>
-                <li><a href="#"">Dashboard</a></li>
-                <li><a href="#"">Events</a></li>
-                <li><a href="#"">Tasks</a></li>
-                <li><a href="#">Guests</a></li>
-                <li><a href="#">Requests</a></li>
-            </ul>
-        </nav>
-        <i class="fas fa-sign-out-alt"></i>
-    </header>
-
-    <main>
-        <section id="dashboard">
-        <section class="top">
+        <nav class="top-navbar">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
             <h2>Dashboard</h2>
-            <section class="desktop-theme-switch theme-switch">
+            <!-- Theme toggle in header -->
+            <div class="desktop-theme-switch theme-switch">
                 <span class="theme-icon" id="themeIcon">☾</span>
                 <div class="switch" id="themeToggle">
                     <div class="switch-circle"></div>
                 </div>
-            </section>
-        </section>
+            </div>
+        </nav>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <img src="./assets/img/logo.png" alt="Logo">
+            <nav>
+              <ul>
+                <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fa-regular fa-calendar"></i> Events</a></li>
+                <li><a href="#"><i class="fa-solid fa-book"></i> Tasks</a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i> Guests</a></li>
+                <li><a href="#"><i class="fa-regular fa-clock"></i> Requests</a></li>
+              </ul>
+            </nav>
+            <div class="sign-out">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+        </aside>
+        
+        <!-- Overlay for mobile -->
+        <div class="overlay" id="overlay"></div>
+    </header>
 
-       <section class="dashboard">
-        <div class="welcome">
-        <h3>Welcome Back</h3>
-        <h1>Miles Garcia</h1>
-    </div>
+    <main>
+        <section id="dashboard">
+            <div class="welcome">
+                <h3>Welcome Back</h3>
+                <h1>Miles Garcia</h1>
+            </div>
 
             <div class="event">
                 <h1>Event Name</h1>
-                <i class="fas fa-arrow-down"></i>
+                <i class="fa-solid fa-chevron-down"></i>
             </div>
 
             <div class="set">
-            <div class="tasks">
-               <h1>Tasks</h1>
-               <hr>
-               <div class="task-attribute">
-                <p>Task name</p>
-                <p>Deadline</p>
-               </div>
-               <div class="task-attribute">
-                <p>Set Event Venue</p>
-                <p>03/24/2025</p>
-               </div>
+                <div class="tasks">
+                    <h1>Tasks</h1>
+                    <hr>
+                    <div class="task-attribute">
+                        <p> Task name</p>
+                        <p> Deadline</p>
+                    </div>
+                    <div class="task-attribute">
+                        <p>Set Event Venue</p>
+                        <p>03/24/2025</p>
+                    </div>
+                </div>
+                
+                <div class="tasks">
+                    <h1>Requests</h1>
+                    <hr>
+                    <div class="task-attribute">
+                        <p> Vendor Name</p>
+                        <p> Status</p>
+                    </div>
+                    <div class="task-attribute">
+                        <p>Eumi Biag</p>
+                        <p>Accepted</span></p>
+                    </div>
+                </div>
             </div>
-            
-
-            <div class="tasks">
-               <h1>Requests</h1>
-               <hr>
-               <div class="task-attribute">
-                <p>Vendor Name</p>
-                <p>Status</p>
-               </div>
-               <div class="task-attribute">
-                <p>Eumi Biag</p>
-                <p>Accepted</p>
-               </div>
-            </div>
-        </div>
-       </section>
-    </section>
+        </section>
     </main>
 
-    <section id="events">
-    </section>
-
-    <section id="tasks">
-    </section>
-
-    <section id="guests">
-    </section>
-
-    <section id="requests">
-    </section>
     <script src="./assets/js/scripts.js"></script>
 </body>
 </html>
