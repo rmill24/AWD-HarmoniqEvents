@@ -396,6 +396,10 @@ function redirectToSignup() {
 // ============================================
 // Signup Form Handling
 // ============================================
+function capitalizeWords(str) {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
 document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent form submission
   
@@ -403,6 +407,9 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const selectedUserType = document.querySelector('input[name="type"]:checked').value;
+
+    // Capitalize the name
+    name = capitalizeWords(name);
   
     const url =
       selectedUserType === "organizer"
@@ -475,9 +482,6 @@ closeModal.addEventListener("click", () => {
   loginModal.style.display = "none";
 });
 
-// ============================================
-// Login Form Handling
-// ============================================
 document.getElementById("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
   
