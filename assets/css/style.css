@@ -676,7 +676,6 @@ p {
 ============================================ */
 .signup {
     display: flex;
-    height: 70vh;
     text-align: center;
     padding: 2em;
     justify-content: space-evenly;
@@ -753,6 +752,7 @@ label {
     font-size: small;
     font-family: var(--font-primary);
     color: var(--login-text-color);
+    font-size: 1em;
 }
 
 input {
@@ -800,6 +800,18 @@ input {
   }
   
 
+#vendor-options{
+    display: none;
+}
+
+select {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
 /* Signup button */
 .signup-btn {
     background-color: var(--color-primary);
@@ -809,6 +821,7 @@ input {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 15px;
+    font-size: 1em;
 }
 /* ============================================
    8. FOOTER

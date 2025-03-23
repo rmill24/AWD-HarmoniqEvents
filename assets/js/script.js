@@ -409,28 +409,51 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers"
         : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors";
     
+    const requestBody = { name, email, password };
+    
+    if (selectedUserType === "vendor") {
+      const serviceType = document.getElementById("service-type").value;
+  
+      if (!serviceType) {
+        alert("Please select a service type.");
+        return;
+      }
+  
+      requestBody.serviceType = serviceType;
+    }
+  
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(requestBody),
       });
   
       const result = await response.json();
   
       if (response.ok) {
-        alert("Signup successful. Please login to continue.");
+        alert("Signup successful!");
         console.log("Response:", result);
       } else {
         alert("Signup failed. Please try again.");
         console.error("Error:", result);
       }
     } catch (error) {
+      alert("Network Error. Please check your connection and try again.");
       console.error("Network Error:", error);
     }
   });
+  
+  // Show/Hide dropdown based on user type selection
+  document.querySelectorAll('input[name="type"]').forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const isVendor = document.querySelector('input[name="type"]:checked').value === "vendor";
+      document.getElementById("vendor-options").style.display = isVendor ? "block" : "none";
+    });
+  });
+  
   
 
 // ============================================
