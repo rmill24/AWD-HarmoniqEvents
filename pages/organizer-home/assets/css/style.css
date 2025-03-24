@@ -1519,6 +1519,112 @@ hr {
     margin-top: 8px;
 }
 
+
+.modal-actions {
+    display: flex;
+    gap: 16px; 
+    margin-top: 36px; 
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 16px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.modal-actions .btn-secondary {
+    background: #E5E5E5;
+    color: #333333;
+    border: 1px solid #CCCCCC;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-actions .btn-secondary:hover {
+    background: #D5D5D5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions .btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions .btn-primary:hover {
+    background: #457e76; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+#requestVendorModal .modal-actions button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#requestVendorModal .btn-secondary {
+    background: #E5E5E5;
+    color: #333333;
+    border: 1px solid #CCCCCC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#requestVendorModal .btn-secondary:hover {
+    background: #D5D5D5;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+[data-theme="dark"] .modal-actions .btn-secondary {
+    background: #333333;
+    color: #FFFFFF;
+    border: 1px solid #444444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .modal-actions .btn-secondary:hover {
+    background: #444444;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] #requestVendorModal .btn-secondary {
+    background: #333333;
+    color: #FFFFFF;
+    border: 1px solid #444444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] #requestVendorModal .btn-secondary:hover {
+    background: #444444;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
 .modal-actions {
     display: flex;
     gap: 16px; 

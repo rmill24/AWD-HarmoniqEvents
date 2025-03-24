@@ -461,12 +461,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const addButton = document.querySelector('.add-task-btn');
 const modal = document.getElementById('addTaskModal');
-const cancelButton = document.querySelector('.cancel-modal');
+const cancelButton = document.querySelector('#addTaskModal .cancel-modal');
 const form = document.getElementById('addTaskForm');
 const description = document.getElementById('taskDescription');
 const counter = document.getElementById('currentCount');
 
-// When yoou click the add button
+// When you click the add button
 addButton.onclick = function() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -477,6 +477,7 @@ cancelButton.onclick = function() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
     form.reset();
+    if (counter) counter.textContent = '0';
 }
 
 // When you click outside the modal
@@ -485,6 +486,7 @@ modal.onclick = function(event) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
         form.reset();
+        if (counter) counter.textContent = '0';
     }
 }
 
@@ -545,9 +547,6 @@ requestVendorModal.addEventListener('click', (e) => {
     }
 });
 
-// ==============================================
-// Event Modals Functionality
-// ==============================================
 
 // Add Event Modal
 const addEventButton = document.querySelector('.add-event-btn');
