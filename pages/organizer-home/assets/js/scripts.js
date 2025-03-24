@@ -612,3 +612,87 @@ editEventModal.addEventListener('click', function(event) {
         editEventDescriptionCounter.textContent = '0';
     }
 });
+ 
+// Add Guest Modal
+const addGuestButton = document.querySelector('.add-guest-btn');
+const addGuestModal = document.getElementById('addGuestModal');
+const guestCancelButton = addGuestModal.querySelector('.cancel-modal');
+const guestForm = document.getElementById('addGuestForm');
+
+// When you click the add guest button
+addGuestButton.addEventListener('click', function() {
+    addGuestModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+// When you click the cancel button
+guestCancelButton.addEventListener('click', function() {
+    addGuestModal.classList.remove('active');
+    document.body.style.overflow = '';
+    guestForm.reset();
+});
+
+// When you click outside the modal
+addGuestModal.addEventListener('click', function(event) {
+    if (event.target === addGuestModal) {
+        addGuestModal.classList.remove('active');
+        document.body.style.overflow = '';
+        guestForm.reset();
+    }
+});
+
+// Edit Guest Modal
+const editGuestButtons = document.querySelectorAll('#guests .edit-button');
+const editGuestModal = document.getElementById('editGuestModal');
+const editGuestCancelButton = editGuestModal.querySelector('.cancel-modal');
+const editGuestForm = document.getElementById('editGuestForm');
+
+// When you click any edit button in the guests table
+editGuestButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        editGuestModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+// When you click the cancel button
+editGuestCancelButton.addEventListener('click', function() {
+    editGuestModal.classList.remove('active');
+    document.body.style.overflow = '';
+    editGuestForm.reset();
+});
+
+// When you click outside the modal
+editGuestModal.addEventListener('click', function(event) {
+    if (event.target === editGuestModal) {
+        editGuestModal.classList.remove('active');
+        document.body.style.overflow = '';
+        editGuestForm.reset();
+    }
+});
+
+// Delete Guests Modal
+const deleteGuestsButton = document.querySelector('.delete-guests-btn');
+const deleteGuestsModal = document.getElementById('deleteGuestsModal');
+const deleteGuestsCancelButton = deleteGuestsModal.querySelector('.cancel-modal');
+const confirmDeleteButton = deleteGuestsModal.querySelector('.confirm-delete');
+
+// When you click the delete button
+deleteGuestsButton.addEventListener('click', function() {
+    deleteGuestsModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+// When you click the cancel button
+deleteGuestsCancelButton.addEventListener('click', function() {
+    deleteGuestsModal.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// When you click outside the modal
+deleteGuestsModal.addEventListener('click', function(event) {
+    if (event.target === deleteGuestsModal) {
+        deleteGuestsModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});

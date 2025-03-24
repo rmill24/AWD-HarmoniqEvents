@@ -1456,7 +1456,9 @@ hr {
 #addTaskForm,
 #editTaskForm,
 #addEventForm,
-#editEventForm {
+#editEventForm,
+#addGuestForm,
+#editGuestForm {
     padding: 30px; 
 }
 
@@ -1519,112 +1521,6 @@ hr {
     margin-top: 8px;
 }
 
-
-.modal-actions {
-    display: flex;
-    gap: 16px; 
-    margin-top: 36px; 
-}
-
-.modal-actions button {
-    flex: 1;
-    padding: 16px;
-    border-radius: 40px;
-    font-size: 15px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.modal-actions .btn-secondary {
-    background: #E5E5E5;
-    color: #333333;
-    border: 1px solid #CCCCCC;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.modal-actions .btn-secondary:hover {
-    background: #D5D5D5;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.modal-actions .btn-primary {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.modal-actions .btn-primary:hover {
-    background: #457e76; 
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-
-#requestVendorModal .modal-actions button {
-    flex: 1;
-    padding: 14px;
-    border-radius: 40px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#requestVendorModal .btn-secondary {
-    background: #E5E5E5;
-    color: #333333;
-    border: 1px solid #CCCCCC;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-#requestVendorModal .btn-secondary:hover {
-    background: #D5D5D5;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
-[data-theme="dark"] .modal-actions .btn-secondary {
-    background: #333333;
-    color: #FFFFFF;
-    border: 1px solid #444444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .modal-actions .btn-secondary:hover {
-    background: #444444;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] #requestVendorModal .btn-secondary {
-    background: #333333;
-    color: #FFFFFF;
-    border: 1px solid #444444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] #requestVendorModal .btn-secondary:hover {
-    background: #444444;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
 .modal-actions {
     display: flex;
     gap: 16px; 
@@ -1634,28 +1530,31 @@ hr {
 .modal-actions button {
     flex: 1;
     padding: 16px; 
-    border: none;
     border-radius: 40px;
     font-size: 15px;
     font-weight: 500;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
+/* Updated cancel button for better visibility */
 .modal-actions .btn-secondary {
-    background: #EEEEEE;
-    text-align: center;
+    background: #E0E0E0;
+    color: #444444;
+    border: 1px solid #CCCCCC;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .modal-actions .btn-secondary:hover {
-    background: #E0E0E0;
+    background: #D0D0D0;
 }
 
 .modal-actions .btn-primary {
     background: var(--primary-color);
     color: white;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1749,25 +1648,32 @@ hr {
     margin-top: 32px;
 }
 
-#requestVendorModal .modal-actions button {
+/* Updated styles for improved visibility */
+#requestVendorModal .btn-secondary {
+    background: #E0E0E0;
+    color: #444444;
+    border: 1px solid #CCCCCC;
     flex: 1;
     padding: 14px;
-    border: none;
     border-radius: 100px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-#requestVendorModal .btn-secondary {
-    background: #E5E5E5;
-    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #requestVendorModal .btn-primary {
     background: var(--primary-color);
     color: white;
+    border: none;
+    flex: 1;
+    padding: 14px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 #requestVendorModal .modal-actions button:hover {
@@ -1784,7 +1690,7 @@ hr {
     }
 }
 
-/* Remove Edit Task Modal Dropdown Styles */
+/* Edit Task Modal input styles */
 #editTaskModal input[type="text"] {
     width: 100%;
     padding: 12px 16px;
@@ -1800,7 +1706,7 @@ hr {
     border-color: var(--primary-color);
 }
 
-/* Dark Mode Modal Styles - Update these too */
+/* Dark Mode Modal Styles */
 [data-theme="dark"] .modal-content {
     background: var(--bg-color);
     border: 1px solid var(--border-color);
@@ -1826,7 +1732,18 @@ hr {
     box-shadow: 0 0 0 2px rgba(81, 147, 139, 0.3);
 }
 
-/* Dark Mode Request Vendor Modal Specific Styles */
+/* Updated dark mode cancel button styles */
+[data-theme="dark"] .modal-actions .btn-secondary {
+    background: #333333;
+    color: #EEEEEE;
+    border: 1px solid #444444;
+}
+
+[data-theme="dark"] .modal-actions .btn-secondary:hover {
+    background: #3A3A3A;
+}
+
+/* Dark mode vendor modal styles */
 [data-theme="dark"] #requestVendorModal .modal-content {
     background: var(--bg-color);
     border: 1px solid var(--border-color);
@@ -1848,19 +1765,16 @@ hr {
 }
 
 [data-theme="dark"] #requestVendorModal .btn-secondary {
-    background: var(--task-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #333333;
+    color: #EEEEEE;
+    border: 1px solid #444444;
 }
 
 [data-theme="dark"] #requestVendorModal .select-wrapper::after {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
-/* Dark Mode Edit Task Modal Specific Styles */
+/* Dark Mode specific styles for task inputs */
 [data-theme="dark"] #editTaskModal input[type="text"] {
     background: var(--task-bg);
     color: var(--text-color);
@@ -1869,4 +1783,25 @@ hr {
 
 [data-theme="dark"] #editTaskModal input[type="text"]:focus {
     border-color: var(--primary-color);
+}
+
+/* Delete Modal Specific Styles */
+.delete-message {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#deleteGuestsModal .btn-primary {
+    background-color: #e53f36;
+}
+
+#deleteGuestsModal .btn-primary:hover {
+    background-color: #d03530;
+}
+
+[data-theme="dark"] .delete-message {
+    color: var(--text-color);
 }
