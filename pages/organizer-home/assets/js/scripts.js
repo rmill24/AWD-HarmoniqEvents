@@ -56,37 +56,74 @@ function initMobileMenu() {
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    const signOut = document.querySelector('.fa-sign-out-alt');
+    const signOut = document.querySelector('.sign-out');
     
     if (!menuToggle || !sidebar || !overlay) {
         console.error('Menu elements not found');
         return;
     }
     
-    // Toggle menu on hamburger click
-    menuToggle.addEventListener('click', function() {
-        menuToggle.classList.toggle('active');
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-    });
-    
-    // Close menu when clicking overlay
-    overlay.addEventListener('click', function() {
+    // Function to close menu
+    function closeMenu() {
         menuToggle.classList.remove('active');
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Function to open menu
+    function openMenu() {
+        menuToggle.classList.add('active');
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Toggle menu on hamburger click
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (sidebar.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
     });
     
-    // Close menu when clicking sign out icon
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', closeMenu);
+    
+    // Close menu when clicking sign out
     if (signOut) {
         signOut.addEventListener('click', function() {
-            menuToggle.classList.remove('active');
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
+            closeMenu();
             // Add sign out functionality here
             console.log('Signing out...');
         });
     }
+    
+    // Close menu when clicking sidebar links
+    const sidebarLinks = sidebar.querySelectorAll('a');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+    
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 1024) {
+                closeMenu();
+            }
+        }, 250);
+    });
 }
 
 // ============================================
