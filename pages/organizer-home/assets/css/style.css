@@ -451,7 +451,7 @@ select option {
 }
 
 /* Tasks Overview */
-.tasks {
+.tasks, .requests {
     background-color: var(--task-bg);
     width: 500px;
     border-radius: 30px;
@@ -461,6 +461,13 @@ select option {
 }
 
 .tasks h1 {
+    font-size: 32px;
+    font-weight: 350;
+    margin-left: 20px;
+    color: var(--text-color);
+}
+
+.requests h1 {
     font-size: 32px;
     font-weight: 350;
     margin-left: 20px;
@@ -752,7 +759,7 @@ hr {
         font-size: 24px;
     }
 
-    .tasks {
+    .tasks, .requests {
         width: 600px;
         height: 450px;
     }
@@ -809,7 +816,7 @@ hr {
         font-size: 20px;
     }
 
-    .tasks {
+    .tasks, .requests {
         width: 500px;
         height: 400px;
     }
@@ -935,7 +942,7 @@ hr {
         padding: 0 10px;
     }
 
-    .tasks {
+    .tasks, .requests {
         width: 450px;
         height: auto;
         min-height: 250px;
@@ -946,6 +953,14 @@ hr {
     }
 
     .tasks h1 {
+        font-size: 24px;
+        margin-left: 0;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .requests h1 {
         font-size: 24px;
         margin-left: 0;
         margin-bottom: 15px;
@@ -1160,7 +1175,7 @@ hr {
         margin: 10px auto;
     }
 
-    .tasks {
+    .tasks, .requests {
         width: 100%;
         min-height: 180px;
         padding: 12px;
@@ -1171,6 +1186,12 @@ hr {
         font-size: 20px;
         margin-bottom: 12px;
     }
+
+    .requests h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
 
     .task-attribute {
         margin: 8px 0;
@@ -1287,7 +1308,7 @@ hr {
         padding: 0 8px;
     }
 
-    .tasks {
+    .tasks, .requests {
         width: 100%;
         min-height: 200px;
     }
