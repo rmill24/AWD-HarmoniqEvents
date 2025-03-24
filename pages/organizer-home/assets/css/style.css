@@ -552,7 +552,7 @@ hr {
     font-size: 14px;
 }
 
-/* Remove bottom border from last row */
+/* emove bottom border from last row */
 .events-table tr:last-child td,
 .tasks-table tr:last-child td,
 .requests-table tr:last-child td,
