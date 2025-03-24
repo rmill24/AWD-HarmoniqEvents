@@ -545,3 +545,71 @@ requestVendorModal.addEventListener('click', (e) => {
     }
 });
 
+// ==============================================
+// Event Modals Functionality
+// ==============================================
+
+// Add Event Modal
+const addEventButton = document.querySelector('.add-event-btn');
+const addEventModal = document.getElementById('addEventModal');
+const eventCancelButton = addEventModal.querySelector('.cancel-modal');
+const eventForm = document.getElementById('addEventForm');
+const eventDescription = document.getElementById('eventDescription');
+const eventDescriptionCounter = document.getElementById('eventDescriptionCount');
+
+// When you click the add event button
+addEventButton.addEventListener('click', function() {
+    addEventModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+// When you click the cancel button
+eventCancelButton.addEventListener('click', function() {
+    addEventModal.classList.remove('active');
+    document.body.style.overflow = '';
+    eventForm.reset();
+    eventDescriptionCounter.textContent = '0';
+});
+
+// When you click outside the modal
+addEventModal.addEventListener('click', function(event) {
+    if (event.target === addEventModal) {
+        addEventModal.classList.remove('active');
+        document.body.style.overflow = '';
+        eventForm.reset();
+        eventDescriptionCounter.textContent = '0';
+    }
+});
+
+// Edit Event Modal
+const editEventButton = document.querySelector('#events .edit-button');
+const editEventModal = document.getElementById('editEventModal');
+const editEventCancelButton = editEventModal.querySelector('.cancel-modal');
+const editEventForm = document.getElementById('editEventForm');
+const editEventDescription = document.getElementById('editEventDescription');
+const editEventDescriptionCounter = document.getElementById('editEventDescriptionCount');
+
+// When you click the edit button
+editEventButton.addEventListener('click', function() {
+    editEventModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+});
+
+// When you click the cancel button
+editEventCancelButton.addEventListener('click', function() {
+    editEventModal.classList.remove('active');
+    document.body.style.overflow = '';
+    editEventForm.reset();
+    editEventDescriptionCounter.textContent = '0';
+});
+
+// When you click outside the modal
+editEventModal.addEventListener('click', function(event) {
+    if (event.target === editEventModal) {
+        editEventModal.classList.remove('active');
+        document.body.style.overflow = '';
+        editEventForm.reset();
+        editEventDescriptionCounter.textContent = '0';
+    }
+});

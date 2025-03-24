@@ -1419,7 +1419,7 @@ hr {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6); 
     display: none;
     z-index: 1000;
 }
@@ -1433,32 +1433,35 @@ hr {
 .modal-content {
     background: white;
     width: 90%;
-    max-width: 400px;
-    border-radius: 12px;
+    max-width: 450px; 
+    border-radius: 16px; 
     overflow: hidden;
     margin: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-header {
     background: var(--primary-color);
-    padding: 20px 24px;
+    padding: 24px 30px; 
     text-align: center;
 }
 
 .modal-header h2 {
     color: white;
-    font-size: 20px;
+    font-size: 22px; 
     margin: 0;
     font-weight: 500;
 }
 
 #addTaskForm,
-#editTaskForm {
-    padding: 24px;
+#editTaskForm,
+#addEventForm,
+#editEventForm {
+    padding: 30px; 
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px; 
 }
 
 .form-group:last-child {
@@ -1468,8 +1471,9 @@ hr {
 .form-group label {
     display: block;
     font-size: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 12px; 
     color: #333333;
+    font-weight: 500; 
 }
 
 .form-group input,
@@ -1477,52 +1481,70 @@ hr {
 .form-group textarea,
 .task-select-btn {
     width: 100%;
-    padding: 14px 16px;
-    background: #EEEEEE;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 10px 18px; 
+    background: #F5F5F5; 
+    border: 1px solid #E0E0E0; 
+    border-radius: 10px; 
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(81, 147, 139, 0.2); 
 }
 
 .form-group textarea {
-    height: 120px;
+    height: 140px; 
     resize: none;
-    margin-bottom: 4px;
+    line-height: 1.5; 
 }
 
 .form-group ::placeholder {
-    color: #999999;
+    color: #AAAAAA;
 }
 
 .date-time-inputs {
     display: flex;
-    gap: 12px;
+    gap: 16px; 
 }
 
 .character-count {
     text-align: right;
     color: #999999;
-    font-size: 12px;
-    margin-top: 6px;
+    font-size: 13px;
+    margin-top: 8px;
 }
 
 .modal-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 32px;
+    gap: 16px; 
+    margin-top: 36px; 
 }
 
 .modal-actions button {
     flex: 1;
-    padding: 14px;
+    padding: 16px; 
     border: none;
     border-radius: 40px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .modal-actions .btn-secondary {
     background: #EEEEEE;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-actions .btn-secondary:hover {
+    background: #E0E0E0;
 }
 
 .modal-actions .btn-primary {
@@ -1533,28 +1555,10 @@ hr {
     justify-content: center;
 }
 
-@media (max-width: 480px) {
-    .modal-content {
-        width: 100%;
-        margin: 16px;
-    }
-    
-    .date-time-inputs,
-    .modal-actions {
-        flex-direction: column;
-    }
-}
-
-.task-select-btn {
-    width: 100%;
-    padding: 12px;
-    background: #EEEEEE;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    text-align: left;
-    color: #999999;
-    cursor: pointer;
+.modal-actions .btn-primary:hover {
+    background: #457e76; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Request Vendor Modal Styles */
@@ -1690,7 +1694,7 @@ hr {
     border-color: var(--primary-color);
 }
 
-/* Dark Mode Modal Styles */
+/* Dark Mode Modal Styles - Update these too */
 [data-theme="dark"] .modal-content {
     background: var(--bg-color);
     border: 1px solid var(--border-color);
@@ -1702,32 +1706,18 @@ hr {
 
 [data-theme="dark"] .form-group input,
 [data-theme="dark"] .form-group textarea,
-[data-theme="dark"] .task-select-btn {
+[data-theme="dark"] .task-select-btn,
+[data-theme="dark"] .form-group select {
     background: var(--task-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
 }
 
-[data-theme="dark"] .form-group input::placeholder,
-[data-theme="dark"] .form-group textarea::placeholder {
-    color: #666666;
-}
-
-[data-theme="dark"] .character-count {
-    color: #666666;
-}
-
-[data-theme="dark"] input[type="date"],
-[data-theme="dark"] input[type="time"] {
-    background: var(--task-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-}
-
-[data-theme="dark"] .modal-actions .btn-secondary {
-    background: var(--task-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(81, 147, 139, 0.3);
 }
 
 /* Dark Mode Request Vendor Modal Specific Styles */
@@ -1755,6 +1745,9 @@ hr {
     background: var(--task-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 [data-theme="dark"] #requestVendorModal .select-wrapper::after {
