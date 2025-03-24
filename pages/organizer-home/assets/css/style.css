@@ -343,42 +343,52 @@ main {
     opacity: 0.9;
 }
 
-/* Tabs */
-.tabs {
+/* Tabs Container */
+.tabs-container {
     display: flex;
-    gap: 40px;
+    align-items: center;
+    justify-content: space-between;
     margin: 30px 0;
     padding: 0;
     border-bottom: 1px solid var(--border-color);
 }
 
-.tab {
-    padding: 12px 0;
-    font-size: 15px;
-    color: var(--text-color);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-    opacity: 0.7;
+.tabs {
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
 }
 
-.tab:hover {
-    opacity: 1;
-}
-
-.tab.active {
+/* Edit Button in Tabs Container */
+.tabs-container .edit-button {
+    background: none;
+    border: none;
     color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
-    font-weight: 500;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: visible;
     opacity: 1;
+    margin-right: 10px;
 }
 
-.tab-content {
-    display: none;
+.tabs-container .edit-button:hover {
+    background-color: rgba(81, 147, 139, 0.1);
+    transform: translateY(-1px);
 }
 
-.tab-content.active {
-    display: block;
+.tabs-container .edit-button:active {
+    transform: translateY(0);
+}
+
+.tabs-container .edit-button i {
+    font-size: 18px;
 }
 
 /* ======================================
@@ -683,19 +693,31 @@ hr {
     font-size: 12px;
 }
 
-/* Edit Button */
+/* Edit Button Styles */
 .edit-button {
-    border: none;
     background: none;
+    border: none;
     color: var(--primary-color);
     cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-    padding: 4px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .edit-button:hover {
-    opacity: 1;
+    background-color: rgba(81, 147, 139, 0.1);
+    transform: translateY(-1px);
+}
+
+.edit-button:active {
+    transform: translateY(0);
+}
+
+.edit-button i {
+    font-size: 16px;
 }
 
 /* Add Task Button Styles */
@@ -1286,7 +1308,7 @@ hr {
     }
 
     .edit-button {
-        padding: 6px;
+        padding: 4px;
     }
 
     .edit-button i {
@@ -1350,4 +1372,39 @@ hr {
 
 .task-attribute[data-status="overdue"] p:last-child {
     color: var(--status-declined);
+}
+
+/* Remove old title-cell styles */
+.title-cell {
+    padding: 15px 20px;
+}
+
+/* Tab Styles */
+.tab {
+    padding: 12px 0;
+    font-size: 15px;
+    color: var(--text-color);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.tab:hover {
+    opacity: 1;
+}
+
+.tab.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 500;
+    opacity: 1;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
 }

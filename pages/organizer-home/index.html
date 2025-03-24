@@ -91,10 +91,15 @@
                 </button>
             </div>
             
-            <!-- Events Tab Navigation -->
-            <div class="tabs">
-                <div class="tab active" data-tab="pending">Pending</div>
-                <div class="tab" data-tab="completed">Completed</div>
+            <!-- Events Tab Navigation with Edit Button -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="pending">Pending</div>
+                    <div class="tab" data-tab="completed">Completed</div>
+                </div>
+                <button class="edit-button" aria-label="Edit event">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
             </div>
             
             <!-- Tab Content -->
@@ -163,10 +168,15 @@
                 </button>
             </div>
             
-            <!-- Tasks Tab Navigation -->
-            <div class="tabs">
-                <div class="tab active" data-tab="pendingTasks">Pending</div>
-                <div class="tab" data-tab="completedTasks">Completed</div>
+            <!-- Tasks Tab Navigation with Edit Button -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="pendingTasks">Pending</div>
+                    <div class="tab" data-tab="completedTasks">Completed</div>
+                </div>
+                <button class="edit-button" aria-label="Edit task">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
             </div>
             
             <!-- Tab Content -->
@@ -209,7 +219,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Create Guest List</td>
+                                <td class="title-cell">
+                                    Create Guest List
+                                </td>
                                 <td>Compile initial guest list</td>
                                 <td>03/15/2025</td>
                                 <td>Completed</td>
