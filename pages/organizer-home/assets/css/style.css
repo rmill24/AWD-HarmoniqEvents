@@ -1,5 +1,27 @@
+/* =================================================================
+   TABLE OF CONTENTS
+   =================================================================
+   1. Variables & Global Settings
+   2. Base Layout & Structure
+   3. Navigation Components
+   4. Common UI Components
+   5. Dashboard Section
+   6. Events Section
+   7. Tasks Section
+   8. Guests Section
+   9. Tables & Data Display
+   10. Status & Badges
+   11. Buttons & Actions
+   12. Responsive Design
+   ================================================================= */
+
+/* ======================================
+   1. VARIABLES & GLOBAL SETTINGS
+   ====================================== */
+/* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
 
+/* Global Reset */
 * {
     margin: 0;
     padding: 0;
@@ -7,42 +29,95 @@
     font-family: 'Inter', sans-serif;
 }
 
+/* Theme Variables */
 :root {
-    --bg-color: #F1F1F1;
+    /* Colors */
+    --bg-color: #FFFFFF;
     --text-color: #333333;
     --primary-color: #51938B;
     --secondary-color: #716f6f;
     --accent-color: #B3D5D0;
-    --border-color: #51938B;
+    --border-color: #EEEEEE;
+    
+    /* Component Colors */
     --top-color: #FFFFFF;
-    --font-light-color: #FFFFFF;
-    --font-dark-color: #313131;
-    --font-dark-color-2: #151515;
     --sidebar-color: #FFFFFF;
     --task-bg: #FFFFFF;
+    --table-header-bg: #f9f9f9;
+    --table-border: #eee;
+    
+    /* Font Colors */
+    --font-light-color: #FFFFFF;
+    --font-dark-color: #000000;
+    --font-dark-color-2: #151515;
+    --table-header-color: #666666;
+    
+    /* Status Colors */
+    --status-pending: #e4c200;
+    --status-accepted: #46c955;
+    --status-declined: #e53f36;
+    
+    /* Misc */
+    --border-color2: #000;
 }
 
+/* Dark Theme Variables */
 [data-theme="dark"] {
     --bg-color: #181818;
     --text-color: #FFFFFF;
-    --primary-color: #51938B;
-    --secondary-color: #716f6f;
-    --accent-color: #B3D5D0;
     --border-color: #51938B;
     --top-color: #232323;
-    --font-light-color: #FFFFFF;
-    --font-dark-color: #DDDDDD;
-    --font-dark-color-2: #FFFFFF;
     --sidebar-color: #232323;
     --task-bg: #252525;
+    --table-header-bg: #2a2a2a;
+    --table-border: #333;
+    --font-dark-color: #DDDDDD;
+    --font-dark-color-2: #FFFFFF;
 }
 
+/* Global styles */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* ======================================
+   2. BASE LAYOUT & STRUCTURE
+   ====================================== */
+main {
+    padding-top: 65px;
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.content-section {
+    position: relative;
+    padding: 30px;
+    background-color: var(--bg-color);
+    min-height: calc(100vh - 65px);
+    width: calc(100% - 400px);
+    max-width: 1200px;
+    display: none;
+    margin: 0 auto;
+}
+
+.content-section.active {
+    display: block;
+}
+
+/* Section Header */
+.section-header {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: var(--font-dark-color);
+}
+
+/* ======================================
+   3. NAVIGATION COMPONENTS
+   ====================================== */
 /* Top Navigation Bar */
 .top-navbar {
     display: flex;
@@ -52,16 +127,97 @@ body {
     background-color: var(--top-color);
     position: fixed;
     top: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
     z-index: 100;
 }
 
 .top-navbar h2 {
     color: var(--font-dark-color);
     font-weight: 450;
+    margin-left: 50px;
 }
 
-/* Hamburger Button */
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: var(--sidebar-color);
+    border-right: 1px solid #e0e0e0;
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+.sidebar img {
+    height: 100px;
+    width: 100px;
+    margin: 0 auto 30px;
+    display: block;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar nav li a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.sidebar nav li a i {
+    margin-right: 15px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar nav li a:hover {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
+.sidebar nav li a.active {
+    color: var(--primary-color);
+    opacity: 1;
+    font-weight: 500;
+}
+
+.sidebar .sign-out {
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+    text-align: left;
+    padding-left: 25px;
+}
+
+.sidebar .sign-out i {
+    font-size: 20px;
+    color: var(--primary-color);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar .sign-out i:hover {
+    opacity: 1;
+}
+
+/* Mobile Menu */
 .menu-toggle {
     background: none;
     border: none;
@@ -84,7 +240,6 @@ body {
     margin-bottom: 5px;
 }
 
-/* Hamburger animation */
 .menu-toggle.active span:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
 }
@@ -97,76 +252,6 @@ body {
     transform: translateY(-8px) rotate(-45deg);
 }
 
-/* Sidebar Menu */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100vh;
-    background-color: var(--sidebar-color);
-    z-index: 1000;
-    transition: left 0.3s ease;
-}
-
-.sidebar.active {
-    left: 0;
-}
-
-.sidebar img {
-    width: 100px;
-    margin-left: 22%;
-    
-}
-
-.sidebar h2 {
-    text-align: center;
-    color: var(--font-dark-color);
-    font-weight: 400;
-    margin-bottom: 30px;
-    font-size: 20px;
-}
-
-.sidebar nav ul {
-    list-style: none;
-}
-
-.sidebar nav li {
-    margin-bottom: 5px;
-}
-
-.sidebar nav li a {
-    color: var(--font-dark-color);
-    text-decoration: none;
-    display: block;
-    padding: 12px 25px;
-    font-size: 18px;
-    transition: background-color 0.2s;
-}
-
-.sidebar nav li a i {
-    margin-right: 30px;
-}
-
-.sidebar nav li a:hover {
-    color: var(--primary-color);
-}
-
-.sidebar .sign-out {
-    position: absolute;
-    bottom: 30px;
-    width: 100%;
-    text-align: left;
-    padding-left: 20px;
-}
-
-.sidebar .sign-out i {
-    font-size: 24px;
-    color: var(--primary-color);
-    cursor: pointer;
-}
-
-/* Overlay */
 .overlay {
     position: fixed;
     top: 0;
@@ -182,6 +267,9 @@ body {
     display: block;
 }
 
+/* ======================================
+   4. COMMON UI COMPONENTS
+   ====================================== */
 /* Theme Switch */
 .theme-switch {
     display: flex;
@@ -220,11 +308,81 @@ body {
     transform: translateX(30px);
 }
 
-/* Main Content */
-main {
-    padding-top: 65px; /* Account for fixed header */
+/* Dropdowns */
+.event-dropdown,
+.event-name-dropdown {
+    background-color: var(--primary-color);
+    border-radius: 30px;
+    padding: 12px 24px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
 }
 
+.event-dropdown h1,
+.event-name-dropdown h3 {
+    color: var(--font-light-color);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.event-dropdown i,
+.event-name-dropdown i {
+    color: var(--font-light-color);
+    font-size: 16px;
+}
+
+.event-dropdown:hover,
+.event-name-dropdown:hover {
+    opacity: 0.9;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 40px;
+    margin: 30px 0;
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab {
+    padding: 12px 0;
+    font-size: 15px;
+    color: var(--text-color);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.tab:hover {
+    opacity: 1;
+}
+
+.tab.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 500;
+    opacity: 1;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ======================================
+   5. DASHBOARD SECTION
+   ====================================== */
 .welcome {
     text-align: center;
     padding: 20px;
@@ -244,36 +402,61 @@ main {
     color: var(--text-color);
 }
 
+/* Event Select Dropdown */
 select {
-    margin-left: 5%;
-    margin-bottom: 3%;
-    padding: 20px;
-    border-radius: 25px;
-    border: 1px solid var(--border-color);
-    width: 90%;
-    font-size: 1.2em;
+    width: 800px;
+    height: 50px;
+    padding: 12px 24px;
     background-color: var(--primary-color);
-    color: white;
+    border: none;
+    border-radius: 30px;
+    color: var(--font-light-color);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 16px;
+    transition: all 0.2s ease;
+}
+
+select:hover {
+    opacity: 0.9;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 12px;
 }
 
 .set {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 100px;
     padding: 0 20px;
+    width: 100%;
+    align-items: center;
 }
 
+/* Tasks Overview */
 .tasks {
     background-color: var(--task-bg);
-    width: 100%;
+    width: 500px;
     border-radius: 30px;
     padding: 20px;
     height: 400px;
-}
-
-hr {
-    border: 1px solid var(--border-color);
-    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    margin: 0 auto;
 }
 
 .tasks h1 {
@@ -283,6 +466,11 @@ hr {
     color: var(--text-color);
 }
 
+hr {
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
 .task-attribute {
     display: flex;
     justify-content: space-between;
@@ -290,29 +478,342 @@ hr {
     color: var(--text-color);
 }
 
-/* Responsive styles */
-@media (min-width: 768px) {
+/* ======================================
+   6. EVENTS SECTION
+   ====================================== */
+.event {
+    display: flex;
+    margin: 0 auto 30px;
+    background-color: var(--primary-color);
+    height: 70px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 50px;
+    align-items: center;
+    color: var(--font-light-color);
+    justify-content: space-between;
+}
+
+.event h1 {
+    font-weight: 400;
+    margin-left: 30px;
+    font-size: 24px;
+}
+
+.event i {
+    font-size: 24px;
+    margin-right: 30px;
+}
+
+/* ======================================
+   7. TABLES & DATA DISPLAY
+   ====================================== */
+.table-container {
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+/* Common Table Styles */
+.events-table,
+.tasks-table,
+.requests-table,
+.guest-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table Headers */
+.events-table th,
+.tasks-table th,
+.requests-table th,
+.guest-table th {
+    text-align: left;
+    padding: 15px 20px;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Table Cells */
+.events-table td,
+.tasks-table td,
+.requests-table td,
+.guest-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Remove bottom border from last row */
+.events-table tr:last-child td,
+.tasks-table tr:last-child td,
+.requests-table tr:last-child td,
+.guest-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ======================================
+   8. STATUS & BADGES
+   ====================================== */
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+    color: white;
+}
+
+.status-pending {
+    background-color: var(--status-pending);
+}
+
+.status-accepted {
+    background-color: var(--status-accepted);
+}
+
+.status-declined {
+    background-color: var(--status-declined);
+}
+
+/* ======================================
+   9. BUTTONS & ACTIONS
+   ====================================== */
+/* Action Bar */
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0;
+    height: 44px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Primary Button */
+.btn-primary,
+.add-event-btn,
+.add-task-btn,
+.add-guest-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0 24px;
+    height: 44px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover,
+.add-event-btn:hover,
+.add-task-btn:hover,
+.add-guest-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Secondary Button */
+.btn-secondary,
+.delete-guests-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid #ddd;
+    padding: 0 24px;
+    height: 44px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover,
+.delete-guests-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Add Vendor Button */
+.add-vendor {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-vendor:hover {
+    opacity: 0.9;
+}
+
+.add-vendor i {
+    font-size: 12px;
+}
+
+/* Edit Button */
+.edit-button {
+    border: none;
+    background: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    padding: 4px;
+}
+
+.edit-button:hover {
+    opacity: 1;
+}
+/* ======================================
+   10. RESPONSIVE DESIGN
+   ====================================== */
+/* Mobile Optimization */
+@media screen and (max-width: 480px) {
+    /* Layout */
+    .sidebar {
+        left: -100%;
+        width: 100%;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .content-section {
+        width: 100%;
+    }
+    
+    main, .top-navbar {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    /* Tables */
+    .table-container {
+        overflow-x: auto;
+        border-radius: 0;
+    }
+    
+    /* Tasks */
     .set {
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: column;
     }
     
     .tasks {
-        width: 45%;
+        width: 100%;
+        margin-bottom: 20px;
+        height: auto;
+        min-height: 300px;
+    }
+    
+    /* Typography */
+    .welcome h1 {
+        font-size: 28px;
+    }
+    
+    .welcome h3 {
+        font-size: 16px;
+    }
+    
+    /* Navigation */
+    .menu-toggle {
+        display: block;
+    }
+    
+    .top-navbar {
+        padding: 10px;
+    }
+    
+    .top-navbar h2 {
+        font-size: 18px;
+    }
+    
+    /* Buttons */
+    .btn-primary,
+    .btn-secondary,
+    .add-event-btn,
+    .add-task-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .add-vendor {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .add-event-btn i,
+    .add-task-btn i {
+        font-size: 12px;
+    }
+    
+    .add-vendor i {
+        font-size: 10px;
+    }
+
+    /* Action Bar */
+    .actions-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .event {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+    .sidebar {
+        left: 0;
+    }
+    
+    main, .top-navbar {
+        margin-left: 180px;
+        width: calc(100% - 180px);
     }
     
     .menu-toggle {
         display: none;
     }
     
-    .sidebar {
-        left: 0;
-        width: 200px;
+    .set {
+        flex-direction: row;
+        justify-content: center;
+        gap: 100px;
     }
     
-    main, .top-navbar {
-        margin-left: 200px;
-        width: calc(100% - 200px);
+    .tasks {
+        width: 500px;
+        margin: 0;
     }
-    
 }

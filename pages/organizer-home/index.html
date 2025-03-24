@@ -16,7 +16,7 @@
               <span></span>
               <span></span>
             </button>
-            <h2>Dashboard</h2>
+            <h2 id="sectionTitle">Dashboard</h2>
             <!-- Theme toggle in header -->
             <div class="desktop-theme-switch theme-switch">
                 <span class="theme-icon" id="themeIcon">☾</span>
@@ -27,28 +27,28 @@
         </nav>
         
         <!-- Sidebar -->
+        <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <img src="./assets/img/logo.png" alt="Logo">
             <nav>
-              <ul>
-                <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fa-regular fa-calendar"></i> Events</a></li>
-                <li><a href="#"><i class="fa-solid fa-book"></i> Tasks</a></li>
-                <li><a href="#"><i class="fa-regular fa-user"></i> Guests</a></li>
-                <li><a href="#"><i class="fa-regular fa-clock"></i> Requests</a></li>
-              </ul>
+                <ul>
+                    <li><a href="#dashboard" class="sidebar-tab" data-section="dashboard"><i class="fa-solid fa-chart-simple"></i>Dashboard</a></li>
+                    <li><a href="#events" class="sidebar-tab" data-section="events"><i class="fa-regular fa-calendar"></i>Events</a></li>
+                    <li><a href="#tasks" class="sidebar-tab active" data-section="tasks"><i class="fa-solid fa-book"></i>Tasks</a></li>
+                    <li><a href="#guests" class="sidebar-tab" data-section="guests"><i class="fa-regular fa-user"></i>Guests</a></li>
+                    <li><a href="#requests" class="sidebar-tab" data-section="requests"><i class="fa-regular fa-clock"></i>Requests</a></li>
+                </ul>
             </nav>
+
+            <!-- Sign Out Button -->
             <div class="sign-out">
-              <i class="fa-solid fa-right-from-bracket"></i>
+                <i class="fa-solid fa-right-from-bracket"></i>
             </div>
         </aside>
-        
-        <!-- Overlay for mobile -->
-        <div class="overlay" id="overlay"></div>
     </header>
 
     <main>
-        <section id="dashboard">
+        <section id="dashboard" class="content-section active">
             <div class="welcome">
                 <br>
                 <h3>Welcome Back</h3>
@@ -87,6 +87,255 @@
                         <p>Accepted</span></p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- EVENTS SECTION -->
+        <section id="events" class="content-section">
+            <div class="actions-bar">
+                <button class="add-event-btn">
+                    <div class="icon"><i class="fa-solid fa-circle-plus"></i></div>
+                    Add Event
+                </button>
+            </div>
+            
+            <!-- Events Tab Navigation -->
+            <div class="tabs">
+                <div class="tab active" data-tab="pending">Pending</div>
+                <div class="tab" data-tab="completed">Completed</div>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="tab-content active" id="pending">
+                <div class="table-container">
+                    <table class="events-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date and Time</th>
+                                <th>Venue</th>
+                                <th>No. of Guests</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Set event venue</td>
+                                <td></td>
+                                <td>03/24/2025</td>
+                                <td>FEU Tech</td>
+                                <td>437</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="completed">
+                <div class="table-container">
+                    <table class="events-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date and Time</th>
+                                <th>Venue</th>
+                                <th>No. of Guests</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Set event venue</td>
+                                <td></td>
+                                <td>03/24/2025</td>
+                                <td>FEU Main</td>
+                                <td>123</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TASKS SECTION -->
+        <section id="tasks" class="content-section">
+            <div class="actions-bar">
+                <button class="event-dropdown">
+                    <h1>Event Name</h1>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                
+                <button class="add-task-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Add Task
+                </button>
+            </div>
+            
+            <!-- Tasks Tab Navigation -->
+            <div class="tabs">
+                <div class="tab active" data-tab="pendingTasks">Pending</div>
+                <div class="tab" data-tab="completedTasks">Completed</div>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="tab-content active" id="pendingTasks">
+                <div class="table-container">
+                    <table class="tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Assigned Vendor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Set Event Venue</td>
+                                <td></td>
+                                <td>03/24/2025</td>
+                                <td>Pending</td>
+                                <td><button class="add-vendor"><i class="fa-solid fa-plus"></i> Add Vendor</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="completedTasks">
+                <div class="table-container">
+                    <table class="tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Assigned Vendor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Create Guest List</td>
+                                <td>Compile initial guest list</td>
+                                <td>03/15/2025</td>
+                                <td>Completed</td>
+                                <td>John Doe</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GUESTS SECTION -->
+        <section id="guests" class="content-section">
+            <div class="actions-bar">
+                <button class="event-dropdown">
+                    <h1>Event Name</h1>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-primary">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Guest
+                    </button>
+                    <button class="btn-secondary">Delete All Guests</button>
+                </div>
+            </div>
+            
+            <!-- Guest Data Table -->
+            <div class="table-container">
+                <table class="guest-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Guest Name</td>
+                            <td>guestemail@email.com</td>
+                            <td>12345678910</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <button class="edit-button">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Guest Name</td>
+                            <td>guestemail@email.com</td>
+                            <td>12345678910</td>
+                            <td><span class="status-badge status-accepted">Accepted</span></td>
+                            <td>
+                                <button class="edit-button">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Guest Name</td>
+                            <td>guestemail@email.com</td>
+                            <td>12345678910</td>
+                            <td><span class="status-badge status-declined">Declined</span></td>
+                            <td>
+                                <button class="edit-button">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- REQUESTS SECTION -->
+        <section id="requests" class="content-section">
+            <div class="event-name-dropdown">
+                <h3>Event Name</h3>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            
+            <div class="table-container">
+                <table class="requests-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Service Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vendor Name</td>
+                            <td>Vendor Name</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Name</td>
+                            <td>Vendor Name</td>
+                            <td><span class="status-badge status-accepted">Accepted</span></td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Name</td>
+                            <td>Vendor Name</td>
+                            <td><span class="status-badge status-declined">Declined</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>

@@ -119,3 +119,212 @@ document.addEventListener('DOMContentLoaded', function() {
     initThemeToggle();
     initMobileMenu();
 });
+
+// ==============================================
+// SIDEBAR NAVIGATION
+// ==============================================
+
+// Function to start the sidebar navigation
+function startSidebarNavigation() {
+    // Get all the sidebar links
+    var sidebarLinks = document.querySelectorAll('.sidebar-tab');
+    
+    // Check if any links found
+    if (!sidebarLinks || sidebarLinks.length === 0) {
+        console.log('No sidebar links found');
+        return;
+    }
+    
+    // Show the first active section
+    showFirstActiveSection();
+    
+    // Add click events to all sidebar links
+    for (var i = 0; i < sidebarLinks.length; i++) {
+        sidebarLinks[i].addEventListener('click', function(e) {
+            e.preventDefault();
+            handleSidebarClick(this, sidebarLinks);
+        });
+    }
+}
+
+// Function to show the first active section
+function showFirstActiveSection() {
+    // Find the first active link
+    var activeLink = document.querySelector('.sidebar-tab.active');
+    
+    // If we found an active link, show its section
+    if (activeLink) {
+        var sectionId = activeLink.getAttribute('data-section');
+        showSection(sectionId);
+    }
+}
+
+// Function to handle sidebar link clicks
+function handleSidebarClick(clickedLink, allLinks) {
+    // Remove active class from all links
+    for (var i = 0; i < allLinks.length; i++) {
+        allLinks[i].classList.remove('active');
+    }
+    
+    // Add active class to clicked link
+    clickedLink.classList.add('active');
+    
+    // Get the section to show
+    var sectionId = clickedLink.getAttribute('data-section');
+    
+    // Show the section
+    showSection(sectionId);
+    
+    // Update the header title
+    var sectionTitle = document.getElementById('sectionTitle');
+    if (sectionTitle) {
+        sectionTitle.textContent = clickedLink.textContent.trim();
+    }
+    
+    // Handle special sections (events and tasks)
+    if (sectionId === 'events' || sectionId === 'tasks') {
+        resetTabs(sectionId);
+    }
+}
+
+// Function to show a section and hide others
+function showSection(sectionId) {
+    // Get all content sections
+    var sections = document.querySelectorAll('.content-section');
+    
+    // Hide all sections
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('active');
+    }
+    
+    // Show the selected section
+    var selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.classList.add('active');
+    }
+}
+
+// Function to reset tabs in events and tasks sections
+function resetTabs(sectionId) {
+    // Get the section
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    // Get all tabs in the section
+    var tabs = section.querySelectorAll('.tab');
+    
+    // Remove active class from all tabs
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    
+    // Make the first tab active
+    if (tabs[0]) {
+        tabs[0].classList.add('active');
+    }
+    
+    // Get all tab contents
+    var contents = section.querySelectorAll('.tab-content');
+    
+    // Hide all tab contents
+    for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.remove('active');
+    }
+    
+    // Show the default content
+    var defaultContentId = sectionId === 'events' ? 'pending' : 'pendingTasks';
+    var defaultContent = document.getElementById(defaultContentId);
+    if (defaultContent) {
+        defaultContent.classList.add('active');
+    }
+}
+
+// ==============================================
+// EVENT TABS FUNCTIONALITY
+// ==============================================
+
+// Function to start the event tabs
+function startEventTabs() {
+    // Get all tab buttons
+    var tabButtons = document.querySelectorAll('.tab');
+    
+    // Check if we found any tabs
+    if (!tabButtons || tabButtons.length === 0) {
+        console.log('No event tabs found');
+        return;
+    }
+    
+    // Add click events to all tabs
+    for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].addEventListener('click', function() {
+            handleTabClick(this, tabButtons);
+        });
+    }
+}
+
+// Function to handle tab clicks
+function handleTabClick(clickedTab, allTabs) {
+    // Remove active class from all tabs
+    for (var i = 0; i < allTabs.length; i++) {
+        allTabs[i].classList.remove('active');
+    }
+    
+    // Add active class to clicked tab
+    clickedTab.classList.add('active');
+    
+    // Get the content to show
+    var tabId = clickedTab.getAttribute('data-tab');
+    
+    // Hide all tab contents
+    var contents = document.querySelectorAll('.tab-content');
+    for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.remove('active');
+    }
+    
+    // Show the selected content
+    var selectedContent = document.getElementById(tabId);
+    if (selectedContent) {
+        selectedContent.classList.add('active');
+    }
+}
+
+// ==============================================
+// START THE APPLICATION
+// ==============================================
+
+// Function to set up the initial state
+function setupInitialState() {
+    // Find the active sidebar link
+    var activeLink = document.querySelector('.sidebar-tab.active');
+    
+    // If we found an active link, show its section
+    if (activeLink) {
+        var sectionId = activeLink.getAttribute('data-section');
+        var section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
+        }
+        
+        // Update the header title
+        var sectionTitle = document.getElementById('sectionTitle');
+        if (sectionTitle) {
+            sectionTitle.textContent = activeLink.textContent.trim();
+        }
+    }
+}
+
+// Start everything when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Starting the application...');
+    
+    // Start the sidebar navigation
+    startSidebarNavigation();
+    
+    // Start the event tabs
+    startEventTabs();
+    
+    // Set up the initial state
+    setupInitialState();
+    
+    console.log('Application started successfully');
+});
