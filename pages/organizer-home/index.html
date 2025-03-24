@@ -33,11 +33,11 @@
             <img src="./assets/img/logo.png" alt="Logo">
             <nav>
                 <ul>
-                    <li><a href="#dashboard" class="sidebar-tab" data-section="dashboard"><i class="fa-solid fa-chart-simple"></i>Dashboard</a></li>
+                    <li><a href="#dashboard" class="sidebar-tab active" data-section="dashboard"><i class="fa-solid fa-house"></i>Dashboard</a></li>
                     <li><a href="#events" class="sidebar-tab" data-section="events"><i class="fa-regular fa-calendar"></i>Events</a></li>
-                    <li><a href="#tasks" class="sidebar-tab active" data-section="tasks"><i class="fa-solid fa-book"></i>Tasks</a></li>
+                    <li><a href="#tasks" class="sidebar-tab" data-section="tasks"><i class="fa-regular fa-circle-check"></i>Tasks</a></li>
                     <li><a href="#guests" class="sidebar-tab" data-section="guests"><i class="fa-regular fa-user"></i>Guests</a></li>
-                    <li><a href="#requests" class="sidebar-tab" data-section="requests"><i class="fa-regular fa-clock"></i>Requests</a></li>
+                    <li><a href="#requests" class="sidebar-tab" data-section="requests"><i class="fa-regular fa-paper-plane"></i>Requests</a></li>
                 </ul>
             </nav>
 
@@ -63,21 +63,19 @@
                     <div class="tasks">
                         <h1>Tasks</h1>
                         <hr>
-                        <div class="task-attribute">
+                        <div class="task-attribute" data-status="pending">
                             <p>Task Name</p>
-                            <p>Deadline</p>
+                            <p>Pending</p>
                         </div>
-                        <div class="task-attribute-list"></div>
                     </div>
             
                     <div class="requests">
                         <h1>Requests</h1>
                         <hr>
                         <div class="task-attribute">
-                            <p>Vendor Name</p>
+                            <p>Request Name</p>
                             <p>Status</p>
                         </div>
-                        <div class="task-attribute-list"></div>
                     </div>
                 </div>
         </section>
@@ -85,8 +83,12 @@
         <!-- EVENTS SECTION -->
         <section id="events" class="content-section">
             <div class="actions-bar">
+                <div class="event-dropdown">
+                    <h1>Select Event</h1>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
                 <button class="add-event-btn">
-                    <div class="icon"><i class="fa-solid fa-circle-plus"></i></div>
+                    <i class="fa-solid fa-plus"></i>
                     Add Event
                 </button>
             </div>
@@ -157,17 +159,133 @@
         <!-- TASKS SECTION -->
         <section id="tasks" class="content-section">
             <div class="actions-bar">
-                <button class="event-dropdown">
-                    <h1>Event Name</h1>
+                <div class="event-dropdown">
+                    <h1>Select Event</h1>
                     <i class="fa-solid fa-chevron-down"></i>
-                </button>
+                </div>
                 
                 <button class="add-task-btn">
                     <i class="fa-solid fa-plus"></i>
                     Add Task
                 </button>
             </div>
-            
+            <!-- Task Modal -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Task</h2>
+            </div>
+            <form id="addTaskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Title:</label>
+                    <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Description:</label>
+                    <textarea id="taskDescription" name="taskDescription" placeholder="Short description..." maxlength="200"></textarea>
+                    <div class="character-count">
+                        <span id="currentCount">0</span>
+                        <span>/200</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group date-time">
+                        <label>Date and Time:</label>
+                        <div class="date-time-inputs">
+                            <input type="date" id="taskDate" name="taskDate" required>
+                            <input type="time" id="taskTime" name="taskTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskType">Task:</label>
+                        <button type="button" class="task-select-btn">Select Task</button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                    <button type="submit" class="btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Edit Task Modal -->
+    <div class="modal" id="editTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+            </div>
+            <form id="editTaskForm">
+                <div class="form-group">
+                    <label for="editTaskTitle">Title:</label>
+                    <input type="text" id="editTaskTitle" name="editTaskTitle" placeholder="Task Name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskDescription">Description:</label>
+                    <textarea id="editTaskDescription" name="editTaskDescription" placeholder="Short description..." maxlength="200"></textarea>
+                    <div class="character-count">
+                        <span id="editCurrentCount">0</span>
+                        <span>/200</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group date-time">
+                        <label>Date and Time:</label>
+                        <div class="date-time-inputs">
+                            <input type="date" id="editTaskDate" name="editTaskDate" required>
+                            <input type="time" id="editTaskTime" name="editTaskTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskType">Task:</label>
+                        <button type="button" class="task-select-btn">Select Task</button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Request a Vendor Modal -->
+    <div class="modal" id="requestVendorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Request a Vendor</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Category:</label>
+                    <div class="select-wrapper">
+                        <select>
+                            <option disabled selected>Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Available Vendors:</label>
+                    <div class="select-wrapper">
+                        <select>
+                            <option disabled selected>Select Vendor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary">Cancel</button>
+                    <button type="button" class="btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
             <!-- Tasks Tab Navigation with Edit Button -->
             <div class="tabs-container">
                 <div class="tabs">
@@ -236,18 +354,18 @@
         <!-- GUESTS SECTION -->
         <section id="guests" class="content-section">
             <div class="actions-bar">
-                <button class="event-dropdown">
-                    <h1>Event Name</h1>
+                <div class="event-dropdown">
+                    <h1>Select Event</h1>
                     <i class="fa-solid fa-chevron-down"></i>
-                </button>
+                </div>
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button class="btn-primary">
+                    <button class="delete-guests-btn">Delete</button>
+                    <button class="add-guest-btn">
                         <i class="fa-solid fa-plus"></i>
                         Add Guest
                     </button>
-                    <button class="btn-secondary">Delete All Guests</button>
                 </div>
             </div>
             
@@ -309,7 +427,7 @@
         <!-- REQUESTS SECTION -->
         <section id="requests" class="content-section">
             <div class="event-name-dropdown">
-                <h3>Event Name</h3>
+                <h3>Select Event</h3>
                 <i class="fa-solid fa-chevron-down"></i>
             </div>
             
@@ -343,6 +461,8 @@
             </div>
         </section>
     </main>
+
+    
 
     <script src="./assets/js/scripts.js"></script>
 </body>
