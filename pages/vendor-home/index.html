@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMQ | Vendor</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="./assets/img/logo-white.png" type="image/png">
+</head>
+<body>
+    <header>
+        <nav class="top-navbar">
+            <div class="logo">
+                <img src="./assets/img/logo.png" alt="HMQ Logo">
+            </div>
+            <h2>Dashboard</h2>
+            <div class="user-controls">
+                <div class="theme-switch">
+                    <span class="theme-icon" id="themeIcon">☾</span>
+                    <div class="switch" id="themeToggle">
+                        <div class="switch-circle"></div>
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Miles+Garcia&background=51938B&color=fff" alt="Profile" class="profile-img">
+                    <div class="user-info">
+                        <h3>Miles Garcia</h3>
+                        <p>Organizer</p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <!-- Vendor Info Card -->
+                <section class="vendor-card">
+                    <div class="vendor-info">
+                        <h3>Name: Eumi Biag</h3>
+                        <h3>Service: Photography</h3>
+                    </div>
+                    <div class="sign-out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </div>
+                </section>
+
+                <!-- Requests Section -->
+                <section class="requests-section">
+                    <h2>Requests From Organizers</h2>
+                    <div class="requests-list">
+                        <!-- Request Item 1 -->
+                        <div class="request-item">
+                            <div class="request-info">
+                                <img src="https://ui-avatars.com/api/?name=John+Doe&background=51938B&color=fff" alt="Organizer" class="organizer-img">
+                                <span class="request-title">Organizer Request 1</span>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-accept">Accept</button>
+                                <button class="btn-reject">Reject</button>
+                            </div>
+                        </div>
+
+                        <!-- Request Item 2 -->
+                        <div class="request-item">
+                            <div class="request-info">
+                                <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=51938B&color=fff" alt="Organizer" class="organizer-img">
+                                <span class="request-title">Organizer Request 2</span>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-accept">Accept</button>
+                                <button class="btn-reject">Reject</button>
+                            </div>
+                        </div>
+
+                        <!-- Request Item 3 -->
+                        <div class="request-item">
+                            <div class="request-info">
+                                <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=51938B&color=fff" alt="Organizer" class="organizer-img">
+                                <span class="request-title">Organizer Request 3</span>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-accept">Accept</button>
+                                <button class="btn-reject">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="./assets/js/scripts.js"></script>
+</body>
+</html>
