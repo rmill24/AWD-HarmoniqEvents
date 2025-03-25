@@ -595,6 +595,69 @@ document
 // TASKS MANAGEMENT
 // ==============================================
 
+// Fetch Events for Dropdown
+async function loadEventDropdown() {
+    try {
+        const response = await fetch(`${apiUrl}/api/events`);
+        const events = await response.json();
+        
+        const eventDropdown = document.querySelector(".event-dropdown-task");
+        eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+        
+        events.forEach(event => {
+            const option = document.createElement("option");
+            option.value = event._id;
+            option.textContent = event.title;
+            eventDropdown.appendChild(option);
+        });
+
+        eventDropdown.addEventListener("change", () => loadTasksForEvent(eventDropdown.value));
+    } catch (error) {
+        console.error("Error fetching events:", error);
+    }
+}
+
+// Fetch Tasks for Selected Event
+async function loadTasksForEvent(eventId) {
+    const tasksTableBody = document.getElementById("tasksTableBody");
+    const completedTasksTableBody = document.querySelector("#completedTasks tbody");
+    
+    if (eventId === "") {
+        tasksTableBody.innerHTML = "";
+        completedTasksTableBody.innerHTML = "";
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+        const tasks = await response.json();
+
+        tasksTableBody.innerHTML = "";
+        completedTasksTableBody.innerHTML = "";
+        
+        tasks.forEach(task => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${task.title}</td>
+                <td>${task.description}</td>
+                <td>${new Date(task.dueDate).toLocaleDateString()}</td>
+                <td>${task.status}</td>
+                <td>${task.assignedVendorId ? task.assignedVendorId : "N/A"}</td>
+            `;
+
+            if (task.status === "completed") {
+                completedTasksTableBody.appendChild(row);
+            } else {
+                tasksTableBody.appendChild(row);
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+    }
+}
+
+// Initialize Dropdown and Fetch Events
+loadEventDropdown();
 
 
 // ==============================================
