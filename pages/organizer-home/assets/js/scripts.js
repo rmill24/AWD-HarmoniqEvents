@@ -590,6 +590,13 @@ document
       console.error("Network error:", error);
     }
   });
+
+// ==============================================
+// TASKS MANAGEMENT
+// ==============================================
+
+
+
 // ==============================================
 // SIDEBAR NAVIGATION
 // ==============================================
@@ -835,18 +842,18 @@ modal.onclick = function (event) {
 };
 
 // Edit Task Modal
-var editButton = document.querySelector("#tasks .edit-button");
+// var editButton = document.querySelector("#tasks .edit-button");
 var editModal = document.getElementById("editTaskModal");
 var editCancelButton = editModal.querySelector(".cancel-modal");
 var editForm = document.getElementById("editTaskForm");
 var editDescription = document.getElementById("editTaskDescription");
 var editCounter = document.getElementById("editCurrentCount");
 
-// When you click the edit button
-editButton.onclick = function () {
-  editModal.classList.add("active");
-  document.body.style.overflow = "hidden";
-};
+// // When you click the edit button
+// editButton.onclick = function () {
+//   editModal.classList.add("active");
+//   document.body.style.overflow = "hidden";
+// };
 
 // When you click the cancel button
 editCancelButton.onclick = function () {
@@ -865,32 +872,44 @@ editModal.onclick = function (event) {
 };
 
 // Add Vendor Modal Functionality
-const addVendorButtons = document.querySelectorAll(".add-vendor");
-const requestVendorModal = document.getElementById("requestVendorModal");
-const cancelVendorButton = document.querySelector(
-  "#requestVendorModal .btn-secondary"
-);
+document.addEventListener("DOMContentLoaded", () => {
+  const requestVendorModal = document.getElementById("requestVendorModal");
 
-// Open modal when Add Vendor button is clicked
-addVendorButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    requestVendorModal.classList.add("active");
-    document.body.style.overflow = "hidden";
-  });
-});
-
-// Close modal when Cancel button is clicked
-cancelVendorButton.addEventListener("click", () => {
-  requestVendorModal.classList.remove("active");
-  document.body.style.overflow = "";
-});
-
-// Close modal when clicking outside
-requestVendorModal.addEventListener("click", (e) => {
-  if (e.target === requestVendorModal) {
-    requestVendorModal.classList.remove("active");
-    document.body.style.overflow = "";
+  if (!requestVendorModal) {
+    console.error("Modal with id 'requestVendorModal' not found in the DOM.");
+    return;
   }
+
+  // Open modal when Add Vendor button is clicked
+  document.addEventListener("click", (event) => {
+    const addVendorButton = event.target.closest(".add-vendor");
+    if (addVendorButton) {
+      console.log("Add Vendor button clicked.");
+      requestVendorModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  });
+
+  // Close modal when Cancel button is clicked
+  const cancelVendorButton = requestVendorModal.querySelector(".btn-secondary");
+  if (cancelVendorButton) {
+    cancelVendorButton.addEventListener("click", () => {
+      console.log("Cancel button clicked.");
+      requestVendorModal.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+  } else {
+    console.error("Cancel button not found inside the modal.");
+  }
+
+  // Close modal when clicking outside
+  requestVendorModal.addEventListener("click", (e) => {
+    if (e.target === requestVendorModal) {
+      console.log("Clicked outside modal content.");
+      requestVendorModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  });
 });
 
 // Add Guest Modal

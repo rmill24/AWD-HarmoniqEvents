@@ -224,11 +224,7 @@
         <!-- TASKS SECTION -->
         <section id="tasks" class="content-section">
             <div class="actions-bar">
-                <div class="event-dropdown">
-                    <h1>Select Event</h1>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-                
+                    <select class="event-dropdown-task"></select>
                 <button class="add-task-btn">
                     <i class="fa-solid fa-plus"></i>
                     Add Task
@@ -367,14 +363,7 @@
                                 <th>Assigned Vendor</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Set Event Venue</td>
-                                <td></td>
-                                <td>03/24/2025</td>
-                                <td>Pending</td>
-                                <td><button class="add-vendor"><i class="fa-solid fa-plus"></i> Add Vendor</button></td>
-                            </tr>
+                        <tbody id="pendingtaskbody">
                         </tbody>
                     </table>
                 </div>
@@ -393,16 +382,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="title-cell">
-                                    Create Guest List
-                                </td>
-                                <td>Compile initial guest list</td>
-                                <td>03/15/2025</td>
-                                <td>Completed</td>
-                                <td>John Doe</td>
-                            </tr>
-                        </tbody>
+                        </tbody id="completedtaskbody">
                     </table>
                 </div>
             </div>
