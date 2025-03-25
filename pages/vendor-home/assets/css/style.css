@@ -404,7 +404,7 @@ MODAL CSS
     opacity: 0.9;
 }
 
-#venue-details, #venue-details-content{
+#venue-modal, #venue-details, #venue-details-content{
     display: none;
 }
 
@@ -413,4 +413,18 @@ MODAL CSS
         width: 80%;
     }
     
+}
+
+#edit-venue-btn{
+    display: none;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    visibility: visible;
+    opacity: 1;
+    margin-top: 5%;
+    text-align: left;
+    font-size: 1em;
 }

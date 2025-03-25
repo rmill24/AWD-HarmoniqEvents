@@ -64,12 +64,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       const venueDetailsSection = document.getElementById("venue-details");
       const venueDetailsContent = document.getElementById("venue-details-content");
       const venueModal = document.getElementById("venue-modal");
+      const editVenueBtn = document.getElementById("edit-venue-btn");
 
       if (data.serviceType === "Venue Manager") {
           if (data.venueDetails && Object.keys(data.venueDetails).length > 2) {
               // ✅ Venue details exist, display them
               venueDetailsSection.style.display = "block";
               venueDetailsContent.style.display = "block";
+              editVenueBtn.style.display = "block";
               venueDetailsContent.innerHTML = `
                   <strong>Name:</strong> ${data.venueDetails.name}<br>
                   <strong>Location:</strong> ${data.venueDetails.location}<br>
@@ -109,38 +111,54 @@ window.addEventListener("click", (event) => {
 document.getElementById("venue-form").addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const venueDetails = {
-        name: document.getElementById("venue-name").value,
-        location: document.getElementById("venue-location").value,
-        capacity: document.getElementById("venue-capacity").value,
-        amenities: document.getElementById("venue-amenities").value.split(",").map(a => a.trim())
-    };
+    const vendorId = localStorage.getItem("vendorId");
 
-    try {
-        const response = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ venueDetails }) 
-        });
+if (!vendorId) {
+    console.error("❌ Vendor ID not found in localStorage!");
+    alert("Vendor ID not found. Please log in again.");
+    return;
+}
 
-        if (!response.ok) throw new Error("Failed to update venue");
+const venueDetails = {
+    name: document.getElementById("venue-name").value,
+    location: document.getElementById("venue-location").value,
+    capacity: document.getElementById("venue-capacity").value,
+    amenities: document.getElementById("venue-amenities").value.split(",").map(a => a.trim())
+};
 
-        // Fetch updated data to ensure latest venue details are displayed
-        const updatedResponse = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`);
-        const updatedData = await updatedResponse.json();
+try {
+    const response = await fetch(`${apiUrl}/api/vendors/${vendorId}/venue`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(venueDetails)
+    });
 
-        console.log("Updated Vendor Data:", updatedData);
+    if (!response.ok) throw new Error("Failed to update venue");
 
-        alert("Venue details saved successfully!");
-        localStorage.setItem("venueSetUp", "true");
+    // Fetch updated data to ensure latest venue details are displayed
+    const updatedResponse = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
+    const updatedData = await updatedResponse.json();
 
-        // Hide modal
-        document.getElementById("venue-modal").style.display = "none";
+    console.log("✅ Updated Vendor Data:", updatedData);
 
+    alert("Venue details updated successfully!");
+    localStorage.setItem("venueSetUp", "true");
 
-    } catch (error) {
-        console.error("Error saving venue details:", error);
-    }
+    // Hide modal
+    document.getElementById("venue-modal").style.display = "none";
+
+    // Update UI with new values
+    document.getElementById("venue-details-content").innerHTML = `
+        <strong>Name:</strong> ${updatedData.venueDetails.name}<br>
+        <strong>Location:</strong> ${updatedData.venueDetails.location}<br>
+        <strong>Capacity:</strong> ${updatedData.venueDetails.capacity}<br>
+        <strong>Amenities:</strong> ${updatedData.venueDetails.amenities.join(", ")}
+    `;
+
+} catch (error) {
+    console.error("❌ Error updating venue details:", error);
+}
+
 });
 
 
