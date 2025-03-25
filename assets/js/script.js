@@ -482,6 +482,13 @@ closeModal.addEventListener("click", () => {
   loginModal.style.display = "none";
 });
 
+// Close the modal when clicking outside of it
+window.addEventListener("click", (event) => {
+  if (event.target === loginModal) {
+    loginModal.style.display = "none";
+  }
+});
+
 document.getElementById("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
   
