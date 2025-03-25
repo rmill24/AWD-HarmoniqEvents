@@ -182,46 +182,49 @@ async function fetchEvents() {
 
 // Fetch Tasks and Requests for a Specific Event
 async function fetchEventDetails(eventId) {
-    const tasksContainer = document.querySelector(".tasks .task-attribute-list");
-    const requestsContainer = document.querySelector(".requests .task-attribute-list");
+  const tasksContainer = document.querySelector(".tasks .task-attribute-list");
+  const requestsContainer = document.querySelector(
+    ".requests .task-attribute-list"
+  );
 
-    // If the user selects "Select Event", clear the content
-    if (eventId === "") {
-        tasksContainer.innerHTML = "";
-        requestsContainer.innerHTML = "";
-        return; // Stop the function here
-    }
+  // If the user selects "Select Event", clear the content
+  if (eventId === "") {
+    tasksContainer.innerHTML = "";
+    requestsContainer.innerHTML = "";
+    return; // Stop the function here
+  }
 
-    try {
-        // Fetch Tasks
-        const tasksResponse = await fetch(`${apiUrl}/api/tasks/${eventId}`);
-        const tasks = await tasksResponse.json();
-        
-        tasksContainer.innerHTML = '';  // Clear previous tasks
+  try {
+    // Fetch Tasks
+    const tasksResponse = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+    const tasks = await tasksResponse.json();
 
-        tasks.forEach(task => {
-            const taskDiv = document.createElement("div");
-            taskDiv.classList.add("task-attribute");
-            taskDiv.innerHTML = `<p>${task.title}</p><p>${new Date(task.dueDate).toLocaleDateString()}</p>`;
-            tasksContainer.appendChild(taskDiv);
-        });
+    tasksContainer.innerHTML = ""; // Clear previous tasks
 
-        // Fetch Requests Related to the Event (With Vendor Names)
-        const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
-        const vendorRequests = await requestsResponse.json();
-        
-        requestsContainer.innerHTML = '';  // Clear previous requests
+    tasks.forEach((task) => {
+      const taskDiv = document.createElement("div");
+      taskDiv.classList.add("task-attribute");
+      taskDiv.innerHTML = `<p>${task.title}</p><p>${new Date(
+        task.dueDate
+      ).toLocaleDateString()}</p>`;
+      tasksContainer.appendChild(taskDiv);
+    });
 
-        vendorRequests.forEach(request => {
-            const requestDiv = document.createElement("div");
-            requestDiv.classList.add("task-attribute");
-            requestDiv.innerHTML = `<p>${request.vendorName}</p><p>${request.status}</p>`;
-            requestsContainer.appendChild(requestDiv);
-        });
+    // Fetch Requests Related to the Event (With Vendor Names)
+    const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
+    const vendorRequests = await requestsResponse.json();
 
-    } catch (error) {
-        console.error("Error fetching event details:", error);
-    }
+    requestsContainer.innerHTML = ""; // Clear previous requests
+
+    vendorRequests.forEach((request) => {
+      const requestDiv = document.createElement("div");
+      requestDiv.classList.add("task-attribute");
+      requestDiv.innerHTML = `<p>${request.vendorName}</p><p>${request.status}</p>`;
+      requestsContainer.appendChild(requestDiv);
+    });
+  } catch (error) {
+    console.error("Error fetching event details:", error);
+  }
 }
 
 // Initial Fetch
@@ -246,6 +249,351 @@ document.addEventListener("DOMContentLoaded", function () {
   initMobileMenu();
 });
 
+// ==============================================
+// EVENTS MANAGEMENT
+// ==============================================
+document.addEventListener("DOMContentLoaded", async () => {
+  const organizerId = localStorage.getItem("organizerId");
+
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+    );
+    const events = await response.json();
+
+    if (response.ok) {
+      populateEventTables(events);
+    } else {
+      console.error("Error fetching events:", events);
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+  }
+});
+
+// Populate event tables dynamically
+async function populateEventTables(events) {
+  const pendingTable = document.querySelector("#pending tbody");
+  const completedTable = document.querySelector("#completed tbody");
+
+  pendingTable.innerHTML = "";
+  completedTable.innerHTML = "";
+
+  const today = new Date().toISOString().split("T")[0]; // Get today's date
+
+  // Sort events from nearest to farthest date
+  events.sort((a, b) => {
+    const dateA = a.date ? new Date(a.date).getTime() : Infinity;
+    const dateB = b.date ? new Date(b.date).getTime() : Infinity;
+    return dateA - dateB; // Ascending order (nearest to farthest)
+  });
+
+  for (const event of events) {
+    const row = document.createElement("tr");
+
+    // Convert UTC date to local time properly
+    let eventDateTime = event.date ? new Date(event.date) : null;
+    let eventDate = eventDateTime
+      ? eventDateTime.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A";
+
+    let eventTime = eventDateTime
+      ? eventDateTime.toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true, // Show user's local time zone
+        })
+      : "N/A";
+
+    // If event date is past today and it's still pending, update its status
+    if (event.status === "pending" && eventDate < today) {
+      await updateEventStatus(event._id, "completed");
+      event.status = "completed";
+    }
+
+    row.innerHTML = `
+          <td>${event.title}</td>
+          <td>${event.description || "-"}</td>
+          <td>${eventDate} ${eventTime}</td>
+          <td>${event.venue || "-"}</td>
+          <td>${event.expectedGuests || "-"}</td>
+          <td>
+              ${
+                event.status === "pending"
+                  ? `<button class="edit-event-button" data-event-id="${event._id}">
+                      <i class="fa-solid fa-pen"></i>
+                  </button>`
+                  : ""
+              }
+              <button class="delete-event-btn" data-event-id="${event._id}">
+                  <i class="fa-solid fa-trash"></i>
+              </button>
+          </td>
+      `;
+
+    if (event.status === "pending") {
+      pendingTable.appendChild(row);
+    } else if (event.status === "completed") {
+      completedTable.appendChild(row);
+    }
+  }
+}
+
+// Function to update event status in the backend
+async function updateEventStatus(eventId, newStatus) {
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Failed to update event ${eventId} to ${newStatus}`);
+    }
+  } catch (error) {
+    console.error("Error updating event status:", error);
+  }
+}
+
+// Handle deleting events
+document.addEventListener("click", async (event) => {
+  const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
+
+  if (!deleteButton) return; // Exit if not clicking the delete button
+
+  const eventId = deleteButton.dataset.eventId;
+
+  if (!confirm("Are you sure you want to delete this event?")) return;
+
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      alert("Event deleted successfully!");
+      deleteButton.closest("tr").remove(); // Remove row without reloading
+    } else {
+      alert("Failed to delete event.");
+    }
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+});
+
+// Prevent editing completed events
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".edit-event-button")) {
+    if (event.target.closest(".edit-event-button").hasAttribute("disabled")) {
+      alert("Completed events cannot be edited.");
+      return;
+    }
+    const eventId = event.target.closest(".edit-event-button").dataset.eventId;
+    openEditModal(eventId);
+  }
+});
+
+//  Add Event Modal
+const addEventButton = document.querySelector(".add-event-btn");
+const addEventModal = document.getElementById("addEventModal");
+const eventCancelButton = addEventModal.querySelector(".cancel-modal");
+const eventForm = document.getElementById("addEventForm");
+const eventDescription = document.getElementById("eventDescription");
+const eventDescriptionCounter = document.getElementById(
+  "eventDescriptionCount"
+);
+
+// Open Add Event Modal
+addEventButton.addEventListener("click", () => {
+  addEventModal.classList.add("active");
+  document.body.style.overflow = "hidden";
+});
+
+// Close Add Event Modal
+eventCancelButton.addEventListener("click", closeAddEventModal);
+
+function closeAddEventModal() {
+  addEventModal.classList.remove("active");
+  document.body.style.overflow = "";
+  eventForm.reset();
+  eventDescriptionCounter.textContent = "0";
+}
+
+//  Handle Adding an Event
+document
+  .getElementById("addEventForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const organizerId = localStorage.getItem("organizerId");
+
+    if (!organizerId) {
+      alert("You must be logged in to add an event.");
+      return;
+    }
+
+    const dateValue = document.getElementById("eventDate").value;
+    const timeValue = document.getElementById("eventTime").value;
+
+    // Convert user input time to UTC before storing
+    const fullDateTime =
+      dateValue && timeValue
+        ? new Date(`${dateValue}T${timeValue}`).toISOString()
+        : null;
+
+    const eventData = {
+      organizerId: organizerId,
+      title: document.getElementById("eventTitle").value,
+      description: document.getElementById("eventDescription").value,
+      date: fullDateTime,
+      expectedGuests: document.getElementById("eventGuests").value,
+      status: "pending",
+    };
+
+    try {
+      const response = await fetch(
+        "https://event-management-api-racelle-millagracias-projects.vercel.app/api/events",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(eventData),
+        }
+      );
+
+      if (response.ok) {
+        alert("Event created successfully!");
+        location.reload();
+      } else {
+        alert("Error adding event.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  });
+
+//  Handle Edit Event Modal
+const editEventModal = document.getElementById("editEventModal");
+const editEventCancelButton = editEventModal.querySelector(".cancel-modal");
+const editEventForm = document.getElementById("editEventForm");
+
+// Open Edit Event Modal (Using Event Delegation)
+document.addEventListener("click", (event) => {
+  const editButton = event.target.closest(".edit-event-button");
+
+  if (editButton) {
+    if (editButton.hasAttribute("disabled")) {
+      alert("Completed events cannot be edited.");
+      return;
+    }
+
+    const eventId = editButton.dataset.eventId;
+    openEditModal(eventId);
+  }
+});
+
+// Close Edit Event Modal
+editEventCancelButton.addEventListener("click", closeEditEventModal);
+
+function closeEditEventModal() {
+  editEventModal.classList.remove("active");
+  document.body.style.overflow = "";
+  editEventForm.reset();
+}
+
+// Open Edit Modal and Populate Fields
+function openEditModal(eventId) {
+  fetch(
+    `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`
+  )
+    .then((response) => response.json())
+    .then((event) => {
+      if (!event) {
+        alert("Event not found.");
+        return;
+      }
+
+      const eventDateTime = event.date ? new Date(event.date) : null;
+
+      document.getElementById("editEventTitle").value = event.title;
+      document.getElementById("editEventDescription").value =
+        event.description || "";
+      document.getElementById("editEventDate").value = eventDateTime
+        ? eventDateTime.toISOString().split("T")[0] // Convert UTC to YYYY-MM-DD
+        : "";
+
+      document.getElementById("editEventTime").value = eventDateTime
+        ? eventDateTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }) // Show in local time
+        : "";
+
+      document.getElementById("editEventGuests").value =
+        event.expectedGuests || "";
+      document.getElementById("editEventForm").dataset.eventId = eventId;
+
+      document.getElementById("editEventModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    })
+    .catch((error) => console.error("Error fetching event details:", error));
+}
+
+// Handle Updating an Event
+document
+  .getElementById("editEventForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const eventId = e.target.dataset.eventId;
+
+    const dateValue = document.getElementById("editEventDate").value;
+    const timeValue = document.getElementById("editEventTime").value;
+
+    // Convert user input time to UTC before storing
+    const fullDateTime =
+      dateValue && timeValue
+        ? new Date(`${dateValue}T${timeValue}`).toISOString()
+        : null;
+
+    const updatedData = {
+      title: document.getElementById("editEventTitle").value,
+      description: document.getElementById("editEventDescription").value,
+      date: fullDateTime,
+      expectedGuests: document.getElementById("editEventGuests").value,
+    };
+
+    try {
+      const response = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (response.ok) {
+        alert("Event updated successfully!");
+        location.reload();
+      } else {
+        alert("Error updating event.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  });
 // ==============================================
 // SIDEBAR NAVIGATION
 // ==============================================
@@ -459,240 +807,177 @@ document.addEventListener("DOMContentLoaded", function () {
 // Modal Functionality
 // ==============================================
 
-const addButton = document.querySelector('.add-task-btn');
-const modal = document.getElementById('addTaskModal');
-const cancelButton = document.querySelector('#addTaskModal .cancel-modal');
-const form = document.getElementById('addTaskForm');
-const description = document.getElementById('taskDescription');
-const counter = document.getElementById('currentCount');
+const addButton = document.querySelector(".add-task-btn");
+const modal = document.getElementById("addTaskModal");
+const cancelButton = document.querySelector("#addTaskModal .cancel-modal");
+const form = document.getElementById("addTaskForm");
+const description = document.getElementById("taskDescription");
+const counter = document.getElementById("currentCount");
 
 // When you click the add button
-addButton.onclick = function() {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
+addButton.onclick = function () {
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+};
 
 // When you click the cancel button
-cancelButton.onclick = function() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    form.reset();
-    if (counter) counter.textContent = '0';
-}
+cancelButton.onclick = function () {
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
+  form.reset();
+  if (counter) counter.textContent = "0";
+};
 
 // When you click outside the modal
-modal.onclick = function(event) {
-    if (event.target == modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        form.reset();
-        if (counter) counter.textContent = '0';
-    }
-}
+modal.onclick = function (event) {
+  if (event.target == modal) {
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+    form.reset();
+    if (counter) counter.textContent = "0";
+  }
+};
 
 // Edit Task Modal
-var editButton = document.querySelector('#tasks .edit-button');
-var editModal = document.getElementById('editTaskModal');
-var editCancelButton = editModal.querySelector('.cancel-modal');
-var editForm = document.getElementById('editTaskForm');
-var editDescription = document.getElementById('editTaskDescription');
-var editCounter = document.getElementById('editCurrentCount');
+var editButton = document.querySelector("#tasks .edit-button");
+var editModal = document.getElementById("editTaskModal");
+var editCancelButton = editModal.querySelector(".cancel-modal");
+var editForm = document.getElementById("editTaskForm");
+var editDescription = document.getElementById("editTaskDescription");
+var editCounter = document.getElementById("editCurrentCount");
 
 // When you click the edit button
-editButton.onclick = function() {
-    editModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
+editButton.onclick = function () {
+  editModal.classList.add("active");
+  document.body.style.overflow = "hidden";
+};
 
 // When you click the cancel button
-editCancelButton.onclick = function() {
-    editModal.classList.remove('active');
-    document.body.style.overflow = '';
-    editForm.reset();
-}
+editCancelButton.onclick = function () {
+  editModal.classList.remove("active");
+  document.body.style.overflow = "";
+  editForm.reset();
+};
 
 // When you click outside the modal
-editModal.onclick = function(event) {
-    if (event.target == editModal) {
-        editModal.classList.remove('active');
-        document.body.style.overflow = '';
-        editForm.reset();
-    }
-}
+editModal.onclick = function (event) {
+  if (event.target == editModal) {
+    editModal.classList.remove("active");
+    document.body.style.overflow = "";
+    editForm.reset();
+  }
+};
 
 // Add Vendor Modal Functionality
-const addVendorButtons = document.querySelectorAll('.add-vendor');
-const requestVendorModal = document.getElementById('requestVendorModal');
-const cancelVendorButton = document.querySelector('#requestVendorModal .btn-secondary');
+const addVendorButtons = document.querySelectorAll(".add-vendor");
+const requestVendorModal = document.getElementById("requestVendorModal");
+const cancelVendorButton = document.querySelector(
+  "#requestVendorModal .btn-secondary"
+);
 
 // Open modal when Add Vendor button is clicked
-addVendorButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        requestVendorModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
+addVendorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    requestVendorModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  });
 });
 
 // Close modal when Cancel button is clicked
-cancelVendorButton.addEventListener('click', () => {
-    requestVendorModal.classList.remove('active');
-    document.body.style.overflow = '';
+cancelVendorButton.addEventListener("click", () => {
+  requestVendorModal.classList.remove("active");
+  document.body.style.overflow = "";
 });
 
 // Close modal when clicking outside
-requestVendorModal.addEventListener('click', (e) => {
-    if (e.target === requestVendorModal) {
-        requestVendorModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+requestVendorModal.addEventListener("click", (e) => {
+  if (e.target === requestVendorModal) {
+    requestVendorModal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
 });
 
-
-// Add Event Modal
-const addEventButton = document.querySelector('.add-event-btn');
-const addEventModal = document.getElementById('addEventModal');
-const eventCancelButton = addEventModal.querySelector('.cancel-modal');
-const eventForm = document.getElementById('addEventForm');
-const eventDescription = document.getElementById('eventDescription');
-const eventDescriptionCounter = document.getElementById('eventDescriptionCount');
-
-// When you click the add event button
-addEventButton.addEventListener('click', function() {
-    addEventModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-});
-
-// When you click the cancel button
-eventCancelButton.addEventListener('click', function() {
-    addEventModal.classList.remove('active');
-    document.body.style.overflow = '';
-    eventForm.reset();
-    eventDescriptionCounter.textContent = '0';
-});
-
-// When you click outside the modal
-addEventModal.addEventListener('click', function(event) {
-    if (event.target === addEventModal) {
-        addEventModal.classList.remove('active');
-        document.body.style.overflow = '';
-        eventForm.reset();
-        eventDescriptionCounter.textContent = '0';
-    }
-});
-
-// Edit Event Modal
-const editEventButton = document.querySelector('#events .edit-button');
-const editEventModal = document.getElementById('editEventModal');
-const editEventCancelButton = editEventModal.querySelector('.cancel-modal');
-const editEventForm = document.getElementById('editEventForm');
-const editEventDescription = document.getElementById('editEventDescription');
-const editEventDescriptionCounter = document.getElementById('editEventDescriptionCount');
-
-// When you click the edit button
-editEventButton.addEventListener('click', function() {
-    editEventModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-});
-
-// When you click the cancel button
-editEventCancelButton.addEventListener('click', function() {
-    editEventModal.classList.remove('active');
-    document.body.style.overflow = '';
-    editEventForm.reset();
-    editEventDescriptionCounter.textContent = '0';
-});
-
-// When you click outside the modal
-editEventModal.addEventListener('click', function(event) {
-    if (event.target === editEventModal) {
-        editEventModal.classList.remove('active');
-        document.body.style.overflow = '';
-        editEventForm.reset();
-        editEventDescriptionCounter.textContent = '0';
-    }
-});
- 
 // Add Guest Modal
-const addGuestButton = document.querySelector('.add-guest-btn');
-const addGuestModal = document.getElementById('addGuestModal');
-const guestCancelButton = addGuestModal.querySelector('.cancel-modal');
-const guestForm = document.getElementById('addGuestForm');
+const addGuestButton = document.querySelector(".add-guest-btn");
+const addGuestModal = document.getElementById("addGuestModal");
+const guestCancelButton = addGuestModal.querySelector(".cancel-modal");
+const guestForm = document.getElementById("addGuestForm");
 
 // When you click the add guest button
-addGuestButton.addEventListener('click', function() {
-    addGuestModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+addGuestButton.addEventListener("click", function () {
+  addGuestModal.classList.add("active");
+  document.body.style.overflow = "hidden";
 });
 
 // When you click the cancel button
-guestCancelButton.addEventListener('click', function() {
-    addGuestModal.classList.remove('active');
-    document.body.style.overflow = '';
-    guestForm.reset();
+guestCancelButton.addEventListener("click", function () {
+  addGuestModal.classList.remove("active");
+  document.body.style.overflow = "";
+  guestForm.reset();
 });
 
 // When you click outside the modal
-addGuestModal.addEventListener('click', function(event) {
-    if (event.target === addGuestModal) {
-        addGuestModal.classList.remove('active');
-        document.body.style.overflow = '';
-        guestForm.reset();
-    }
+addGuestModal.addEventListener("click", function (event) {
+  if (event.target === addGuestModal) {
+    addGuestModal.classList.remove("active");
+    document.body.style.overflow = "";
+    guestForm.reset();
+  }
 });
 
 // Edit Guest Modal
-const editGuestButtons = document.querySelectorAll('#guests .edit-button');
-const editGuestModal = document.getElementById('editGuestModal');
-const editGuestCancelButton = editGuestModal.querySelector('.cancel-modal');
-const editGuestForm = document.getElementById('editGuestForm');
+const editGuestButtons = document.querySelectorAll("#guests .edit-button");
+const editGuestModal = document.getElementById("editGuestModal");
+const editGuestCancelButton = editGuestModal.querySelector(".cancel-modal");
+const editGuestForm = document.getElementById("editGuestForm");
 
 // When you click any edit button in the guests table
-editGuestButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        editGuestModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
+editGuestButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    editGuestModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  });
 });
 
 // When you click the cancel button
-editGuestCancelButton.addEventListener('click', function() {
-    editGuestModal.classList.remove('active');
-    document.body.style.overflow = '';
-    editGuestForm.reset();
+editGuestCancelButton.addEventListener("click", function () {
+  editGuestModal.classList.remove("active");
+  document.body.style.overflow = "";
+  editGuestForm.reset();
 });
 
 // When you click outside the modal
-editGuestModal.addEventListener('click', function(event) {
-    if (event.target === editGuestModal) {
-        editGuestModal.classList.remove('active');
-        document.body.style.overflow = '';
-        editGuestForm.reset();
-    }
+editGuestModal.addEventListener("click", function (event) {
+  if (event.target === editGuestModal) {
+    editGuestModal.classList.remove("active");
+    document.body.style.overflow = "";
+    editGuestForm.reset();
+  }
 });
 
 // Delete Guests Modal
-const deleteGuestsButton = document.querySelector('.delete-guests-btn');
-const deleteGuestsModal = document.getElementById('deleteGuestsModal');
-const deleteGuestsCancelButton = deleteGuestsModal.querySelector('.cancel-modal');
-const confirmDeleteButton = deleteGuestsModal.querySelector('.confirm-delete');
+const deleteGuestsButton = document.querySelector(".delete-guests-btn");
+const deleteGuestsModal = document.getElementById("deleteGuestsModal");
+const deleteGuestsCancelButton =
+  deleteGuestsModal.querySelector(".cancel-modal");
+const confirmDeleteButton = deleteGuestsModal.querySelector(".confirm-delete");
 
 // When you click the delete button
-deleteGuestsButton.addEventListener('click', function() {
-    deleteGuestsModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+deleteGuestsButton.addEventListener("click", function () {
+  deleteGuestsModal.classList.add("active");
+  document.body.style.overflow = "hidden";
 });
 
 // When you click the cancel button
-deleteGuestsCancelButton.addEventListener('click', function() {
-    deleteGuestsModal.classList.remove('active');
-    document.body.style.overflow = '';
+deleteGuestsCancelButton.addEventListener("click", function () {
+  deleteGuestsModal.classList.remove("active");
+  document.body.style.overflow = "";
 });
 
 // When you click outside the modal
-deleteGuestsModal.addEventListener('click', function(event) {
-    if (event.target === deleteGuestsModal) {
-        deleteGuestsModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+deleteGuestsModal.addEventListener("click", function (event) {
+  if (event.target === deleteGuestsModal) {
+    deleteGuestsModal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
 });

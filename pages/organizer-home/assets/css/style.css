@@ -363,7 +363,7 @@ main {
 }
 
 /* Edit Button in Tabs Container */
-.tabs-container .edit-button {
+.tabs-container .edit-event-button, .delete-event-btn {
     background: none;
     border: none;
     color: var(--primary-color);
@@ -371,7 +371,7 @@ main {
     padding: 8px;
     border-radius: 6px;
     transition: all 0.2s ease;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
     visibility: visible;
@@ -379,16 +379,16 @@ main {
     margin-right: 10px;
 }
 
-.tabs-container .edit-button:hover {
+.tabs-container .edit-event-button:hover, .delete-event-btn:hover{
     background-color: rgba(81, 147, 139, 0.1);
     transform: translateY(-1px);
 }
 
-.tabs-container .edit-button:active {
+.tabs-container .edit-event-button:active, delete-event-btn:active{
     transform: translateY(0);
 }
 
-.tabs-container .edit-button i {
+.tabs-container .edit-event-button i, .delete-event-btn i {
     font-size: 18px;
 }
 
@@ -695,7 +695,7 @@ hr {
 }
 
 /* Edit Button Styles */
-.edit-button {
+.edit-event-button {
     background: none;
     border: none;
     color: var(--primary-color);
@@ -708,16 +708,16 @@ hr {
     justify-content: center;
 }
 
-.edit-button:hover {
+.edit-event-button:hover {
     background-color: rgba(81, 147, 139, 0.1);
     transform: translateY(-1px);
 }
 
-.edit-button:active {
+.edit-event-button:active {
     transform: translateY(0);
 }
 
-.edit-button i {
+.edit-event-button i {
     font-size: 16px;
 }
 
@@ -1128,11 +1128,11 @@ hr {
         font-size: 13px;
     }
 
-    .edit-button {
+    .edit-event-button {
         padding: 6px;
     }
 
-    .edit-button i {
+    .edit-event-button i {
         font-size: 16px;
     }
 }
@@ -1308,11 +1308,11 @@ hr {
         font-size: 12px;
     }
 
-    .edit-button {
+    .edit-event-button {
         padding: 4px;
     }
 
-    .edit-button i {
+    .edit-event-button i {
         font-size: 14px;
     }
 

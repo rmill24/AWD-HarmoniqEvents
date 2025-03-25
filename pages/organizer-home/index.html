@@ -85,10 +85,6 @@
         <!-- EVENTS SECTION -->
         <section id="events" class="content-section">
             <div class="actions-bar">
-                <div class="event-dropdown">
-                    <h1>Select Event</h1>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
                 <button class="add-event-btn">
                     <i class="fa-solid fa-plus"></i>
                     Add Event
@@ -185,9 +181,6 @@
                     <div class="tab active" data-tab="pending">Pending</div>
                     <div class="tab" data-tab="completed">Completed</div>
                 </div>
-                <button class="edit-button" aria-label="Edit event">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
             </div>
             
             <!-- Tab Content -->
@@ -200,18 +193,11 @@
                                 <th>Description</th>
                                 <th>Date and Time</th>
                                 <th>Venue</th>
-                                <th>No. of Guests</th>
+                                <th>Expected No. of Guests</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Set event venue</td>
-                                <td></td>
-                                <td>03/24/2025</td>
-                                <td>FEU Tech</td>
-                                <td>437</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="eventsTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -225,18 +211,11 @@
                                 <th>Description</th>
                                 <th>Date and Time</th>
                                 <th>Venue</th>
-                                <th>No. of Guests</th>
+                                <th>Expected No. of Guests</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Set event venue</td>
-                                <td></td>
-                                <td>03/24/2025</td>
-                                <td>FEU Main</td>
-                                <td>123</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="eventsTableBody"></tbody>
                     </table>
                 </div>
             </div>
