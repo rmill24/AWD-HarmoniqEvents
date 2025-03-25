@@ -647,13 +647,16 @@ async function loadTasksForEvent(eventId) {
     for (const task of tasks) {
       const row = document.createElement("tr");
 
+      const taskDueDate = new Date(task.dueDate);
+      const isPastCompleted = task.status === "completed" && taskDueDate < today;
+
       let vendorDisplay = "";
       if (task.assignedVendorId) {
         try {
           const vendorResponse = await fetch(`${apiUrl}/api/vendors/${task.assignedVendorId}`);
           if (vendorResponse.ok) {
             const vendorData = await vendorResponse.json();
-            vendorDisplay = `<span>Assigned Vendor: ${vendorData.name}</span>`;
+            vendorDisplay = `<span>${vendorData.name}</span>`;
           } else {
             vendorDisplay = `<span>Vendor Assigned</span>`;
           }
@@ -662,14 +665,14 @@ async function loadTasksForEvent(eventId) {
           vendorDisplay = `<span>Vendor Assigned</span>`;
         }
       } else {
-        vendorDisplay = `<button class="add-vendor" data-task-id="${task._id}">
-                           <i class="fa-solid fa-plus"></i> Request Vendor
-                         </button>`;
+        vendorDisplay = isPastCompleted
+          ? `<button class="disabled-btn" disabled>
+               <i class="fa-solid fa-ban"></i> Cannot Request Vendor
+             </button>`
+          : `<button class="add-vendor" data-task-id="${task._id}">
+               <i class="fa-solid fa-plus"></i> Request Vendor
+             </button>`;
       }
-
-      // Determine if the task can be marked as pending again
-      const taskDueDate = new Date(task.dueDate);
-      const isPastCompleted = task.status === "completed" && taskDueDate < today;
 
       // Button to toggle task status
       const toggleStatusButton = isPastCompleted
@@ -707,6 +710,7 @@ async function loadTasksForEvent(eventId) {
     console.error("Error fetching tasks:", error);
   }
 }
+
 
 // Toggle Task Status (Complete ↔ Pending)
 document.addEventListener("click", async (event) => {
