@@ -621,9 +621,7 @@ async function loadEventDropdown() {
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
   const tasksTableBody = document.getElementById("tasksTableBody");
-  const completedTasksTableBody = document.querySelector(
-    "#completedTasks tbody"
-  );
+  const completedTasksTableBody = document.querySelector("#completedTasks tbody");
 
   if (eventId === "") {
     tasksTableBody.innerHTML = "";
@@ -641,20 +639,20 @@ async function loadTasksForEvent(eventId) {
     tasks.forEach((task) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-                <td>${task.title}</td>
-                <td>${task.description || "-"}</td>
-                <td>${new Date(task.dueDate).toLocaleDateString()}</td>
-                <td>${task.status}</td>
-                        <td>
+        <td>${task.title}</td>
+        <td>${task.description || "-"}</td>
+        <td>${new Date(task.dueDate).toLocaleDateString()}</td>
+        <td>${task.status}</td>
+        <td>
           ${
-            task.assignedVendorId
-              ? `<span>${task.assignedVendorId}</span>`
+            task.assignedVendorName
+              ? `<span>${task.assignedVendorName}</span>` // Display vendor name
               : `<button class="add-vendor" data-task-id="${task._id}">
                   <i class="fa-solid fa-plus"></i> Add Vendor
                 </button>`
           }
         </td>
-                <td>
+        <td>
           <button class="edit-task-btn" data-task-id="${task._id}">
             <i class="fa-solid fa-pen"></i>
           </button>
@@ -662,7 +660,7 @@ async function loadTasksForEvent(eventId) {
             <i class="fa-solid fa-trash"></i>
           </button>
         </td>
-            `;
+      `;
 
       if (task.status === "completed") {
         completedTasksTableBody.appendChild(row);
@@ -674,6 +672,7 @@ async function loadTasksForEvent(eventId) {
     console.error("Error fetching tasks:", error);
   }
 }
+
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
@@ -765,6 +764,117 @@ document.addEventListener("DOMContentLoaded", () => {
       editTaskModal.style.display = "none";
     });
   });
+
+  // ============================
+  // ADD VENDOR FUNCTIONALITY
+  // ============================
+  const requestVendorModal = document.getElementById("requestVendorModal");
+  const categoryDropdown = requestVendorModal.querySelector("#vendorCategory");
+  const vendorDropdown = requestVendorModal.querySelector("#vendorList");
+  const confirmVendorBtn = requestVendorModal.querySelector(".btn-primary");
+  let currentTaskForVendor = null;
+
+  // Open Add Vendor Modal
+  document.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("add-vendor")) {
+      currentTaskForVendor = event.target.getAttribute("data-task-id");
+
+      if (!currentTaskForVendor) {
+        console.error("No Task ID found for adding a vendor!");
+        return;
+      }
+
+      try {
+        // Fetch Unique Service Categories
+        const response = await fetch(`${apiUrl}/api/vendors`);
+        if (!response.ok) {
+          console.error("Error fetching vendors:", await response.text());
+          return;
+        }
+
+        const vendors = await response.json();
+
+        // Extract unique categories from vendors
+        const categories = [...new Set(vendors.map((vendor) => vendor.serviceType))];
+
+        // Populate Category Dropdown
+        categoryDropdown.innerHTML = `<option disabled selected>Select Category</option>`;
+        categories.forEach((category) => {
+          const option = document.createElement("option");
+          option.value = category;
+          option.textContent = category;
+          categoryDropdown.appendChild(option);
+        });
+
+        // Show Modal
+        requestVendorModal.style.display = "block";
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    }
+  });
+
+  // Fetch Vendors Based on Selected Category
+  categoryDropdown.addEventListener("change", async () => {
+    const selectedCategory = categoryDropdown.value;
+    if (!selectedCategory) return;
+
+    try {
+      const response = await fetch(`${apiUrl}/api/vendors?serviceType=${selectedCategory}`);
+      if (!response.ok) {
+        console.error("Error fetching vendors:", await response.text());
+        return;
+      }
+
+      const vendors = await response.json();
+
+      // Populate Vendor Dropdown
+      vendorDropdown.innerHTML = `<option disabled selected>Select Vendor</option>`;
+      vendors.forEach((vendor) => {
+        const option = document.createElement("option");
+        option.value = vendor._id;
+        option.textContent = vendor.name;
+        vendorDropdown.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching vendors by category:", error);
+    }
+  });
+
+  // Handle Assign Vendor Confirmation
+  confirmVendorBtn.addEventListener("click", async () => {
+    if (!currentTaskForVendor) return;
+
+    const selectedVendorId = vendorDropdown.value;
+    if (!selectedVendorId) {
+      alert("Please select a vendor.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${currentTaskForVendor}/assign-vendor`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignedVendorId: selectedVendorId }),
+      });
+
+      if (response.ok) {
+        alert("Vendor assigned successfully!");
+        requestVendorModal.style.display = "none";
+        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+      } else {
+        console.error("Failed to assign vendor:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error assigning vendor:", error);
+    }
+  });
+
+  // Close Modal on Cancel
+  requestVendorModal.querySelector(".btn-secondary").addEventListener("click", () => {
+    requestVendorModal.style.display = "none";
+  });
+
 });
 
 
