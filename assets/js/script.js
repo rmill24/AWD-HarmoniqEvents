@@ -403,7 +403,7 @@ function capitalizeWords(str) {
 document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent form submission
   
-    const name = document.getElementById("name").value;
+    let name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const selectedUserType = document.querySelector('input[name="type"]:checked').value;
