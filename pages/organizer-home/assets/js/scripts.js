@@ -624,9 +624,7 @@ async function loadEventDropdown() {
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
   const tasksTableBody = document.getElementById("tasksTableBody");
-  const completedTasksTableBody = document.querySelector(
-    "#completedTasks tbody"
-  );
+  const completedTasksTableBody = document.querySelector("#completedTasks tbody");
 
   if (eventId === "") {
     tasksTableBody.innerHTML = "";
@@ -644,22 +642,38 @@ async function loadTasksForEvent(eventId) {
     tasksTableBody.innerHTML = "";
     completedTasksTableBody.innerHTML = "";
 
-    tasks.forEach((task) => {
+    for (const task of tasks) {
       const row = document.createElement("tr");
+
+      let vendorDisplay = "";
+
+      if (task.assignedVendorId) {
+        // If a vendor is assigned, fetch their details
+        try {
+          const vendorResponse = await fetch(`${apiUrl}/api/vendors/${task.assignedVendorId}`);
+          if (vendorResponse.ok) {
+            const vendorData = await vendorResponse.json();
+            vendorDisplay = `<span>${vendorData.name}</span>`;
+          } else {
+            vendorDisplay = `<span>Vendor Assigned</span>`;
+          }
+        } catch (error) {
+          console.error("Error fetching assigned vendor details:", error);
+          vendorDisplay = `<span>Vendor Assigned</span>`;
+        }
+      } else {
+        // Show request button if no vendor is assigned
+        vendorDisplay = `<button class="add-vendor" data-task-id="${task._id}">
+                           <i class="fa-solid fa-plus"></i> Request Vendor
+                         </button>`;
+      }
+
       row.innerHTML = `
         <td>${task.title}</td>
         <td>${task.description || "-"}</td>
         <td>${new Date(task.dueDate).toLocaleDateString()}</td>
         <td>${task.status}</td>
-        <td>
-          ${
-            task.requestedVendor
-              ? `<span>Request sent to: ${task.requestedVendor}</span>`
-              : `<button class="add-vendor" data-task-id="${task._id}">
-                  <i class="fa-solid fa-plus"></i> Request Vendor
-                </button>`
-          }
-        </td>
+        <td>${vendorDisplay}</td>
         <td>
           <button class="edit-task-btn" data-task-id="${task._id}">
             <i class="fa-solid fa-pen"></i>
@@ -675,7 +689,7 @@ async function loadTasksForEvent(eventId) {
       } else {
         tasksTableBody.appendChild(row);
       }
-    });
+    }
   } catch (error) {
     console.error("Error fetching tasks:", error);
   }
