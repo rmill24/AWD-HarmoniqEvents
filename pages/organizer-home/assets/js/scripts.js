@@ -294,18 +294,13 @@ async function populateEventTables(events) {
     // Convert UTC date to local time properly
     let eventDateTime = event.date ? new Date(event.date) : null;
     let eventDate = eventDateTime
-      ? eventDateTime.toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
+      ? eventDateTime.toLocaleDateString("en-CA") // YYYY-MM-DD format
       : "N/A";
-
     let eventTime = eventDateTime
-      ? eventDateTime.toLocaleTimeString(undefined, {
+      ? eventDateTime.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
-          hour12: true, // Show user's local time zone
+          hour12: true,
         })
       : "N/A";
 
@@ -320,13 +315,13 @@ async function populateEventTables(events) {
           <td>${event.description || "-"}</td>
           <td>${eventDate} ${eventTime}</td>
           <td>${event.venue || "-"}</td>
-          <td>${event.expectedGuests || "-"}</td>
+          <td>${event.expectedGuests || "Not Specified"}</td>
           <td>
               ${
                 event.status === "pending"
                   ? `<button class="edit-event-button" data-event-id="${event._id}">
                       <i class="fa-solid fa-pen"></i>
-                  </button>`
+                  </button>` 
                   : ""
               }
               <button class="delete-event-btn" data-event-id="${event._id}">
@@ -342,6 +337,7 @@ async function populateEventTables(events) {
     }
   }
 }
+
 
 // Function to update event status in the backend
 async function updateEventStatus(eventId, newStatus) {
