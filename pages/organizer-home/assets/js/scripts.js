@@ -596,6 +596,7 @@ document
 // ==============================================
 // TASKS MANAGEMENT
 // ==============================================
+let eventDates = {};
 
 // Fetch Events for Dropdown
 async function loadEventDropdown() {
@@ -604,18 +605,30 @@ async function loadEventDropdown() {
     const events = await response.json();
 
     const eventDropdown = document.querySelector(".event-dropdown-task");
+    const eventDateDisplay = document.getElementById("event-date-display");
     eventDropdown.innerHTML = `<option value="">Select Event</option>`;
 
     events.forEach((event) => {
+      eventDates[event._id] = new Date(event.date); // Store event date
       const option = document.createElement("option");
       option.value = event._id;
       option.textContent = event.title;
       eventDropdown.appendChild(option);
     });
 
-    eventDropdown.addEventListener("change", () =>
-      loadTasksForEvent(eventDropdown.value)
-    );
+    // Listen for event selection change
+    eventDropdown.addEventListener("change", () => {
+      const selectedEventId = eventDropdown.value;
+      if (selectedEventId) {
+        const eventDate = eventDates[selectedEventId];
+        eventDateDisplay.textContent = `Event Date: ${eventDate.toLocaleDateString()}`;
+        loadTasksForEvent(selectedEventId); // Load tasks
+      } else {
+        eventDateDisplay.textContent = ""; // Clear if no event selected
+        document.getElementById("tasksTableBody").innerHTML = "";
+        document.querySelector("#completedTasks tbody").innerHTML = "";
+      }
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
   }
@@ -798,35 +811,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle Edit Task Form Submission
-  editTaskForm.addEventListener("submit", async (event) => {
+  document.getElementById("editTaskForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-
+  
     if (!currentEditingTaskId) return;
-
+  
+    const taskDateInput = document.getElementById("editTaskDate").value;
+    const taskDueDate = new Date(taskDateInput);
+  
+    const selectedEventId = document.querySelector(".event-dropdown-task").value;
+    const eventDate = eventDates[selectedEventId]; // Get event date
+  
+    if (taskDueDate > eventDate) {
+      alert("Task due date cannot be later than the event date.");
+      return;
+    }
+  
     const updatedTask = {
       title: document.getElementById("editTaskTitle").value,
       description: document.getElementById("editTaskDescription").value,
-      dueDate: new Date(
-        `${document.getElementById("editTaskDate").value}T${
-          document.getElementById("editTaskTime").value
-        }`
-      ).toISOString(),
+      dueDate: new Date(`${taskDateInput}T${document.getElementById("editTaskTime").value}`).toISOString(),
     };
-
+  
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tasks/${currentEditingTaskId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedTask),
-        }
-      );
-
+      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTask),
+      });
+  
       if (response.ok) {
         alert("Task updated successfully!");
-        editTaskModal.style.display = "none";
-        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+        document.getElementById("editTaskModal").style.display = "none";
+        loadTasksForEvent(selectedEventId);
       } else {
         console.error("Failed to update task:", await response.text());
       }
@@ -834,6 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error updating task:", error);
     }
   });
+  
 
   // ============================
   // DELETE TASK FUNCTIONALITY
@@ -1063,36 +1081,41 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // HANDLE ADD TASK FORM SUBMISSION
-  addTaskForm.addEventListener("submit", async (event) => {
+  document.getElementById("addTaskForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const selectedEventId = eventDropdown.value; // Get Selected Event ID
+  
+    const selectedEventId = document.querySelector(".event-dropdown-task").value;
     if (!selectedEventId) {
       alert("Please select an event first.");
       return;
     }
-
+  
+    const eventDate = eventDates[selectedEventId]; // Get event date
+    const taskDateInput = document.getElementById("taskDate").value;
+    const taskDueDate = new Date(taskDateInput);
+  
+    if (taskDueDate > eventDate) {
+      alert("Task due date cannot be later than the event date.");
+      return;
+    }
+  
     const newTask = {
       title: document.getElementById("taskTitle").value,
       description: document.getElementById("taskDescription").value,
-      dueDate: new Date(
-        `${document.getElementById("taskDate").value}T${
-          document.getElementById("taskTime").value
-        }`
-      ).toISOString(),
-      eventId: selectedEventId, // Assign selected event ID
+      dueDate: new Date(`${taskDateInput}T${document.getElementById("taskTime").value}`).toISOString(),
+      eventId: selectedEventId,
     };
-
+  
     try {
       const response = await fetch(`${apiUrl}/api/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTask),
       });
-
+  
       if (response.ok) {
         alert("Task added successfully!");
-        addTaskModal.style.display = "none";
+        document.getElementById("addTaskModal").style.display = "none";
         loadTasksForEvent(selectedEventId); // Refresh tasks
       } else {
         console.error("Failed to add task:", await response.text());
@@ -1101,6 +1124,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error adding task:", error);
     }
   });
+  
 
     // Close Modal on Cancel
     addTaskModal
@@ -1405,36 +1429,6 @@ modal.onclick = function (event) {
     if (counter) counter.textContent = "0";
   }
 };
-
-// // Edit Task Modal
-// var editButton = document.querySelector(".edit-task-btn");
-// var editModal = document.getElementById("editTaskModal");
-// var editCancelButton = editModal.querySelector(".cancel-modal");
-// var editForm = document.getElementById("editTaskForm");
-// var editDescription = document.getElementById("editTaskDescription");
-// var editCounter = document.getElementById("editCurrentCount");
-
-// // When you click the edit button
-// editButton.onclick = function () {
-//   editModal.classList.add("active");
-//   document.body.style.overflow = "hidden";
-// };
-
-// // When you click the cancel button
-// editCancelButton.onclick = function () {
-//   editModal.classList.remove("active");
-//   document.body.style.overflow = "";
-//   editForm.reset();
-// };
-
-// // When you click outside the modal
-// editModal.onclick = function (event) {
-//   if (event.target == editModal) {
-//     editModal.classList.remove("active");
-//     document.body.style.overflow = "";
-//     editForm.reset();
-//   }
-// };
 
 // Add Vendor Modal Functionality
 document.addEventListener("DOMContentLoaded", () => {
