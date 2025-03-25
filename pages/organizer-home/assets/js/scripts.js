@@ -642,18 +642,18 @@ async function loadTasksForEvent(eventId) {
     tasksTableBody.innerHTML = "";
     completedTasksTableBody.innerHTML = "";
 
+    const today = new Date();
+
     for (const task of tasks) {
       const row = document.createElement("tr");
 
       let vendorDisplay = "";
-
       if (task.assignedVendorId) {
-        // If a vendor is assigned, fetch their details
         try {
           const vendorResponse = await fetch(`${apiUrl}/api/vendors/${task.assignedVendorId}`);
           if (vendorResponse.ok) {
             const vendorData = await vendorResponse.json();
-            vendorDisplay = `<span>${vendorData.name}</span>`;
+            vendorDisplay = `<span>Assigned Vendor: ${vendorData.name}</span>`;
           } else {
             vendorDisplay = `<span>Vendor Assigned</span>`;
           }
@@ -662,11 +662,23 @@ async function loadTasksForEvent(eventId) {
           vendorDisplay = `<span>Vendor Assigned</span>`;
         }
       } else {
-        // Show request button if no vendor is assigned
         vendorDisplay = `<button class="add-vendor" data-task-id="${task._id}">
                            <i class="fa-solid fa-plus"></i> Request Vendor
                          </button>`;
       }
+
+      // Determine if the task can be marked as pending again
+      const taskDueDate = new Date(task.dueDate);
+      const isPastCompleted = task.status === "completed" && taskDueDate < today;
+
+      // Button to toggle task status
+      const toggleStatusButton = isPastCompleted
+        ? `<button class="disabled-btn" disabled>
+             <i class="fa-solid fa-ban"></i> Cannot Revert
+           </button>`
+        : `<button class="toggle-status-btn" data-task-id="${task._id}" data-status="${task.status}">
+             ${task.status === "completed" ? `<i class="fa-solid fa-arrow-rotate-left"></i> Mark as Pending` : `<i class="fa-solid fa-check"></i> Mark as Complete`}
+           </button>`;
 
       row.innerHTML = `
         <td>${task.title}</td>
@@ -675,6 +687,7 @@ async function loadTasksForEvent(eventId) {
         <td>${task.status}</td>
         <td>${vendorDisplay}</td>
         <td>
+          ${toggleStatusButton}
           <button class="edit-task-btn" data-task-id="${task._id}">
             <i class="fa-solid fa-pen"></i>
           </button>
@@ -694,6 +707,40 @@ async function loadTasksForEvent(eventId) {
     console.error("Error fetching tasks:", error);
   }
 }
+
+// Toggle Task Status (Complete ↔ Pending)
+document.addEventListener("click", async (event) => {
+  if (event.target.closest(".toggle-status-btn")) {
+    const button = event.target.closest(".toggle-status-btn");
+    const taskId = button.getAttribute("data-task-id");
+    const currentStatus = button.getAttribute("data-status");
+
+    if (!taskId) {
+      console.error("No Task ID found!");
+      return;
+    }
+
+    const newStatus = currentStatus === "completed" ? "pending" : "completed";
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        alert(`Task marked as ${newStatus}`);
+        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+      } else {
+        console.error("Failed to update task status:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  }
+});
+
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
