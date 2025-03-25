@@ -1813,7 +1813,7 @@ hr {
     border-radius: 5px;
 }
 
-#guestStatus{
+#guestStatus, #editGuestStatus{
     color: var(--text-color);
 }
 
