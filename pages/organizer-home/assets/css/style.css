@@ -312,7 +312,7 @@ main {
 
 /* Dropdowns */
 .event-dropdown,
-.event-name-dropdown, .event-dropdown-task {
+.event-name-dropdown, .event-dropdown-task, .event-dropdown-guests {
     background-color: var(--primary-color);
     border-radius: 30px;
     padding: 12px 24px;
@@ -326,7 +326,7 @@ main {
 }
 
 .event-dropdown h1, .event-dropdown-task h1, .event-dropdown-task h3,
-.event-name-dropdown h3 {
+.event-name-dropdown h3, .event-dropdown-guests h3, .event-dropdown-guests h1 {
     color: var(--font-light-color);
     font-size: 15px;
     font-weight: 500;
@@ -334,13 +334,13 @@ main {
 }
 
 .event-dropdown i,
-.event-name-dropdown i, .event-dropdown-task i {
+.event-name-dropdown i, .event-dropdown-task i, .event-dropdown-guests i {
     color: var(--font-light-color);
     font-size: 16px;
 }
 
 .event-dropdown:hover,
-.event-name-dropdown:hover, .event-dropdown-task:hover {
+.event-name-dropdown:hover, .event-dropdown-task:hover, .event-dropdown-guests:hover {
     opacity: 0.9;
 }
 
@@ -1060,7 +1060,7 @@ hr {
         padding: 0 10px;
     }
 
-    .event-dropdown, .event-dropdown-task{
+    .event-dropdown, .event-dropdown-task, .event-dropdown-guests{
         flex: 1;
         max-width: 300px;
         padding: 12px 20px;
@@ -1082,7 +1082,7 @@ hr {
     }
 
     .event-dropdown h1, .event-dropdown-task h1, .event-dropdown-task h3,
-    .event-name-dropdown h3 {
+    .event-name-dropdown h3, .event-dropdown-guests h1, .event-dropdown-guests h3 {
         font-size: 16px;
     }
 
@@ -1257,7 +1257,7 @@ hr {
         gap: 12px;
     }
 
-    .event-dropdown, .event-dropdown-task {
+    .event-dropdown, .event-dropdown-task, .event-dropdown-guests {
         flex: 1;
         max-width: 200px;
         padding: 10px 15px;
@@ -1273,7 +1273,7 @@ hr {
     }
 
     .event-dropdown h1, .event-dropdown-task h1
-    .event-name-dropdown h3 {
+    .event-name-dropdown h3, .event-dropdown-guests h1, .event-dropdown-guests h3 {
         font-size: 14px;
     }
 
