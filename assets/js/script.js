@@ -494,16 +494,9 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   
     const email = document.getElementById("login-email").value;
     const password = document.getElementById("login-password").value;
+    const selectedUserType = document.querySelector('input[name="type-login"]:checked').value;
   
-    // Ask the user whether they are an Organizer or Vendor
-    const userType = prompt("Are you logging in as an 'organizer' or 'vendor'?").toLowerCase();
-  
-    if (userType !== "organizer" && userType !== "vendor") {
-      alert("Invalid user type. Please enter 'organizer' or 'vendor'.");
-      return;
-    }
-  
-    const url = userType === "organizer"
+    const url = selectedUserType === "organizer"
       ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/login"
       : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors/login";
   
@@ -521,7 +514,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         console.log("Login response:", result);
         document.getElementById("login-modal").classList.add("hidden");
 
-        if (userType === "organizer"){
+        if (selectedUserType === "organizer"){
             localStorage.setItem("organizerId", result.organizerId);
             window.location.href = "/pages/organizer-home/index.html";
         } else {
