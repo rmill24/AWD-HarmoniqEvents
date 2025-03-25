@@ -225,7 +225,6 @@ async function fetchEventDetails(eventId) {
       requestDiv.innerHTML = `<p> ${request.vendorName}</p><p> ${request.status}</p>`;
       requestsContainer.appendChild(requestDiv);
     });
-    
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
@@ -625,7 +624,9 @@ async function loadEventDropdown() {
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
   const tasksTableBody = document.getElementById("tasksTableBody");
-  const completedTasksTableBody = document.querySelector("#completedTasks tbody");
+  const completedTasksTableBody = document.querySelector(
+    "#completedTasks tbody"
+  );
 
   if (eventId === "") {
     tasksTableBody.innerHTML = "";
@@ -680,7 +681,6 @@ async function loadTasksForEvent(eventId) {
   }
 }
 
-
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
 
@@ -694,42 +694,43 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target.classList.contains("edit-task-btn")) {
       const taskId = event.target.getAttribute("data-task-id");
       currentEditingTaskId = taskId; // Assign task ID for editing
-      
+
       console.log("Task ID being fetched:", taskId); // Debugging
       if (!taskId) {
         console.error("No Task ID found!");
         return;
       }
-  
+
       try {
         const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
         console.log("Full Response:", response.JSON);
-  
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Error fetching task details:", errorText);
           return;
         }
-  
+
         const task = await response.json();
         console.log("Fetched Task Data:", task);
-        
+
         // Fill the edit form with task data
         document.getElementById("editTaskTitle").value = task.title;
-        document.getElementById("editTaskDescription").value = task.description || "";
-        document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
-        document.getElementById("editTaskTime").value = new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
+        document.getElementById("editTaskDescription").value =
+          task.description || "";
+        document.getElementById("editTaskDate").value =
+          task.dueDate.split("T")[0];
+        document.getElementById("editTaskTime").value = new Date(
+          task.dueDate
+        ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
         // Open the modal
-        document.getElementById("editTaskModal").style.display = "block";
-  
+        document.getElementById("editTaskModal").style.display = "active";
       } catch (error) {
         console.error("Error fetching task details:", error);
       }
     }
   });
-  
-  
 
   // Handle Edit Task Form Submission
   editTaskForm.addEventListener("submit", async (event) => {
@@ -741,16 +742,21 @@ document.addEventListener("DOMContentLoaded", () => {
       title: document.getElementById("editTaskTitle").value,
       description: document.getElementById("editTaskDescription").value,
       dueDate: new Date(
-        `${document.getElementById("editTaskDate").value}T${document.getElementById("editTaskTime").value}`
+        `${document.getElementById("editTaskDate").value}T${
+          document.getElementById("editTaskTime").value
+        }`
       ).toISOString(),
     };
 
     try {
-      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTask),
-      });
+      const response = await fetch(
+        `${apiUrl}/api/tasks/${currentEditingTaskId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedTask),
+        }
+      );
 
       if (response.ok) {
         alert("Task updated successfully!");
@@ -776,7 +782,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const confirmDelete = confirm("Are you sure you want to delete this task?");
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this task?"
+      );
       if (!confirmDelete) return;
 
       try {
@@ -786,7 +794,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
           alert("Task deleted successfully!");
-          loadTasksForEvent(document.querySelector(".event-dropdown-task").value); // Refresh task list
+          loadTasksForEvent(
+            document.querySelector(".event-dropdown-task").value
+          ); // Refresh task list
         } else {
           console.error("Failed to delete task:", await response.text());
         }
@@ -795,7 +805,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-
 
   // Close Edit Modal
   document.querySelectorAll(".cancel-modal").forEach((btn) => {
@@ -834,7 +843,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const vendors = await response.json();
 
         // Extract unique categories from vendors
-        const categories = [...new Set(vendors.map((vendor) => vendor.serviceType))];
+        const categories = [
+          ...new Set(vendors.map((vendor) => vendor.serviceType)),
+        ];
 
         // Populate Category Dropdown
         categoryDropdown.innerHTML = `<option disabled selected>Select Category</option>`;
@@ -846,7 +857,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Show Modal
-        requestVendorModal.style.display = "block";
+        requestVendorModal.classList.add("active");
       } catch (error) {
         console.error("Error fetching vendors:", error);
       }
@@ -857,16 +868,16 @@ document.addEventListener("DOMContentLoaded", () => {
   categoryDropdown.addEventListener("change", async () => {
     const selectedCategory = categoryDropdown.value;
     if (!selectedCategory) return;
-
+  
     try {
       const response = await fetch(`${apiUrl}/api/vendors?serviceType=${selectedCategory}`);
       if (!response.ok) {
         console.error("Error fetching vendors:", await response.text());
         return;
       }
-
+  
       const vendors = await response.json();
-
+      
       // Populate Vendor Dropdown
       vendorDropdown.innerHTML = `<option disabled selected>Select Vendor</option>`;
       vendors.forEach((vendor) => {
@@ -875,34 +886,71 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = vendor.name;
         vendorDropdown.appendChild(option);
       });
+  
+      // Clear Venue Details when category changes
+      document.getElementById("venueDetailsContainer").style.display = "none";
     } catch (error) {
       console.error("Error fetching vendors by category:", error);
     }
   });
 
+  vendorDropdown.addEventListener("change", async () => {
+    const selectedVendorId = vendorDropdown.value;
+    if (!selectedVendorId) return;
+  
+    try {
+      const response = await fetch(`${apiUrl}/api/vendors/${selectedVendorId}`);
+      if (!response.ok) {
+        console.error("Error fetching vendor details:", await response.text());
+        return;
+      }
+  
+      const vendor = await response.json();
+  
+      // Check if vendor is a Venue Manager and has venue details
+      if (vendor.serviceType === "Venue Manager" && vendor.venueDetails) {
+        document.getElementById("venueName").textContent = vendor.venueDetails.name || "N/A";
+        document.getElementById("venueLocation").textContent = vendor.venueDetails.location || "N/A";
+        document.getElementById("venueCapacity").textContent = vendor.venueDetails.capacity || "N/A";
+        document.getElementById("venueAmenities").textContent = vendor.venueDetails.amenities?.join(", ") || "None";
+  
+        // Show venue details section
+        document.getElementById("venueDetailsContainer").style.display = "active";
+      } else {
+        document.getElementById("venueDetailsContainer").style.display = "none";
+      }
+    } catch (error) {
+      console.error("Error fetching vendor details:", error);
+    }
+  });
+  
+  
+
   // Handle Assign Vendor Confirmation
   confirmVendorBtn.addEventListener("click", async () => {
     if (!currentTaskForVendor) return;
-  
+
     const selectedVendorId = vendorDropdown.value;
     if (!selectedVendorId) {
       alert("Please select a vendor.");
       return;
     }
-  
+
     try {
-      const selectedEventId = document.querySelector(".event-dropdown-task").value;
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
 
       const response = await fetch(`${apiUrl}/api/requests`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           vendorId: selectedVendorId,
           eventId: selectedEventId,
-          taskId: currentTaskForVendor// Ensure correct event association
+          taskId: currentTaskForVendor, // Ensure correct event association
         }),
       });
-  
+
       if (response.ok) {
         alert("Vendor request sent successfully!");
         requestVendorModal.style.display = "none";
@@ -916,9 +964,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Close Modal on Cancel
-  requestVendorModal.querySelector(".btn-secondary").addEventListener("click", () => {
-    requestVendorModal.style.display = "none";
-  });
+  requestVendorModal
+    .querySelector(".btn-secondary")
+    .addEventListener("click", () => {
+      requestVendorModal.classList.remove("active");
+    });
 
   // ============================
   // ADD TASK FUNCTIONALITY
@@ -940,7 +990,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addTaskForm.reset();
 
     // Show Modal
-    addTaskModal.style.display = "block";
+    addTaskModal.classList.add("active");
   });
 
   // HANDLE ADD TASK FORM SUBMISSION
@@ -957,7 +1007,9 @@ document.addEventListener("DOMContentLoaded", () => {
       title: document.getElementById("taskTitle").value,
       description: document.getElementById("taskDescription").value,
       dueDate: new Date(
-        `${document.getElementById("taskDate").value}T${document.getElementById("taskTime").value}`
+        `${document.getElementById("taskDate").value}T${
+          document.getElementById("taskTime").value
+        }`
       ).toISOString(),
       eventId: selectedEventId, // Assign selected event ID
     };
@@ -981,8 +1033,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-});
+    // Close Modal on Cancel
+    addTaskModal
+    .querySelector(".btn-secondary")
+    .addEventListener("click", () => {
+      addTaskModal.classList.remove("active");
+    });
 
+  async function autoCompleteExpiredTasks() {
+    try {
+      console.log("Checking for expired tasks...");
+
+      const response = await fetch(`${apiUrl}/api/tasks`);
+      if (!response.ok) {
+        console.error("Error fetching tasks:", await response.text());
+        return;
+      }
+
+      const tasks = await response.json();
+      const today = new Date();
+
+      for (const task of tasks) {
+        const taskDueDate = new Date(task.dueDate);
+
+        // If the task is pending and past due, update it to completed
+        if (task.status === "pending" && taskDueDate < today) {
+          await updateTaskStatus(task._id, "completed");
+          task.status = "completed"; // Reflect the change in local data
+          console.log(`Updated Task ${task._id} to Completed`);
+        }
+      }
+
+      // Refresh task lists
+      loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+    } catch (error) {
+      console.error("Error updating expired tasks:", error);
+    }
+  }
+
+  // Function to update a task's status
+  async function updateTaskStatus(taskId, newStatus) {
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to update task ${taskId} to ${newStatus}`);
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  }
+
+  // Run the function every minute to check for expired tasks
+  autoCompleteExpiredTasks();
+  setInterval(autoCompleteExpiredTasks, 60000);
+});
 
 // ==============================================
 // SIDEBAR NAVIGATION
