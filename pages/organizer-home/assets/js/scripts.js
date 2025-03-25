@@ -1187,6 +1187,142 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ==============================================
+// GUESTS MANAGEMENT
+// ==============================================
+
+async function loadGuestEventDropdown() {
+  try {
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
+
+    const eventDropdown = document.querySelector(".event-dropdown-guests");
+    eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+
+    events.forEach((event) => {
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventDropdown.appendChild(option);
+    });
+
+    // Load guests when an event is selected
+    eventDropdown.addEventListener("change", () => {
+      loadGuestsForEvent(eventDropdown.value);
+    });
+
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
+
+async function loadGuestsForEvent(eventId) {
+  const guestsTableBody = document.querySelector(".guest-table tbody");
+
+  if (eventId === "") {
+    guestsTableBody.innerHTML = "<tr><td colspan='6'>No event selected</td></tr>";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/api/guests/${eventId}`);
+    const guests = await response.json();
+
+    guestsTableBody.innerHTML = ""; // Clear previous data
+
+    guests.forEach((guest) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${guest.name}</td>
+        <td>${guest.email}</td>
+        <td>${guest.phone || "-"}</td>
+        <td>
+          <span class="status-badge status-${guest.status.toLowerCase()}">${guest.status}</span>
+        </td>
+        <td>
+          <button class="edit-guest-btn" data-guest-id="${guest._id}">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+            <button class="delete-guest-btn" data-guest-id="${guest._id}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      `;
+      guestsTableBody.appendChild(row);
+    });
+
+  } catch (error) {
+    console.error("Error fetching guests:", error);
+  }
+}
+
+// Initialize Guest Event Dropdown
+loadGuestEventDropdown();
+
+
+// ==============================================
+// ADD GUEST FUNCTIONALITY
+// ==============================================
+
+document.querySelector(".add-guest-btn").addEventListener("click", () => {
+  const selectedEventId = document.querySelector(".event-dropdown-guests").value;
+
+  if (!selectedEventId) {
+      alert("Please select an event first.");
+      return;
+  }
+
+  // Reset form fields before opening the modal
+  document.getElementById("addGuestForm").reset();
+
+  // Show modal
+  document.getElementById("addGuestModal").classList.add("active");
+});
+
+document.getElementById("addGuestForm").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const selectedEventId = document.querySelector(".event-dropdown-guests").value;
+  if (!selectedEventId) {
+      alert("Please select an event first.");
+      return;
+  }
+
+  const newGuest = {
+      name: document.getElementById("guestName").value,
+      email: document.getElementById("guestEmail").value,
+      phone: document.getElementById("guestPhone").value,
+      status: document.getElementById("guestStatus").value,
+      eventId: selectedEventId, // Assign guest to selected event
+  };
+
+  try {
+      const response = await fetch(`${apiUrl}/api/guests`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newGuest),
+      });
+
+      if (response.ok) {
+          alert("Guest added successfully!");
+          document.getElementById("addGuestModal").style.display = "none";
+          loadGuestsForEvent(selectedEventId); // Refresh the guest list
+      } else {
+          console.error("Failed to add guest:", await response.text());
+      }
+  } catch (error) {
+      console.error("Error adding guest:", error);
+  }
+});
+
+document.querySelectorAll(".cancel-modal").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("addGuestModal").classList.remove("active");
+  });
+});
+
+
+
+// ==============================================
 // SIDEBAR NAVIGATION
 // ==============================================
 
@@ -1500,7 +1636,7 @@ addGuestModal.addEventListener("click", function (event) {
 });
 
 // Edit Guest Modal
-const editGuestButtons = document.querySelectorAll("#guests .edit-button");
+const editGuestButtons = document.querySelectorAll("#guests .edit-guest-btn");
 const editGuestModal = document.getElementById("editGuestModal");
 const editGuestCancelButton = editGuestModal.querySelector(".cancel-modal");
 const editGuestForm = document.getElementById("editGuestForm");

@@ -396,14 +396,12 @@
         <!-- GUESTS SECTION -->
         <section id="guests" class="content-section">
             <div class="actions-bar">
-                <div class="event-dropdown-guests">
-                    <h1>Select Event</h1>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
+                <select class="event-dropdown-guests">
+                </select>
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button class="delete-guests-btn">Delete</button>
+                    <!-- <button class="delete-guests-btn">Delete</button> -->
                     <button class="add-guest-btn">
                         <i class="fa-solid fa-plus"></i>
                         Add Guest
@@ -511,51 +509,14 @@
                 <table class="guest-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Status</th>
-                            <th></th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Guest Name</td>
-                            <td>guestemail@email.com</td>
-                            <td>12345678910</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <td>
-                                <button class="edit-button">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Guest Name</td>
-                            <td>guestemail@email.com</td>
-                            <td>12345678910</td>
-                            <td><span class="status-badge status-accepted">Accepted</span></td>
-                            <td>
-                                <button class="edit-button">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Guest Name</td>
-                            <td>guestemail@email.com</td>
-                            <td>12345678910</td>
-                            <td><span class="status-badge status-declined">Declined</span></td>
-                            <td>
-                                <button class="edit-button">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
