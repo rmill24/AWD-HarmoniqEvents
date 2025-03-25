@@ -98,15 +98,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-
-// // Close the modal when clicking outside of it
-// const venueModal = document.getElementById("venue-modal");
-// window.addEventListener("click", (event) => {
-//   if (event.target === venueModal) {
-//     venueModal.style.display = "none";
-//   }
-// });
-
 // Handle venue form submission
 document.getElementById("venue-form").addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -196,6 +187,87 @@ document.getElementById("edit-venue-btn").addEventListener("click", async functi
       alert("Failed to fetch venue details. Please try again.");
   }
 });
+
+async function fetchVendorRequests() {
+  const vendorId = localStorage.getItem("vendorId");
+
+  if (!vendorId) {
+      console.error("❌ Vendor ID not found in localStorage!");
+      alert("Vendor ID not found. Please log in again.");
+      return;
+  }
+
+  try {
+      const response = await fetch(`${apiUrl}/api/requests/vendor/${vendorId}`);
+      const requests = await response.json();
+
+      console.log("✅ Fetched Vendor Requests:", requests);
+
+      const requestsList = document.getElementById("requests-list");
+      requestsList.innerHTML = ""; // Clear previous content
+
+      if (requests.length === 0) {
+          requestsList.innerHTML = "<p>No requests found.</p>";
+          return;
+      }
+
+      requests.forEach((request) => {
+          const requestItem = document.createElement("div");
+          requestItem.classList.add("request-item");
+
+          requestItem.innerHTML = `
+              <div class="request-info">
+                  <p><strong>Event:</strong> ${request.eventTitle}</p>
+                  <p><strong>Task:</strong> ${request.taskTitle}</p>
+                  <p><strong>Organizer:</strong> ${request.organizerName} (${request.organizerEmail})</p>
+              </div>
+              <div class="request-actions">
+                  <button class="btn-accept" data-request-id="${request._id}">Accept</button>
+                  <button class="btn-reject" data-request-id="${request._id}">Reject</button>
+              </div>
+          `;
+
+          requestsList.appendChild(requestItem);
+      });
+
+      // Attach event listeners to buttons
+      document.querySelectorAll(".btn-accept").forEach((button) => {
+          button.addEventListener("click", () => handleRequestAction(button.dataset.requestId, "accepted"));
+      });
+
+      document.querySelectorAll(".btn-reject").forEach((button) => {
+          button.addEventListener("click", () => handleRequestAction(button.dataset.requestId, "declined"));
+      });
+
+  } catch (error) {
+      console.error("❌ Error fetching requests:", error);
+  }
+}
+
+
+// Handle Accept or Reject Actions
+async function handleRequestAction(requestId, status) {
+  try {
+      const response = await fetch(`${apiUrl}/api/requests/${requestId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) {
+          throw new Error(`Failed to update request status to ${status}`);
+      }
+
+      alert(`Request ${status} successfully!`);
+      fetchVendorRequests(); // Refresh the list after update
+  } catch (error) {
+      console.error(`❌ Error updating request status:`, error);
+  }
+}
+
+// Call the function on page load
+document.addEventListener("DOMContentLoaded", fetchVendorRequests);
+
 
 // ============================================
 // Sign Out Button
