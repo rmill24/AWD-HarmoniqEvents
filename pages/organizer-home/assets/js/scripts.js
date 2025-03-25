@@ -654,6 +654,14 @@ async function loadTasksForEvent(eventId) {
                 </button>`
           }
         </td>
+                <td>
+          <button class="edit-task-btn" data-task-id="${task._id}">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button class="delete-task-btn" data-task-id="${task._id}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
             `;
 
       if (task.status === "completed") {
