@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (data.venueDetails && Object.keys(data.venueDetails).length > 2) {
               // ✅ Venue details exist, display them
               venueDetailsSection.style.display = "block";
+              venueDetailsContent.style.display = "block";
               venueDetailsContent.innerHTML = `
                   <strong>Name:</strong> ${data.venueDetails.name}<br>
                   <strong>Location:</strong> ${data.venueDetails.location}<br>
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
       } else {
           venueDetailsSection.style.display = "none"; // Hide venue details for non-Venue Managers
+          venueModal.style.display = "none"; // Hide modal for non-Venue Managers
       }
   } catch (error) {
       console.error("Error fetching vendor data:", error);
@@ -105,45 +107,40 @@ window.addEventListener("click", (event) => {
 
 // Handle venue form submission
 document.getElementById("venue-form").addEventListener("submit", async function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const venueDetails = {
-      name: document.getElementById("venue-name").value,
-      location: document.getElementById("venue-location").value,
-      capacity: document.getElementById("venue-capacity").value,
-      amenities: document.getElementById("venue-amenities").value.split(",").map(a => a.trim())
-  };
+    const venueDetails = {
+        name: document.getElementById("venue-name").value,
+        location: document.getElementById("venue-location").value,
+        capacity: document.getElementById("venue-capacity").value,
+        amenities: document.getElementById("venue-amenities").value.split(",").map(a => a.trim())
+    };
 
-  try {
-      const response = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ venueDetails }) 
-      });
+    try {
+        const response = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ venueDetails }) 
+        });
 
-      if (!response.ok) throw new Error("Failed to update venue");
+        if (!response.ok) throw new Error("Failed to update venue");
 
-      const data = await response.json();
-      alert("Venue details saved successfully!");
+        // Fetch updated data to ensure latest venue details are displayed
+        const updatedResponse = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`);
+        const updatedData = await updatedResponse.json();
 
-      // ✅ Store the flag so modal doesn’t show again
-      localStorage.setItem("venueSetUp", "true");
+        console.log("Updated Vendor Data:", updatedData);
 
-      // ✅ Hide modal explicitly
-      document.getElementById("venue-modal").style.display = "none";
+        alert("Venue details saved successfully!");
+        localStorage.setItem("venueSetUp", "true");
 
-      // ✅ Update displayed venue details without reloading
-      document.getElementById("venue-details-content").innerHTML = `
-          <strong>Name:</strong> ${data.venueDetails.name}<br>
-          <strong>Location:</strong> ${data.venueDetails.location}<br>
-          <strong>Capacity:</strong> ${data.venueDetails.capacity}<br>
-          <strong>Amenities:</strong> ${data.venueDetails.amenities.join(", ")}
-      `;
-      document.getElementById("venue-details").style.display = "block";
+        // Hide modal
+        document.getElementById("venue-modal").style.display = "none";
 
-  } catch (error) {
-      console.error("Error saving venue details:", error);
-  }
+
+    } catch (error) {
+        console.error("Error saving venue details:", error);
+    }
 });
 
 
