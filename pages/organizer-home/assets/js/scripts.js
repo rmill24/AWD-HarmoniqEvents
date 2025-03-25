@@ -1470,7 +1470,7 @@ async function loadRequestsForEvent(eventId) {
   const requestsTableBody = document.querySelector(".requests-table tbody");
 
   if (!eventId) {
-      requestsTableBody.innerHTML = "<tr><td colspan='3'>No event selected</td></tr>";
+      requestsTableBody.innerHTML = "<tr><td colspan='4'>No event selected</td></tr>";
       return;
   }
 
@@ -1481,11 +1481,21 @@ async function loadRequestsForEvent(eventId) {
       requestsTableBody.innerHTML = ""; // Clear previous data
 
       requests.forEach((request) => {
+          const isPending = request.status === "pending";
+          const cancelBtn = isPending
+              ? `<button class="cancel-request-btn" data-request-id="${request._id}">
+                   <i class="fa-solid fa-ban"></i> Cancel
+                 </button>`
+              : `<button class="disabled-btn" disabled>
+                   <i class="fa-solid fa-lock"></i> Cannot Cancel
+                 </button>`;
+
           const row = document.createElement("tr");
           row.innerHTML = `
               <td>${request.vendorName}</td>
               <td>${request.serviceType}</td>
               <td><span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span></td>
+              <td>${cancelBtn}</td>
           `;
           requestsTableBody.appendChild(row);
       });
@@ -1494,6 +1504,35 @@ async function loadRequestsForEvent(eventId) {
       console.error("Error fetching requests:", error);
   }
 }
+
+document.addEventListener("click", async (event) => {
+  if (event.target.closest(".cancel-request-btn")) {
+      const requestId = event.target.closest(".cancel-request-btn").getAttribute("data-request-id");
+
+      if (!requestId) {
+          console.error("No Request ID found!");
+          return;
+      }
+
+      const confirmCancel = confirm("Are you sure you want to cancel this request?");
+      if (!confirmCancel) return;
+
+      try {
+          const response = await fetch(`${apiUrl}/api/requests/${requestId}`, {
+              method: "DELETE",
+          });
+
+          if (response.ok) {
+              alert("Request canceled successfully!");
+              loadRequestsForEvent(document.querySelector(".event-name-dropdown").value); // Refresh requests list
+          } else {
+              console.error("Failed to cancel request:", await response.text());
+          }
+      } catch (error) {
+          console.error("Error canceling request:", error);
+      }
+  }
+});
 
 
 
