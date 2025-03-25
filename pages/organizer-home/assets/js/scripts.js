@@ -1435,6 +1435,67 @@ document.addEventListener("click", async (event) => {
   }
 });
 
+// ==============================================
+// REQUESTS MANAGEMENT
+// ==============================================
+async function loadRequestEventDropdown() {
+  try {
+      const response = await fetch(`${apiUrl}/api/events`);
+      const events = await response.json();
+
+      const eventDropdown = document.querySelector(".event-name-dropdown");
+      eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+
+      events.forEach((event) => {
+          const option = document.createElement("option");
+          option.value = event._id;
+          option.textContent = event.title;
+          eventDropdown.appendChild(option);
+      });
+
+      // Load requests when an event is selected
+      eventDropdown.addEventListener("change", () => {
+          loadRequestsForEvent(eventDropdown.value);
+      });
+
+  } catch (error) {
+      console.error("Error fetching events:", error);
+  }
+}
+
+// Initialize the event dropdown
+loadRequestEventDropdown();
+
+async function loadRequestsForEvent(eventId) {
+  const requestsTableBody = document.querySelector(".requests-table tbody");
+
+  if (!eventId) {
+      requestsTableBody.innerHTML = "<tr><td colspan='3'>No event selected</td></tr>";
+      return;
+  }
+
+  try {
+      const response = await fetch(`${apiUrl}/api/requests/${eventId}`);
+      const requests = await response.json();
+
+      requestsTableBody.innerHTML = ""; // Clear previous data
+
+      requests.forEach((request) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+              <td>${request.vendorName}</td>
+              <td>${request.serviceType}</td>
+              <td><span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span></td>
+          `;
+          requestsTableBody.appendChild(row);
+      });
+
+  } catch (error) {
+      console.error("Error fetching requests:", error);
+  }
+}
+
+
 
 // ==============================================
 // SIDEBAR NAVIGATION
