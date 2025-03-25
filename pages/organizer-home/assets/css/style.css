@@ -422,7 +422,7 @@ select {
     background-color: var(--primary-color);
     border: none;
     border-radius: 30px;
-    color: var(--text-color);
+    color: var(--font-light-color);
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -1812,4 +1812,8 @@ hr {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+#guestStatus{
+    color: var(--text-color);
 }
