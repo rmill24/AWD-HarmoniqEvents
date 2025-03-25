@@ -635,7 +635,10 @@ async function loadTasksForEvent(eventId) {
 
   try {
     const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
-    const tasks = await response.json();
+    let tasks = await response.json();
+
+    // Sort tasks by dueDate (earliest first)
+    tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     tasksTableBody.innerHTML = "";
     completedTasksTableBody.innerHTML = "";
@@ -761,6 +764,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ============================
+  // DELETE TASK FUNCTIONALITY
+  // ============================
+  document.addEventListener("click", async (event) => {
+    if (event.target.closest(".delete-task-btn")) {
+      const taskId = event.target.getAttribute("data-task-id");
+
+      if (!taskId) {
+        console.error("No Task ID found for deletion!");
+        return;
+      }
+
+      const confirmDelete = confirm("Are you sure you want to delete this task?");
+      if (!confirmDelete) return;
+
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          alert("Task deleted successfully!");
+          loadTasksForEvent(document.querySelector(".event-dropdown-task").value); // Refresh task list
+        } else {
+          console.error("Failed to delete task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    }
+  });
+
+
   // Close Edit Modal
   document.querySelectorAll(".cancel-modal").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -855,10 +891,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     try {
-      const response = await fetch(`${apiUrl}/api/tasks/${currentTaskForVendor}/request-vendor`, {
-        method: "PUT",
+      const selectedEventId = document.querySelector(".event-dropdown-task").value;
+
+      const response = await fetch(`${apiUrl}/api/requests`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vendorId: selectedVendorId }),
+        body: JSON.stringify({ 
+          vendorId: selectedVendorId,
+          eventId: selectedEventId,
+          taskId: currentTaskForVendor// Ensure correct event association
+        }),
       });
   
       if (response.ok) {
@@ -876,6 +918,67 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close Modal on Cancel
   requestVendorModal.querySelector(".btn-secondary").addEventListener("click", () => {
     requestVendorModal.style.display = "none";
+  });
+
+  // ============================
+  // ADD TASK FUNCTIONALITY
+  // ============================
+  const addTaskModal = document.getElementById("addTaskModal");
+  const addTaskForm = document.getElementById("addTaskForm");
+  const eventDropdown = document.querySelector(".event-dropdown-task");
+
+  // OPEN ADD TASK MODAL
+  document.querySelector(".add-task-btn").addEventListener("click", () => {
+    const selectedEventId = eventDropdown.value;
+
+    if (!selectedEventId) {
+      alert("Please select an event first.");
+      return;
+    }
+
+    // Reset Form Fields
+    addTaskForm.reset();
+
+    // Show Modal
+    addTaskModal.style.display = "block";
+  });
+
+  // HANDLE ADD TASK FORM SUBMISSION
+  addTaskForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const selectedEventId = eventDropdown.value; // Get Selected Event ID
+    if (!selectedEventId) {
+      alert("Please select an event first.");
+      return;
+    }
+
+    const newTask = {
+      title: document.getElementById("taskTitle").value,
+      description: document.getElementById("taskDescription").value,
+      dueDate: new Date(
+        `${document.getElementById("taskDate").value}T${document.getElementById("taskTime").value}`
+      ).toISOString(),
+      eventId: selectedEventId, // Assign selected event ID
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTask),
+      });
+
+      if (response.ok) {
+        alert("Task added successfully!");
+        addTaskModal.style.display = "none";
+        loadTasksForEvent(selectedEventId); // Refresh tasks
+      } else {
+        console.error("Failed to add task:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   });
 
 });
