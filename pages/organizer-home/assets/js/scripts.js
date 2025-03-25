@@ -321,7 +321,7 @@ async function populateEventTables(events) {
                 event.status === "pending"
                   ? `<button class="edit-event-button" data-event-id="${event._id}">
                       <i class="fa-solid fa-pen"></i>
-                  </button>` 
+                  </button>`
                   : ""
               }
               <button class="delete-event-btn" data-event-id="${event._id}">
@@ -337,7 +337,6 @@ async function populateEventTables(events) {
     }
   }
 }
-
 
 // Function to update event status in the backend
 async function updateEventStatus(eventId, newStatus) {
@@ -597,68 +596,79 @@ document
 
 // Fetch Events for Dropdown
 async function loadEventDropdown() {
-    try {
-        const response = await fetch(`${apiUrl}/api/events`);
-        const events = await response.json();
-        
-        const eventDropdown = document.querySelector(".event-dropdown-task");
-        eventDropdown.innerHTML = `<option value="">Select Event</option>`;
-        
-        events.forEach(event => {
-            const option = document.createElement("option");
-            option.value = event._id;
-            option.textContent = event.title;
-            eventDropdown.appendChild(option);
-        });
+  try {
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
 
-        eventDropdown.addEventListener("change", () => loadTasksForEvent(eventDropdown.value));
-    } catch (error) {
-        console.error("Error fetching events:", error);
-    }
+    const eventDropdown = document.querySelector(".event-dropdown-task");
+    eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+
+    events.forEach((event) => {
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventDropdown.appendChild(option);
+    });
+
+    eventDropdown.addEventListener("change", () =>
+      loadTasksForEvent(eventDropdown.value)
+    );
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
 }
 
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
-    const tasksTableBody = document.getElementById("tasksTableBody");
-    const completedTasksTableBody = document.querySelector("#completedTasks tbody");
-    
-    if (eventId === "") {
-        tasksTableBody.innerHTML = "";
-        completedTasksTableBody.innerHTML = "";
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
-        const tasks = await response.json();
+  const tasksTableBody = document.getElementById("tasksTableBody");
+  const completedTasksTableBody = document.querySelector(
+    "#completedTasks tbody"
+  );
 
-        tasksTableBody.innerHTML = "";
-        completedTasksTableBody.innerHTML = "";
-        
-        tasks.forEach(task => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
+  if (eventId === "") {
+    tasksTableBody.innerHTML = "";
+    completedTasksTableBody.innerHTML = "";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+    const tasks = await response.json();
+
+    tasksTableBody.innerHTML = "";
+    completedTasksTableBody.innerHTML = "";
+
+    tasks.forEach((task) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
                 <td>${task.title}</td>
                 <td>${task.description}</td>
                 <td>${new Date(task.dueDate).toLocaleDateString()}</td>
                 <td>${task.status}</td>
-                <td>${task.assignedVendorId ? task.assignedVendorId : "N/A"}</td>
+                        <td>
+          ${
+            task.assignedVendorId
+              ? `<span>${task.assignedVendorId}</span>`
+              : `<button class="add-vendor" data-task-id="${task._id}">
+                  <i class="fa-solid fa-plus"></i> Add Vendor
+                </button>`
+          }
+        </td>
             `;
 
-            if (task.status === "completed") {
-                completedTasksTableBody.appendChild(row);
-            } else {
-                tasksTableBody.appendChild(row);
-            }
-        });
-    } catch (error) {
-        console.error("Error fetching tasks:", error);
-    }
+      if (task.status === "completed") {
+        completedTasksTableBody.appendChild(row);
+      } else {
+        tasksTableBody.appendChild(row);
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+  }
 }
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
-
 
 // ==============================================
 // SIDEBAR NAVIGATION
