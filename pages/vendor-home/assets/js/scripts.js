@@ -217,9 +217,10 @@ async function fetchVendorRequests() {
 
           requestItem.innerHTML = `
               <div class="request-info">
-                  <p><strong>Event:</strong> ${request.eventTitle}</p>
+                  <span class="request-title">Event: ${request.eventTitle}</span>
                   <p><strong>Task:</strong> ${request.taskTitle}</p>
                   <p><strong>Organizer:</strong> ${request.organizerName} (${request.organizerEmail})</p>
+                  <p><strong>Status:</strong> <span id="request-status-${request._id}">${request.status}</span></p>
               </div>
               <div class="request-actions">
                   <button class="btn-accept" data-request-id="${request._id}">Accept</button>
@@ -244,26 +245,29 @@ async function fetchVendorRequests() {
   }
 }
 
-
-// Handle Accept or Reject Actions
-async function handleRequestAction(requestId, status) {
+async function handleRequestAction(requestId, newStatus) {
   try {
-      const response = await fetch(`${apiUrl}/api/requests/${requestId}`, {
-          method: "PATCH",
+      const response = await fetch(`${apiUrl}/api/requests/${requestId}/status`, {
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status }),
+          body: JSON.stringify({ status: newStatus })
       });
 
-      if (!response.ok) {
-          throw new Error(`Failed to update request status to ${status}`);
-      }
+      if (!response.ok) throw new Error(`Failed to update request status to ${newStatus}`);
 
-      alert(`Request ${status} successfully!`);
-      fetchVendorRequests(); // Refresh the list after update
+      console.log(`✅ Request ${requestId} updated to ${newStatus}`);
+
+      // Update UI immediately
+      document.getElementById(`request-status-${requestId}`).textContent = newStatus;
+
+      // Reload requests to reflect the changes
+      fetchVendorRequests();
+
   } catch (error) {
-      console.error(`❌ Error updating request status:`, error);
+      console.error("❌ Error updating request status:", error);
   }
 }
+
 
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", fetchVendorRequests);
