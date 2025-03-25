@@ -214,14 +214,18 @@ async function fetchEventDetails(eventId) {
     const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
     const vendorRequests = await requestsResponse.json();
 
+    console.log(eventId);
+    console.log("Vendor Requests:", vendorRequests); // Debugging line
+
     requestsContainer.innerHTML = ""; // Clear previous requests
 
     vendorRequests.forEach((request) => {
       const requestDiv = document.createElement("div");
       requestDiv.classList.add("task-attribute");
-      requestDiv.innerHTML = `<p>${request.vendorName}</p><p>${request.status}</p>`;
+      requestDiv.innerHTML = `<p> ${request.vendorName}</p><p> ${request.status}</p>`;
       requestsContainer.appendChild(requestDiv);
     });
+    
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
@@ -645,10 +649,10 @@ async function loadTasksForEvent(eventId) {
         <td>${task.status}</td>
         <td>
           ${
-            task.assignedVendorName
-              ? `<span>${task.assignedVendorName}</span>` // Display vendor name
+            task.requestedVendor
+              ? `<span>Request sent to: ${task.requestedVendor}</span>`
               : `<button class="add-vendor" data-task-id="${task._id}">
-                  <i class="fa-solid fa-plus"></i> Add Vendor
+                  <i class="fa-solid fa-plus"></i> Request Vendor
                 </button>`
           }
         </td>
@@ -689,7 +693,6 @@ document.addEventListener("DOMContentLoaded", () => {
       currentEditingTaskId = taskId; // Assign task ID for editing
       
       console.log("Task ID being fetched:", taskId); // Debugging
-  
       if (!taskId) {
         console.error("No Task ID found!");
         return;
@@ -844,29 +847,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle Assign Vendor Confirmation
   confirmVendorBtn.addEventListener("click", async () => {
     if (!currentTaskForVendor) return;
-
+  
     const selectedVendorId = vendorDropdown.value;
     if (!selectedVendorId) {
       alert("Please select a vendor.");
       return;
     }
-
+  
     try {
-      const response = await fetch(`${apiUrl}/api/tasks/${currentTaskForVendor}/assign-vendor`, {
+      const response = await fetch(`${apiUrl}/api/tasks/${currentTaskForVendor}/request-vendor`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignedVendorId: selectedVendorId }),
+        body: JSON.stringify({ vendorId: selectedVendorId }),
       });
-
+  
       if (response.ok) {
-        alert("Vendor assigned successfully!");
+        alert("Vendor request sent successfully!");
         requestVendorModal.style.display = "none";
         loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
       } else {
-        console.error("Failed to assign vendor:", await response.text());
+        console.error("Failed to send vendor request:", await response.text());
       }
     } catch (error) {
-      console.error("Error assigning vendor:", error);
+      console.error("Error sending vendor request:", error);
     }
   });
 
@@ -876,7 +879,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
-
 
 
 // ==============================================
