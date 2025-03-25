@@ -642,7 +642,7 @@ async function loadTasksForEvent(eventId) {
       const row = document.createElement("tr");
       row.innerHTML = `
                 <td>${task.title}</td>
-                <td>${task.description}</td>
+                <td>${task.description || "-"}</td>
                 <td>${new Date(task.dueDate).toLocaleDateString()}</td>
                 <td>${task.status}</td>
                         <td>
@@ -677,6 +677,97 @@ async function loadTasksForEvent(eventId) {
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const editTaskModal = document.getElementById("editTaskModal");
+  const editTaskForm = document.getElementById("editTaskForm");
+  let currentEditingTaskId = null;
+
+  // Open Edit Task Modal
+  document.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("edit-task-btn")) {
+      const taskId = event.target.getAttribute("data-task-id");
+      currentEditingTaskId = taskId; // Assign task ID for editing
+      
+      console.log("Task ID being fetched:", taskId); // Debugging
+  
+      if (!taskId) {
+        console.error("No Task ID found!");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
+        console.log("Full Response:", response.JSON);
+  
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error fetching task details:", errorText);
+          return;
+        }
+  
+        const task = await response.json();
+        console.log("Fetched Task Data:", task);
+        
+        // Fill the edit form with task data
+        document.getElementById("editTaskTitle").value = task.title;
+        document.getElementById("editTaskDescription").value = task.description || "";
+        document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
+        document.getElementById("editTaskTime").value = new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+        // Open the modal
+        document.getElementById("editTaskModal").style.display = "block";
+  
+      } catch (error) {
+        console.error("Error fetching task details:", error);
+      }
+    }
+  });
+  
+  
+
+  // Handle Edit Task Form Submission
+  editTaskForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!currentEditingTaskId) return;
+
+    const updatedTask = {
+      title: document.getElementById("editTaskTitle").value,
+      description: document.getElementById("editTaskDescription").value,
+      dueDate: new Date(
+        `${document.getElementById("editTaskDate").value}T${document.getElementById("editTaskTime").value}`
+      ).toISOString(),
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTask),
+      });
+
+      if (response.ok) {
+        alert("Task updated successfully!");
+        editTaskModal.style.display = "none";
+        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+      } else {
+        console.error("Failed to update task:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  });
+
+  // Close Edit Modal
+  document.querySelectorAll(".cancel-modal").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      editTaskModal.style.display = "none";
+    });
+  });
+});
+
+
 
 // ==============================================
 // SIDEBAR NAVIGATION
@@ -922,13 +1013,13 @@ modal.onclick = function (event) {
   }
 };
 
-// Edit Task Modal
-// var editButton = document.querySelector("#tasks .edit-button");
-var editModal = document.getElementById("editTaskModal");
-var editCancelButton = editModal.querySelector(".cancel-modal");
-var editForm = document.getElementById("editTaskForm");
-var editDescription = document.getElementById("editTaskDescription");
-var editCounter = document.getElementById("editCurrentCount");
+// // Edit Task Modal
+// var editButton = document.querySelector(".edit-task-btn");
+// var editModal = document.getElementById("editTaskModal");
+// var editCancelButton = editModal.querySelector(".cancel-modal");
+// var editForm = document.getElementById("editTaskForm");
+// var editDescription = document.getElementById("editTaskDescription");
+// var editCounter = document.getElementById("editCurrentCount");
 
 // // When you click the edit button
 // editButton.onclick = function () {
@@ -936,21 +1027,21 @@ var editCounter = document.getElementById("editCurrentCount");
 //   document.body.style.overflow = "hidden";
 // };
 
-// When you click the cancel button
-editCancelButton.onclick = function () {
-  editModal.classList.remove("active");
-  document.body.style.overflow = "";
-  editForm.reset();
-};
+// // When you click the cancel button
+// editCancelButton.onclick = function () {
+//   editModal.classList.remove("active");
+//   document.body.style.overflow = "";
+//   editForm.reset();
+// };
 
-// When you click outside the modal
-editModal.onclick = function (event) {
-  if (event.target == editModal) {
-    editModal.classList.remove("active");
-    document.body.style.overflow = "";
-    editForm.reset();
-  }
-};
+// // When you click outside the modal
+// editModal.onclick = function (event) {
+//   if (event.target == editModal) {
+//     editModal.classList.remove("active");
+//     document.body.style.overflow = "";
+//     editForm.reset();
+//   }
+// };
 
 // Add Vendor Modal Functionality
 document.addEventListener("DOMContentLoaded", () => {
