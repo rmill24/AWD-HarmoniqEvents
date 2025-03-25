@@ -33,54 +33,136 @@ function updateThemeIcon(theme) {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Initializing vendor dashboard...");
   initThemeToggle();
-  initSignOut();
-  initRequestActions();
 });
 
 // ============================================
 // VENDOR DASHBOARD
 // ============================================
-
 // API Base URL
 const apiUrl =
   "https://event-management-api-racelle-millagracias-projects.vercel.app";
 
-document.addEventListener("DOMContentLoaded", () => {
+// Fetch vendor data
+document.addEventListener("DOMContentLoaded", async () => {
   const vendorId = localStorage.getItem("vendorId");
 
   if (!vendorId) {
-    alert("You are not logged in. Please log in first.");
-    window.location.href = "/index.html"; // Redirect to login page
-    return;
+      alert("You are not logged in. Please log in first.");
+      window.location.href = "/index.html"; 
+      return;
   }
 
-  fetch(
-    `https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors/${vendorId}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Organizer Data:", data);
-      document.getElementById("vendor-name").textContent = `${data.name}`;
-      document.getElementById("vendor-serviceType").textContent = `${data.serviceType}`;
-    })
-    .catch((error) => console.error("Error fetching organizer data:", error));
+  try {
+      const response = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
+      const data = await response.json();
+
+      console.log("Fetched Vendor Data:", data);
+
+      document.getElementById("vendor-name").textContent = data.name;
+      document.getElementById("vendor-serviceType").textContent = data.serviceType;
+
+      const venueDetailsSection = document.getElementById("venue-details");
+      const venueDetailsContent = document.getElementById("venue-details-content");
+      const venueModal = document.getElementById("venue-modal");
+
+      if (data.serviceType === "Venue Manager") {
+          if (data.venueDetails && Object.keys(data.venueDetails).length > 2) {
+              // ✅ Venue details exist, display them
+              venueDetailsSection.style.display = "block";
+              venueDetailsContent.innerHTML = `
+                  <strong>Name:</strong> ${data.venueDetails.name}<br>
+                  <strong>Location:</strong> ${data.venueDetails.location}<br>
+                  <strong>Capacity:</strong> ${data.venueDetails.capacity}<br>
+                  <strong>Amenities:</strong> ${data.venueDetails.amenities.join(", ")}
+              `;
+
+              // ✅ Store flag to prevent modal from showing again
+              localStorage.setItem("venueSetUp", "true");
+              venueModal.style.display = "none";
+
+              console.log("✅ Venue details exist, modal should NOT show.");
+          } else if (!localStorage.getItem("venueSetUp")) {
+              // ✅ Only show modal if venue details are missing and not set
+              venueModal.style.display = "flex";
+              console.log("❌ No venue details found, modal SHOULD show.");
+          }
+      } else {
+          venueDetailsSection.style.display = "none"; // Hide venue details for non-Venue Managers
+      }
+  } catch (error) {
+      console.error("Error fetching vendor data:", error);
+  }
 });
+
+
+// Close the modal when clicking outside of it
+const venueModal = document.getElementById("venue-modal");
+window.addEventListener("click", (event) => {
+  if (event.target === venueModal) {
+    venueModal.style.display = "none";
+  }
+});
+
+// Handle venue form submission
+document.getElementById("venue-form").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const venueDetails = {
+      name: document.getElementById("venue-name").value,
+      location: document.getElementById("venue-location").value,
+      capacity: document.getElementById("venue-capacity").value,
+      amenities: document.getElementById("venue-amenities").value.split(",").map(a => a.trim())
+  };
+
+  try {
+      const response = await fetch(`${apiUrl}/api/vendors/${localStorage.getItem("vendorId")}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ venueDetails }) 
+      });
+
+      if (!response.ok) throw new Error("Failed to update venue");
+
+      const data = await response.json();
+      alert("Venue details saved successfully!");
+
+      // ✅ Store the flag so modal doesn’t show again
+      localStorage.setItem("venueSetUp", "true");
+
+      // ✅ Hide modal explicitly
+      document.getElementById("venue-modal").style.display = "none";
+
+      // ✅ Update displayed venue details without reloading
+      document.getElementById("venue-details-content").innerHTML = `
+          <strong>Name:</strong> ${data.venueDetails.name}<br>
+          <strong>Location:</strong> ${data.venueDetails.location}<br>
+          <strong>Capacity:</strong> ${data.venueDetails.capacity}<br>
+          <strong>Amenities:</strong> ${data.venueDetails.amenities.join(", ")}
+      `;
+      document.getElementById("venue-details").style.display = "block";
+
+  } catch (error) {
+      console.error("Error saving venue details:", error);
+  }
+});
+
 
 // ============================================
 // Sign Out Button
 // ============================================
 document.querySelector(".sign-out").addEventListener("click", () => {
-    // Clear stored data
-    localStorage.removeItem("vendorId");
-    localStorage.removeItem("organizerId");
-  
-    // Redirect to login page
-    window.location.href = "/index.html";
-  });
-  
-  // Initialize on page load
-  document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM loaded");
-    initThemeToggle();
-    initMobileMenu();
-  });
+  // Clear stored data
+  localStorage.removeItem("vendorId");
+  localStorage.removeItem("organizerId");
+
+  // Redirect to login page
+  window.location.href = "/index.html";
+});
+
+// ============================================
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM loaded");
+  initThemeToggle();
+});

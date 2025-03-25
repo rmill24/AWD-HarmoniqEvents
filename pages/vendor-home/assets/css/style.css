@@ -404,6 +404,10 @@ MODAL CSS
     opacity: 0.9;
 }
 
+#venue-details, #venue-details-content{
+    display: none;
+}
+
 @media screen and (max-width: 375px) {
     .modal-content {
         width: 80%;
