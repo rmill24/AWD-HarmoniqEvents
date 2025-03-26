@@ -284,30 +284,16 @@ async function populateEventTables(events) {
 
   const today = new Date().toISOString().split("T")[0]; // Get today's date
 
-  // Sort events from nearest to farthest date
-  events.sort((a, b) => {
-    const dateA = a.date ? new Date(a.date).getTime() : Infinity;
-    const dateB = b.date ? new Date(b.date).getTime() : Infinity;
-    return dateA - dateB; // Ascending order (nearest to farthest)
-  });
+  events.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort events by date
 
   for (const event of events) {
     const row = document.createElement("tr");
 
-    // Convert UTC date to local time properly
     let eventDateTime = event.date ? new Date(event.date) : null;
-    let eventDate = eventDateTime
-      ? eventDateTime.toLocaleDateString("en-CA") // YYYY-MM-DD format
-      : "N/A";
-    let eventTime = eventDateTime
-      ? eventDateTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      : "N/A";
+    let eventDate = eventDateTime ? eventDateTime.toLocaleDateString("en-CA") : "N/A";
+    let eventTime = eventDateTime ? eventDateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }) : "N/A";
 
-    // If event date is past today and it's still pending, update its status
+    // If event is pending but past today, auto-mark it as completed
     if (event.status === "pending" && eventDate < today) {
       await updateEventStatus(event._id, "completed");
       event.status = "completed";
@@ -317,7 +303,7 @@ async function populateEventTables(events) {
           <td>${event.title}</td>
           <td>${event.description || "-"}</td>
           <td>${eventDate} ${eventTime}</td>
-          <td>${event.venue || "-"}</td>
+          <td>${event.venue || "<i>Venue not assigned</i>"}</td>
           <td>${event.expectedGuests || "Not Specified"}</td>
           <td>
               ${
@@ -340,6 +326,7 @@ async function populateEventTables(events) {
     }
   }
 }
+
 
 // Function to update event status in the backend
 async function updateEventStatus(eventId, newStatus) {
