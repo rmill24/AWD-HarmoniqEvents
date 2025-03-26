@@ -220,7 +220,7 @@ async function fetchVendorRequests() {
 
           requestItem.innerHTML = `
               <div class="request-info">
-                  <span class="request-title">Event: ${request.eventTitle}</span>
+                  <p class="request-title"><strong>Event:</strong>${request.eventTitle}</p>
                   <p><strong>Task:</strong> ${request.taskTitle}</p>
                   <p><strong>Organizer:</strong> ${request.organizerName} (${request.organizerEmail})</p>
                   <p><strong>Status:</strong> <span id="request-status-${request._id}">${request.status}</span></p>

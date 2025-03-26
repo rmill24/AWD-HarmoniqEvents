@@ -457,8 +457,8 @@ document
       );
 
       if (response.ok) {
+        addEventModal.classList.remove("active");
         alert("Event created successfully!");
-        location.reload();
       } else {
         alert("Error adding event.");
       }
@@ -570,8 +570,8 @@ document
       );
 
       if (response.ok) {
+        closeEditEventModal();
         alert("Event updated successfully!");
-        location.reload();
       } else {
         alert("Error updating event.");
       }
@@ -584,6 +584,23 @@ document
 // TASKS MANAGEMENT
 // ==============================================
 let eventDates = {};
+
+function formatDateTime(dateString) {
+  const date = new Date(dateString);
+
+  // Extract individual parts
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, "0");
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12 || 12; // Convert 24-hour time to 12-hour format
+
+  return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+}
 
 // Fetch Events for Dropdown
 async function loadEventDropdown() {
@@ -700,7 +717,7 @@ async function loadTasksForEvent(eventId) {
       row.innerHTML = `
         <td>${task.title}</td>
         <td>${task.description || "-"}</td>
-        <td>${new Date(task.dueDate).toLocaleDateString()}</td>
+        <td>${formatDateTime(task.dueDate)}</td>
         <td>${task.status}</td>
         <td>${vendorDisplay}</td>
         <td>
@@ -823,8 +840,6 @@ document.addEventListener("click", async (event) => {
   }
 });
 
-
-
   // Handle Edit Task Form Submission
   document.getElementById("editTaskForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -866,7 +881,6 @@ document.addEventListener("click", async (event) => {
       console.error("Error updating task:", error);
     }
   });
-  
 
   // ============================
   // DELETE TASK FUNCTIONALITY
