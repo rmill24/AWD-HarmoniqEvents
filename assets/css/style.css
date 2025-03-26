@@ -301,18 +301,28 @@ p {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Device Mockup Styles */
 .device-mockup {
-    max-width: 65%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    padding: 20px 0;
 }
 
 .device-mockup img {
     width: auto;
-    height: 250px;
+    height: 400px;
 }
 
-#iphone {
-    max-width: 400px;
+#device {
+    max-width: 300px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
 }
 /* ============================================
    5. FEATURE CAROUSEL SECTION
@@ -381,6 +391,11 @@ p {
     align-items: center;
     background-color: var(--feature-visual-bg);
     border-radius: 20px 0 0 20px;
+}
+
+.feature-visual img {
+    max-width: 100%;
+    height: 400px;
 }
 
 /* Carousel Navigation */
@@ -1073,8 +1088,8 @@ footer {
     }
     
     .device-mockup img {
-        height: auto;
-        max-width: 80%;
+        height: 200px;
+        max-width: 100%;
     }
     
     /* Feature Cards - Mobile */
@@ -1306,7 +1321,7 @@ footer {
     }
     
     .device-mockup {
-        max-width: 45%;
+        max-width: 55%;
     }
     
     h1 {
