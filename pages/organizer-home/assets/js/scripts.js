@@ -769,41 +769,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open Edit Task Modal
   document.addEventListener("click", async (event) => {
-    if (event.target.classList.contains("edit-task-btn")) {
-      const taskId = event.target.getAttribute("data-task-id");
-      currentEditingTaskId = taskId; // Assign task ID for editing
-
-      console.log("Task ID being fetched:", taskId); // Debugging
+    const editButton = event.target.closest(".edit-task-btn");
+  
+    if (editButton) {
+      const taskId = editButton.getAttribute("data-task-id");
+  
       if (!taskId) {
         console.error("No Task ID found!");
         return;
       }
-
+  
       try {
         const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
-        console.log("Full Response:", response.JSON);
-
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error fetching task details:", errorText);
+          console.error("Error fetching task details:", await response.text());
           return;
         }
-
+  
         const task = await response.json();
-        console.log("Fetched Task Data:", task);
-
-        // Fill the edit form with task data
+  
+        // Populate the modal with task data
         document.getElementById("editTaskTitle").value = task.title;
         document.getElementById("editTaskDescription").value =
           task.description || "";
-        document.getElementById("editTaskDate").value =
-          task.dueDate.split("T")[0];
+        document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
         document.getElementById("editTaskTime").value = new Date(
           task.dueDate
         ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-        // Open the modal
-        document.getElementById("editTaskModal").style.display = "active";
+  
+        // Show the modal
+        document.getElementById("editTaskModal").classList.add("active");
+        document.body.style.overflow = "hidden";
       } catch (error) {
         console.error("Error fetching task details:", error);
       }
@@ -1879,29 +1875,29 @@ editGuestModal.addEventListener("click", function (event) {
   }
 });
 
-// Delete Guests Modal
-const deleteGuestsButton = document.querySelector(".delete-guests-btn");
-const deleteGuestsModal = document.getElementById("deleteGuestsModal");
-const deleteGuestsCancelButton =
-  deleteGuestsModal.querySelector(".cancel-modal");
-const confirmDeleteButton = deleteGuestsModal.querySelector(".confirm-delete");
+// // Delete Guests Modal
+// const deleteGuestsButton = document.querySelector(".delete-guests-btn");
+// const deleteGuestsModal = document.getElementById("deleteGuestsModal");
+// const deleteGuestsCancelButton =
+//   deleteGuestsModal.querySelector(".cancel-modal");
+// const confirmDeleteButton = deleteGuestsModal.querySelector(".confirm-delete");
 
-// When you click the delete button
-deleteGuestsButton.addEventListener("click", function () {
-  deleteGuestsModal.classList.add("active");
-  document.body.style.overflow = "hidden";
-});
+// // When you click the delete button
+// deleteGuestsButton.addEventListener("click", function () {
+//   deleteGuestsModal.classList.add("active");
+//   document.body.style.overflow = "hidden";
+// });
 
-// When you click the cancel button
-deleteGuestsCancelButton.addEventListener("click", function () {
-  deleteGuestsModal.classList.remove("active");
-  document.body.style.overflow = "";
-});
+// // When you click the cancel button
+// deleteGuestsCancelButton.addEventListener("click", function () {
+//   deleteGuestsModal.classList.remove("active");
+//   document.body.style.overflow = "";
+// });
 
-// When you click outside the modal
-deleteGuestsModal.addEventListener("click", function (event) {
-  if (event.target === deleteGuestsModal) {
-    deleteGuestsModal.classList.remove("active");
-    document.body.style.overflow = "";
-  }
-});
+// // When you click outside the modal
+// deleteGuestsModal.addEventListener("click", function (event) {
+//   if (event.target === deleteGuestsModal) {
+//     deleteGuestsModal.classList.remove("active");
+//     document.body.style.overflow = "";
+//   }
+// });
