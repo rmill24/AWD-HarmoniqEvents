@@ -888,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close Edit Modal
   document.querySelectorAll(".cancel-modal").forEach((btn) => {
     btn.addEventListener("click", () => {
-      editTaskModal.style.display = "none";
+      editTaskModal.classList.remove("active");
     });
   });
 
