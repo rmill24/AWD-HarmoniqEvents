@@ -725,8 +725,6 @@ async function loadTasksForEvent(eventId) {
   }
 }
 
-
-
 // Toggle Task Status (Complete ↔ Pending)
 document.addEventListener("click", async (event) => {
   if (event.target.closest(".toggle-status-btn")) {
@@ -774,12 +772,15 @@ document.addEventListener("click", async (event) => {
   if (editButton) {
     const taskId = editButton.getAttribute("data-task-id");
 
-    console.log(taskId);
+    console.log("Editing Task ID:", taskId); // ✅ Debugging
 
     if (!taskId) {
       console.error("No Task ID found!");
       return;
     }
+
+    // ✅ Store taskId for later use in the update function
+    currentEditingTaskId = taskId;
 
     try {
       const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
@@ -801,7 +802,7 @@ document.addEventListener("click", async (event) => {
       // Populate the modal with task data
       document.getElementById("editTaskTitle").value = task.title || "";
       document.getElementById("editTaskDescription").value = task.description || "";
-      
+
       // ✅ Ensure dueDate is valid
       const taskDate = new Date(task.dueDate);
       if (isNaN(taskDate.getTime())) {
@@ -821,6 +822,7 @@ document.addEventListener("click", async (event) => {
     }
   }
 });
+
 
 
   // Handle Edit Task Form Submission
@@ -847,7 +849,7 @@ document.addEventListener("click", async (event) => {
     };
   
     try {
-      const response = await fetch(`${apiUrl}/api/tasks/task/${currentEditingTaskId}`, {
+      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedTask),
