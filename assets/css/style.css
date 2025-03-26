@@ -812,7 +812,7 @@ input {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin: 0;
+    margin: 0 auto;
   }
   
 
@@ -1162,6 +1162,12 @@ footer {
 
     .txt p {
         font-size: 1.25em;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 30px;
+        margin: 0 auto;
     }
     
     /* Footer - Mobile */
