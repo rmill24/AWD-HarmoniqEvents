@@ -142,8 +142,10 @@ try {
     reloadPage();
 
     // Hide modal
-    document.getElementById("venue-modal").style.display = "none";
-
+    if (localStorage.getItem("venueSetUp") == "true"){
+        document.getElementById("venue-modal").style.display = "none";
+    }
+    
     // Update UI with new values
     document.getElementById("venue-details-content").innerHTML = `
         <strong>Name:</strong> ${updatedData.venueDetails.name}<br>
