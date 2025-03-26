@@ -442,9 +442,11 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
   
       if (response.ok) {
         alert("Signup successful!");
+        document.getElementById("signup-form").reset();
         console.log("Response:", result);
       } else {
         alert("Signup failed. Please try again.");
+        document.getElementById("signup-form").reset();
         console.error("Error:", result);
       }
     } catch (error) {
