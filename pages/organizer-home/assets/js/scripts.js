@@ -1321,7 +1321,7 @@ document.getElementById("addGuestForm").addEventListener("submit", async functio
 
       if (response.ok) {
           alert("Guest added successfully!");
-          document.getElementById("addGuestModal").style.display = "none";
+          document.getElementById("addGuestModal").classList.remove("active");
           loadGuestsForEvent(selectedEventId); // Refresh the guest list
       } else {
           console.error("Failed to add guest:", await response.text());
@@ -1836,34 +1836,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = "";
     }
   });
-});
-
-// Add Guest Modal
-const addGuestButton = document.querySelector(".add-guest-btn");
-const addGuestModal = document.getElementById("addGuestModal");
-const guestCancelButton = addGuestModal.querySelector(".cancel-modal");
-const guestForm = document.getElementById("addGuestForm");
-
-// When you click the add guest button
-addGuestButton.addEventListener("click", function () {
-  addGuestModal.classList.add("active");
-  document.body.style.overflow = "hidden";
-});
-
-// When you click the cancel button
-guestCancelButton.addEventListener("click", function () {
-  addGuestModal.classList.remove("active");
-  document.body.style.overflow = "";
-  guestForm.reset();
-});
-
-// When you click outside the modal
-addGuestModal.addEventListener("click", function (event) {
-  if (event.target === addGuestModal) {
-    addGuestModal.classList.remove("active");
-    document.body.style.overflow = "";
-    guestForm.reset();
-  }
 });
 
 // Edit Guest Modal
