@@ -461,6 +461,30 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     });
   });
   
+  document.addEventListener("DOMContentLoaded", () => {
+    const vendorRadio = document.querySelector('input[name="type"][value="vendor"]');
+    const organizerRadio = document.querySelector('input[name="type"][value="organizer"]');
+    const vendorOptions = document.getElementById("vendor-options");
+    const serviceTypeSelect = document.getElementById("service-type");
+
+    // Function to toggle visibility and required attribute
+    const toggleVendorOptions = () => {
+        if (vendorRadio.checked) {
+            vendorOptions.style.display = "block";
+            serviceTypeSelect.setAttribute("required", "required");
+        } else {
+            vendorOptions.style.display = "none";
+            serviceTypeSelect.removeAttribute("required");
+        }
+    };
+
+    // Add event listeners to radio buttons
+    vendorRadio.addEventListener("change", toggleVendorOptions);
+    organizerRadio.addEventListener("change", toggleVendorOptions);
+
+    // Initialize on page load
+    toggleVendorOptions();
+});
 
 // ============================================
 // Login Form Handling
