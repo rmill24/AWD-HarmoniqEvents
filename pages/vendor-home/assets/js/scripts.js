@@ -29,12 +29,6 @@ function updateThemeIcon(theme) {
   }
 }
 
-// Initialize everything when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("Initializing vendor dashboard...");
-  initThemeToggle();
-});
-
 // ============================================
 // VENDOR DASHBOARD
 // ============================================
