@@ -38,70 +38,67 @@ const apiUrl =
 
 // Fetch vendor data
 document.addEventListener("DOMContentLoaded", async () => {
-  const vendorId = localStorage.getItem("vendorId");
-
-  if (!vendorId) {
+    const vendorId = localStorage.getItem("vendorId");
+  
+    if (!vendorId) {
       alert("You are not logged in. Please log in first.");
-      window.location.href = "/index.html"; 
+      window.location.href = "/index.html";
       return;
-  }
-
-  try {
+    }
+  
+    try {
       const response = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
       const data = await response.json();
-
+  
       console.log("Fetched Vendor Data:", data);
-
+  
       document.getElementById("vendor-name").textContent = data.name;
       document.getElementById("vendor-serviceType").textContent = data.serviceType;
-
+  
       const venueDetailsSection = document.getElementById("venue-details");
       const venueDetailsContent = document.getElementById("venue-details-content");
       const venueModal = document.getElementById("venue-modal");
       const editVenueBtn = document.getElementById("edit-venue-btn");
-
+  
       if (data.serviceType === "Venue Manager") {
-        // Ensure venue details exist and are properly filled
         const venueDetails = data.venueDetails;
         const isVenueComplete =
-            venueDetails &&
-            venueDetails.name &&
-            venueDetails.location &&
-            venueDetails.capacity &&
-            Array.isArray(venueDetails.amenities) &&
-            venueDetails.amenities.length > 0;
-    
+          venueDetails &&
+          venueDetails.name &&
+          venueDetails.location &&
+          venueDetails.capacity &&
+          Array.isArray(venueDetails.amenities) &&
+          venueDetails.amenities.length > 0;
+  
         if (isVenueComplete) {
-            // ✅ Venue details exist, display them
-            venueDetailsSection.style.display = "block";
-            venueDetailsContent.style.display = "block";
-            editVenueBtn.style.display = "block";
-            venueDetailsContent.innerHTML = `
-                <strong>Name:</strong> ${venueDetails.name}<br>
-                <strong>Location:</strong> ${venueDetails.location}<br>
-                <strong>Capacity:</strong> ${venueDetails.capacity}<br>
-                <strong>Amenities:</strong> ${venueDetails.amenities.join(", ")}
-            `;
-    
-            // ✅ Set venue setup flag only when details are complete
-            localStorage.setItem("venueSetUp", "true");
-            venueModal.style.display = "none";
-    
-            console.log("✅ Venue details exist, modal should NOT show.");
-        } else if (!localStorage.getItem("venueSetUp")) {
-            // ✅ Only show modal if venue details are missing
-            venueModal.style.display = "flex";
-            console.log("❌ No venue details found, modal SHOULD show.");
+          // ✅ Venue details exist, show them
+          venueDetailsSection.style.display = "block";
+          venueDetailsContent.style.display = "block";
+          editVenueBtn.style.display = "block";
+          venueDetailsContent.innerHTML = `
+            <strong>Name:</strong> ${venueDetails.name}<br>
+            <strong>Location:</strong> ${venueDetails.location}<br>
+            <strong>Capacity:</strong> ${venueDetails.capacity}<br>
+            <strong>Amenities:</strong> ${venueDetails.amenities.join(", ")}
+          `;
+  
+          venueModal.style.display = "none";
+          localStorage.setItem(`venueSetUp_${vendorId}`, "true"); // Set unique flag per vendor
+  
+          console.log("✅ Venue details exist, modal should NOT show.");
+        } else if (!localStorage.getItem(`venueSetUp_${vendorId}`)) {
+          // ✅ Only show modal if it's the first login AND venue details are missing
+          venueModal.style.display = "flex";
+          console.log("❌ No venue details found, modal SHOULD show.");
         }
-    }
-     else {
-          venueDetailsSection.style.display = "none"; // Hide venue details for non-Venue Managers
-          venueModal.style.display = "none"; // Hide modal for non-Venue Managers
+      } else {
+        venueDetailsSection.style.display = "none";
+        venueModal.style.display = "none";
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Error fetching vendor data:", error);
-  }
-});
+    }
+  });
 
 // Handle venue form submission
 document.getElementById("venue-form").addEventListener("submit", async function (e) {
@@ -139,12 +136,10 @@ try {
 
     alert("Venue details updated successfully!");
     localStorage.setItem("venueSetUp", "true");
-    reloadPage();
 
     // Hide modal
-    if (localStorage.getItem("venueSetUp") == "true"){
-        document.getElementById("venue-modal").style.display = "none";
-    }
+    document.getElementById("venue-modal").style.display = "none";
+    location.reload()
     
     // Update UI with new values
     document.getElementById("venue-details-content").innerHTML = `
@@ -285,13 +280,22 @@ document.addEventListener("DOMContentLoaded", fetchVendorRequests);
 // Sign Out Button
 // ============================================
 document.querySelector(".sign-out").addEventListener("click", () => {
-  // Clear stored data
-  localStorage.removeItem("vendorId");
-  localStorage.removeItem("organizerId");
-
-  // Redirect to login page
-  window.location.href = "/index.html";
-});
+    // Get the current vendorId before clearing
+    const vendorId = localStorage.getItem("vendorId");
+  
+    // Clear stored data
+    localStorage.removeItem("vendorId");
+    localStorage.removeItem("organizerId");
+  
+    // Remove venue setup flag for the current vendor
+    if (vendorId) {
+      localStorage.removeItem(`venueSetUp_${vendorId}`);
+    }
+  
+    // Redirect to login page
+    window.location.href = "/index.html";
+  });
+  
 
 // ============================================
 
