@@ -218,16 +218,19 @@ async function fetchVendorRequests() {
           const requestItem = document.createElement("div");
           requestItem.classList.add("request-item");
 
+          // Check if the request has been accepted or declined
+          const isDisabled = request.status !== "pending";
+
           requestItem.innerHTML = `
               <div class="request-info">
-                  <p class="request-title"><strong>Event:</strong>${request.eventTitle}</p>
+                  <p class="request-title"><strong>Event: </strong>${request.eventTitle}</p>
                   <p><strong>Task:</strong> ${request.taskTitle}</p>
                   <p><strong>Organizer:</strong> ${request.organizerName} (${request.organizerEmail})</p>
                   <p><strong>Status:</strong> <span id="request-status-${request._id}">${request.status}</span></p>
               </div>
               <div class="request-actions">
-                  <button class="btn-accept" data-request-id="${request._id}">Accept</button>
-                  <button class="btn-reject" data-request-id="${request._id}">Reject</button>
+                  <button class="btn-accept" data-request-id="${request._id}" ${isDisabled ? 'style="display:none;"' : ""}>Accept</button>
+                  <button class="btn-reject" data-request-id="${request._id}" ${isDisabled ? 'style="display:none;"' : ""}>Reject</button>
               </div>
           `;
 
@@ -249,6 +252,10 @@ async function fetchVendorRequests() {
 }
 
 async function handleRequestAction(requestId, newStatus) {
+  const actionText = newStatus === "accepted" ? "accepting" : "declining";
+  const confirmation = confirm(`Are you sure you want to proceed with ${actionText} this request? This action cannot be undone.`);
+  if (!confirmation) return;
+
   try {
       const response = await fetch(`${apiUrl}/api/requests/${requestId}/status`, {
           method: "PUT",
@@ -260,12 +267,16 @@ async function handleRequestAction(requestId, newStatus) {
 
       console.log(`✅ Request ${requestId} updated to ${newStatus}`);
 
-      // Update UI immediately
+      // Update UI
       document.getElementById(`request-status-${requestId}`).textContent = newStatus;
 
-      // Reload requests to reflect the changes
-      fetchVendorRequests();
+      // Hide buttons
+      document.querySelectorAll(`[data-request-id="${requestId}"]`).forEach(button => {
+          button.style.display = "none";
+      });
 
+      alert(`Request has been successfully ${newStatus}. You can no longer change this decision.`);
+      
   } catch (error) {
       console.error("❌ Error updating request status:", error);
   }
