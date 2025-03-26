@@ -656,7 +656,9 @@ async function loadTasksForEvent(eventId) {
       const isPastCompleted = task.status === "completed" && taskDueDate < today;
 
       let vendorDisplay = "";
-      let requestedVendor = vendorRequests.find(req => req.taskId === task._id);
+      
+      // ✅ Fix: Match requests using `taskId` properly
+      let requestedVendor = vendorRequests.find(req => req.taskId === task._id.toString());
 
       if (task.assignedVendorId) {
         // Vendor has accepted the request
@@ -673,8 +675,8 @@ async function loadTasksForEvent(eventId) {
           vendorDisplay = `<span>Vendor Assigned</span>`;
         }
       } else if (requestedVendor && requestedVendor.status === "pending") {
-        // Vendor request is still pending
-        vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName}</span>`;
+        // ✅ Fix: Display pending vendor request properly
+        vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName} (${requestedVendor.serviceType})</span>`;
       } else {
         // No vendor assigned, show add vendor button
         vendorDisplay = isPastCompleted
@@ -722,6 +724,8 @@ async function loadTasksForEvent(eventId) {
     console.error("Error fetching tasks:", error);
   }
 }
+
+
 
 // Toggle Task Status (Complete ↔ Pending)
 document.addEventListener("click", async (event) => {
