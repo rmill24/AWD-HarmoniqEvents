@@ -1103,6 +1103,10 @@ footer {
     .feature-visual {
         border-radius: 20px 20px 0 0;
     }
+
+    .feature-visual img {
+        height: 200px;
+    }
     
     h2 {
         font-size: 1.8em;
