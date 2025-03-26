@@ -633,10 +633,15 @@ async function loadTasksForEvent(eventId) {
   }
 
   try {
+    // Fetch tasks
     const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
     let tasks = await response.json();
 
-    // Sort tasks by dueDate (earliest first)
+    // Fetch pending vendor requests for this event
+    const requestResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
+    const vendorRequests = await requestResponse.json();
+
+    // Sort tasks by dueDate
     tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
     tasksTableBody.innerHTML = "";
@@ -651,7 +656,10 @@ async function loadTasksForEvent(eventId) {
       const isPastCompleted = task.status === "completed" && taskDueDate < today;
 
       let vendorDisplay = "";
+      let requestedVendor = vendorRequests.find(req => req.taskId === task._id);
+
       if (task.assignedVendorId) {
+        // Vendor has accepted the request
         try {
           const vendorResponse = await fetch(`${apiUrl}/api/vendors/${task.assignedVendorId}`);
           if (vendorResponse.ok) {
@@ -664,7 +672,11 @@ async function loadTasksForEvent(eventId) {
           console.error("Error fetching assigned vendor details:", error);
           vendorDisplay = `<span>Vendor Assigned</span>`;
         }
+      } else if (requestedVendor && requestedVendor.status === "pending") {
+        // Vendor request is still pending
+        vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName}</span>`;
       } else {
+        // No vendor assigned, show add vendor button
         vendorDisplay = isPastCompleted
           ? `<button class="disabled-btn" disabled>
                <i class="fa-solid fa-ban"></i> Cannot Request Vendor
@@ -674,7 +686,7 @@ async function loadTasksForEvent(eventId) {
              </button>`;
       }
 
-      // Button to toggle task status
+      // Toggle Task Status Button
       const toggleStatusButton = isPastCompleted
         ? `<button class="disabled-btn" disabled>
              <i class="fa-solid fa-ban"></i> Cannot Revert
@@ -711,7 +723,6 @@ async function loadTasksForEvent(eventId) {
   }
 }
 
-
 // Toggle Task Status (Complete ↔ Pending)
 document.addEventListener("click", async (event) => {
   if (event.target.closest(".toggle-status-btn")) {
@@ -745,7 +756,6 @@ document.addEventListener("click", async (event) => {
   }
 });
 
-
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
 
@@ -754,44 +764,60 @@ document.addEventListener("DOMContentLoaded", () => {
   const editTaskForm = document.getElementById("editTaskForm");
   let currentEditingTaskId = null;
 
-  // Open Edit Task Modal
-  document.addEventListener("click", async (event) => {
-    const editButton = event.target.closest(".edit-task-btn");
-  
-    if (editButton) {
-      const taskId = editButton.getAttribute("data-task-id");
-  
-      if (!taskId) {
-        console.error("No Task ID found!");
+// Open Edit Task Modal
+document.addEventListener("click", async (event) => {
+  const editButton = event.target.closest(".edit-task-btn");
+  if (editButton) {
+    const taskId = editButton.getAttribute("data-task-id");
+
+    console.log(taskId);
+
+    if (!taskId) {
+      console.error("No Task ID found!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
+
+      if (!response.ok) {
+        console.error("Error fetching task details:", await response.text());
         return;
       }
-  
-      try {
-        const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
-        if (!response.ok) {
-          console.error("Error fetching task details:", await response.text());
-          return;
-        }
-  
-        const task = await response.json();
-  
-        // Populate the modal with task data
-        document.getElementById("editTaskTitle").value = task.title;
-        document.getElementById("editTaskDescription").value =
-          task.description || "";
-        document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
-        document.getElementById("editTaskTime").value = new Date(
-          task.dueDate
-        ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  
-        // Show the modal
-        document.getElementById("editTaskModal").classList.add("active");
-        document.body.style.overflow = "hidden";
-      } catch (error) {
-        console.error("Error fetching task details:", error);
+
+      const task = await response.json();
+
+      // ✅ Ensure task.dueDate exists before using .split()
+      if (!task || !task.dueDate) {
+        console.error("Task data is missing or invalid:", task);
+        alert("Error: Task data is missing. Please try again.");
+        return;
       }
+
+      // Populate the modal with task data
+      document.getElementById("editTaskTitle").value = task.title || "";
+      document.getElementById("editTaskDescription").value = task.description || "";
+      
+      // ✅ Ensure dueDate is valid
+      const taskDate = new Date(task.dueDate);
+      if (isNaN(taskDate.getTime())) {
+        console.error("Invalid date format:", task.dueDate);
+        alert("Error: Task has an invalid date.");
+        return;
+      }
+
+      document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
+      document.getElementById("editTaskTime").value = taskDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      // Show the modal
+      document.getElementById("editTaskModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    } catch (error) {
+      console.error("Error fetching task details:", error);
     }
-  });
+  }
+});
+
 
   // Handle Edit Task Form Submission
   document.getElementById("editTaskForm").addEventListener("submit", async (event) => {
@@ -817,7 +843,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     try {
-      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
+      const response = await fetch(`${apiUrl}/api/tasks/task/${currentEditingTaskId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedTask),
@@ -825,7 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
       if (response.ok) {
         alert("Task updated successfully!");
-        document.getElementById("editTaskModal").style.display = "none";
+        document.getElementById("editTaskModal").classList.remove("active");
         loadTasksForEvent(selectedEventId);
       } else {
         console.error("Failed to update task:", await response.text());
@@ -842,6 +868,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", async (event) => {
     if (event.target.closest(".delete-task-btn")) {
       const taskId = event.target.getAttribute("data-task-id");
+
+      console.log(taskId);
 
       if (!taskId) {
         console.error("No Task ID found for deletion!");
