@@ -61,29 +61,40 @@ document.addEventListener("DOMContentLoaded", async () => {
       const editVenueBtn = document.getElementById("edit-venue-btn");
 
       if (data.serviceType === "Venue Manager") {
-          if (data.venueDetails && Object.keys(data.venueDetails).length > 2) {
-              // ✅ Venue details exist, display them
-              venueDetailsSection.style.display = "block";
-              venueDetailsContent.style.display = "block";
-              editVenueBtn.style.display = "block";
-              venueDetailsContent.innerHTML = `
-                  <strong>Name:</strong> ${data.venueDetails.name}<br>
-                  <strong>Location:</strong> ${data.venueDetails.location}<br>
-                  <strong>Capacity:</strong> ${data.venueDetails.capacity}<br>
-                  <strong>Amenities:</strong> ${data.venueDetails.amenities.join(", ")}
-              `;
-
-              // ✅ Store flag to prevent modal from showing again
-              localStorage.setItem("venueSetUp", "true");
-              venueModal.style.display = "none";
-
-              console.log("✅ Venue details exist, modal should NOT show.");
-          } else if (!localStorage.getItem("venueSetUp")) {
-              // ✅ Only show modal if venue details are missing and not set
-              venueModal.style.display = "flex";
-              console.log("❌ No venue details found, modal SHOULD show.");
-          }
-      } else {
+        // Ensure venue details exist and are properly filled
+        const venueDetails = data.venueDetails;
+        const isVenueComplete =
+            venueDetails &&
+            venueDetails.name &&
+            venueDetails.location &&
+            venueDetails.capacity &&
+            Array.isArray(venueDetails.amenities) &&
+            venueDetails.amenities.length > 0;
+    
+        if (isVenueComplete) {
+            // ✅ Venue details exist, display them
+            venueDetailsSection.style.display = "block";
+            venueDetailsContent.style.display = "block";
+            editVenueBtn.style.display = "block";
+            venueDetailsContent.innerHTML = `
+                <strong>Name:</strong> ${venueDetails.name}<br>
+                <strong>Location:</strong> ${venueDetails.location}<br>
+                <strong>Capacity:</strong> ${venueDetails.capacity}<br>
+                <strong>Amenities:</strong> ${venueDetails.amenities.join(", ")}
+            `;
+    
+            // ✅ Set venue setup flag only when details are complete
+            localStorage.setItem("venueSetUp", "true");
+            venueModal.style.display = "none";
+    
+            console.log("✅ Venue details exist, modal should NOT show.");
+        } else if (!localStorage.getItem("venueSetUp")) {
+            // ✅ Only show modal if venue details are missing
+            venueModal.style.display = "flex";
+            console.log("❌ No venue details found, modal SHOULD show.");
+        }
+    }
+     else {
           venueDetailsSection.style.display = "none"; // Hide venue details for non-Venue Managers
           venueModal.style.display = "none"; // Hide modal for non-Venue Managers
       }
@@ -128,6 +139,7 @@ try {
 
     alert("Venue details updated successfully!");
     localStorage.setItem("venueSetUp", "true");
+    reloadPage();
 
     // Hide modal
     document.getElementById("venue-modal").style.display = "none";
