@@ -50,12 +50,8 @@
                     <button class="cta-button">Get Started</button>
                 </article>
         
-                <div id="iphone" class="device-mockup">
-                    <img src="./assets/img/iphone.png" alt="Mobile app screenshot showing the event planning interface">
-                </div>
-                <div id="macbook" class="device-mockup">
-                    <img src="./assets/img/macbook.png" alt="Mobile app screenshot showing the event planning interface">
-                </div>
+                <div id="device" class="device-mockup">
+                  <img src="./assets/img/mockup.png" alt="">
             </section>
             <!-- Features Carousel Section -->
         <section class="carousel-container" id ="services">
@@ -63,7 +59,7 @@
                 <div class="carousel-slide">
                     <div class="feature-card">
                         <section class="feature-visual">
-                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                            <img src="./assets/img/event-planning.png" alt="">
                         </section>
                         
                         <section class="feature-info">
@@ -75,7 +71,7 @@
                 <section class="carousel-slide">
                     <div class="feature-card">
                         <section class="feature-visual">
-                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                            <img src="./assets/img/event-sched.png" alt="">
                         </section>
                         <article class="feature-info">
                             <h2>EVENT SCHEDULING</h2>
@@ -86,7 +82,7 @@
                 <section class="carousel-slide">
                     <div class="feature-card">
                         <section class="feature-visual">
-                            <img src="https://dummyimage.com/526x300/828282/fff" alt="">
+                            <img src="./assets/img/guest.png" alt="">
                         </section>
                         <article class="feature-info">
                             <h2>GUEST MANAGEMENT</h2>
@@ -115,8 +111,8 @@
               </div>
               <div class="review-content">
                 <div class="stars">★★★★★</div>
-                <h3 class="review-title">Review title</h3>
-                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+                <h3 class="review-title">Saved My Wedding Day!</h3>
+                <p class="review-body">Harmoniq Events made planning my destination wedding completely stress-free. Highly recommend!</p>
               </div>
             </div>
           </div>
@@ -131,8 +127,8 @@
               </div>
               <div class="review-content">
                 <div class="stars">★★★★★</div>
-                <h3 class="review-title">Review title</h3>
-                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+                <h3 class="review-title">Perfect Corporate Event</h3>
+                <p class="review-body">Our company retreat was flawlessly organized using Harmoniq Events. </p>
               </div>
             </div>
           </div>
@@ -147,8 +143,8 @@
               </div>
               <div class="review-content">
                 <div class="stars">★★★★★</div>
-                <h3 class="review-title">Review title</h3>
-                <p class="review-body">Review body text that describes the customer's experience with our product or service.</p>
+                <h3 class="review-title">Birthday Party Success</h3>
+                <p class="review-body">I planned my son's 10th birthday party using Harmoniq Events and it was incredibly intuitive. </p>
               </div>
             </div>
           </div>
@@ -164,7 +160,7 @@
               <div class="review-content">
                 <div class="stars">★★★★☆</div>
                 <h3 class="review-title">Great Experience</h3>
-                <p class="review-body">The product exceeded my expectations in almost every way. Would definitely recommend!</p>
+                <p class="review-body">The event exceeded my expectations in almost every way. Would definitely recommend!</p>
               </div>
             </div>
           </div>
@@ -182,7 +178,7 @@
               <div class="review-content">
                 <div class="stars">★★★★★</div>
                 <h3 class="review-title">Excellent Service</h3>
-                <p class="review-body">Customer support was fantastic and helped me resolve all my issues quickly.</p>
+                <p class="review-body">Event planner was fantastic and helped me resolve all my issues quickly.</p>
               </div>
             </div>
           </div>
@@ -200,7 +196,7 @@
         </div>
       </div>
       <!-- Signup Section -->
-    <section id="signup-form" class="signup">
+    <section id="signup-section" class="signup">
         <div class="txt">
         <h1>Ready to turn your
             vision into reality?</h1>
@@ -208,30 +204,69 @@
     </div>
     <div class="form-container">
         <h2>Sign Up</h2>
-        <p class="login-text">Already a member? <a href="#">Log in</a></p>
+        <p class="login-text">Already a member? <a href="#" id="login-link">Log in</a></p>
+        <div id="login-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="login-form">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+        
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+
+                    <label>Type</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="type-login" value="organizer" checked> Organizer</label>
+                        <label><input type="radio" name="type-login" value="vendor"> Vendor</label>
+                    </div>
+        
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+            </div>
+        </div>
         <hr>
-        <form>
-            <label for="username">Username</label>
-            <input type="username" id="username" placeholder="Enter your username" required>
+        <form id="signup-form">
+    <label for="name">Name</label>
+    <input type="name" id="name" placeholder="Enter your name" required>
 
-            <label for="password">Password</label>
-            <div class="password-field">
-                <input type="password" id="password" placeholder="Enter password">
-                <i id="togglePassword" class="fa-solid fa-eye toggle-password"></i>
-            </div>
-                <label>Type</label>
-                <div class="radio-group">
-                  <label><input type="radio" name="type" value="user"> User</label>
-                  <label><input type="radio" name="type" value="vendor"> Vendor</label>
-                </div>
-            <button type="submit" class="signup-btn">Sign Up</button>
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
 
-            <div class="social-login"></div>
-                
+    <label for="password">Password</label>
+    <div class="password-field">
+        <input type="password" id="password" placeholder="Enter password">
+        <i id="togglePassword" class="fa-solid fa-eye toggle-password"></i>
+    </div>
 
-                </div>                
-            </div>
-        </form>
+    <label>Type</label>
+    <div class="radio-group">
+        <label><input type="radio" name="type" value="organizer" checked> Organizer</label>
+        <label><input type="radio" name="type" value="vendor"> Vendor</label>
+    </div>
+
+    <!-- Dropdown for Vendors -->
+    <div id="vendor-options">
+        <label for="service-type">Service Type</label>
+        <select id="service-type" name="service-type" required>
+            <option value="">Select a service</option>
+            <option value="Catering">Catering</option>
+            <option value="Photography">Photography</option>
+            <option value="Venue Manager">Venue Manager</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Music">Music</option>
+            <option value="Decoration">Decoration</option>
+            <option value="Bartender">Bartender</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Transportation">Transportation</option>
+        </select>
+        
+    </div>
+
+    <button type="submit" class="signup-btn">Sign Up</button>
+</form>
+
     </div>
     </section>
 </main>
