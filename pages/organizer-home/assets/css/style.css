@@ -615,6 +615,10 @@ hr {
     height: 44px;
 }
 
+#events .actions-bar {
+    margin: 0 auto 20px;
+}
+
 #tasks .actions-bar {
     display: flex !important;
     flex-direction: row !important;
@@ -1067,6 +1071,10 @@ hr {
         padding: 12px 15px;
         font-size: 14px;
         white-space: nowrap;
+    }
+
+    #events .actions-bar {
+        margin: 0;
     }
 
     #tasks .actions-bar {
