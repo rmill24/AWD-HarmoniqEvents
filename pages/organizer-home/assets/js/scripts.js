@@ -290,8 +290,16 @@ async function populateEventTables(events) {
     const row = document.createElement("tr");
 
     let eventDateTime = event.date ? new Date(event.date) : null;
-    let eventDate = eventDateTime ? eventDateTime.toLocaleDateString("en-CA") : "N/A";
-    let eventTime = eventDateTime ? eventDateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }) : "N/A";
+    let eventDate = eventDateTime
+      ? eventDateTime.toLocaleDateString("en-CA")
+      : "N/A";
+    let eventTime = eventDateTime
+      ? eventDateTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : "N/A";
 
     // If event is pending but past today, auto-mark it as completed
     if (event.status === "pending" && eventDate < today) {
@@ -326,68 +334,6 @@ async function populateEventTables(events) {
     }
   }
 }
-
-
-// Function to update event status in the backend
-async function updateEventStatus(eventId, newStatus) {
-  try {
-    const response = await fetch(
-      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      }
-    );
-
-    if (!response.ok) {
-      console.error(`Failed to update event ${eventId} to ${newStatus}`);
-    }
-  } catch (error) {
-    console.error("Error updating event status:", error);
-  }
-}
-
-// Handle deleting events
-document.addEventListener("click", async (event) => {
-  const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
-
-  if (!deleteButton) return; // Exit if not clicking the delete button
-
-  const eventId = deleteButton.dataset.eventId;
-
-  if (!confirm("Are you sure you want to delete this event?")) return;
-
-  try {
-    const response = await fetch(
-      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (response.ok) {
-      alert("Event deleted successfully!");
-      deleteButton.closest("tr").remove(); // Remove row without reloading
-    } else {
-      alert("Failed to delete event.");
-    }
-  } catch (error) {
-    console.error("Error deleting event:", error);
-  }
-});
-
-// Prevent editing completed events
-document.addEventListener("click", (event) => {
-  if (event.target.closest(".edit-event-button")) {
-    if (event.target.closest(".edit-event-button").hasAttribute("disabled")) {
-      alert("Completed events cannot be edited.");
-      return;
-    }
-    const eventId = event.target.closest(".edit-event-button").dataset.eventId;
-    openEditModal(eventId);
-  }
-});
 
 //  Add Event Modal
 const addEventButton = document.querySelector(".add-event-btn");
@@ -459,6 +405,14 @@ document
       if (response.ok) {
         addEventModal.classList.remove("active");
         alert("Event created successfully!");
+
+        // Fetch and refresh the events
+        const organizerId = localStorage.getItem("organizerId");
+        const eventsResponse = await fetch(
+          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        );
+        const events = await eventsResponse.json();
+        populateEventTables(events); // Refresh the event tables
       } else {
         alert("Error adding event.");
       }
@@ -471,6 +425,79 @@ document
 const editEventModal = document.getElementById("editEventModal");
 const editEventCancelButton = editEventModal.querySelector(".cancel-modal");
 const editEventForm = document.getElementById("editEventForm");
+
+// Handle Updating an Event
+document
+  .getElementById("editEventForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const eventId = e.target.dataset.eventId;
+
+    const dateValue = document.getElementById("editEventDate").value;
+    const timeValue = document.getElementById("editEventTime").value;
+
+    // Convert user input time to UTC before storing
+    const fullDateTime =
+      dateValue && timeValue
+        ? new Date(`${dateValue}T${timeValue}`).toISOString()
+        : null;
+
+    const updatedData = {
+      title: document.getElementById("editEventTitle").value,
+      description: document.getElementById("editEventDescription").value,
+      date: fullDateTime,
+      expectedGuests: document.getElementById("editEventGuests").value,
+    };
+
+    try {
+      const response = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (response.ok) {
+        closeEditEventModal();
+        alert("Event updated successfully!");
+
+        // Fetch and refresh the events
+        const organizerId = localStorage.getItem("organizerId");
+        const eventsResponse = await fetch(
+          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        );
+        const events = await eventsResponse.json();
+        populateEventTables(events); // Refresh the event tables
+      } else {
+        alert("Error updating event.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  });
+
+// Function to update event status in the backend
+async function updateEventStatus(eventId, newStatus) {
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Failed to update event ${eventId} to ${newStatus}`);
+    }
+  } catch (error) {
+    console.error("Error updating event status:", error);
+  }
+}
 
 // Open Edit Event Modal (Using Event Delegation)
 document.addEventListener("click", (event) => {
@@ -535,50 +562,52 @@ function openEditModal(eventId) {
     .catch((error) => console.error("Error fetching event details:", error));
 }
 
-// Handle Updating an Event
-document
-  .getElementById("editEventForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
+// Handle deleting events
+document.addEventListener("click", async (event) => {
+  const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
 
-    const eventId = e.target.dataset.eventId;
+  if (!deleteButton) return; // Exit if not clicking the delete button
 
-    const dateValue = document.getElementById("editEventDate").value;
-    const timeValue = document.getElementById("editEventTime").value;
+  const eventId = deleteButton.dataset.eventId;
 
-    // Convert user input time to UTC before storing
-    const fullDateTime =
-      dateValue && timeValue
-        ? new Date(`${dateValue}T${timeValue}`).toISOString()
-        : null;
+  if (!confirm("Are you sure you want to delete this event?")) return;
 
-    const updatedData = {
-      title: document.getElementById("editEventTitle").value,
-      description: document.getElementById("editEventDescription").value,
-      date: fullDateTime,
-      expectedGuests: document.getElementById("editEventGuests").value,
-    };
-
-    try {
-      const response = await fetch(
-        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedData),
-        }
-      );
-
-      if (response.ok) {
-        closeEditEventModal();
-        alert("Event updated successfully!");
-      } else {
-        alert("Error updating event.");
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "DELETE",
       }
-    } catch (error) {
-      console.error("Network error:", error);
+    );
+
+    if (response.ok) {
+      alert("Event deleted successfully!");
+      // Fetch and refresh the events
+      const organizerId = localStorage.getItem("organizerId");
+      const eventsResponse = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+      );
+      const events = await eventsResponse.json();
+      populateEventTables(events); // Refresh the event tables
+    } else {
+      alert("Failed to delete event.");
     }
-  });
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+});
+
+// Prevent editing completed events
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".edit-event-button")) {
+    if (event.target.closest(".edit-event-button").hasAttribute("disabled")) {
+      alert("Completed events cannot be edited.");
+      return;
+    }
+    const eventId = event.target.closest(".edit-event-button").dataset.eventId;
+    openEditModal(eventId);
+  }
+});
 
 // ==============================================
 // TASKS MANAGEMENT
@@ -641,7 +670,9 @@ async function loadEventDropdown() {
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
   const tasksTableBody = document.getElementById("tasksTableBody");
-  const completedTasksTableBody = document.querySelector("#completedTasks tbody");
+  const completedTasksTableBody = document.querySelector(
+    "#completedTasks tbody"
+  );
 
   if (eventId === "") {
     tasksTableBody.innerHTML = "";
@@ -670,17 +701,22 @@ async function loadTasksForEvent(eventId) {
       const row = document.createElement("tr");
 
       const taskDueDate = new Date(task.dueDate);
-      const isPastCompleted = task.status === "completed" && taskDueDate < today;
+      const isPastCompleted =
+        task.status === "completed" && taskDueDate < today;
 
       let vendorDisplay = "";
-      
+
       // ✅ Fix: Match requests using `taskId` properly
-      let requestedVendor = vendorRequests.find(req => req.taskId === task._id.toString());
+      let requestedVendor = vendorRequests.find(
+        (req) => req.taskId === task._id.toString()
+      );
 
       if (task.assignedVendorId) {
         // Vendor has accepted the request
         try {
-          const vendorResponse = await fetch(`${apiUrl}/api/vendors/${task.assignedVendorId}`);
+          const vendorResponse = await fetch(
+            `${apiUrl}/api/vendors/${task.assignedVendorId}`
+          );
           if (vendorResponse.ok) {
             const vendorData = await vendorResponse.json();
             vendorDisplay = `<span>${vendorData.name}</span>`;
@@ -710,8 +746,14 @@ async function loadTasksForEvent(eventId) {
         ? `<button class="disabled-btn" disabled>
              <i class="fa-solid fa-ban"></i> Cannot Revert
            </button>`
-        : `<button class="toggle-status-btn" data-task-id="${task._id}" data-status="${task.status}">
-             ${task.status === "completed" ? `<i class="fa-solid fa-arrow-rotate-left"></i> Mark as Pending` : `<i class="fa-solid fa-check"></i> Mark as Complete`}
+        : `<button class="toggle-status-btn" data-task-id="${
+            task._id
+          }" data-status="${task.status}">
+             ${
+               task.status === "completed"
+                 ? `<i class="fa-solid fa-arrow-rotate-left"></i> Mark as Pending`
+                 : `<i class="fa-solid fa-check"></i> Mark as Complete`
+             }
            </button>`;
 
       row.innerHTML = `
@@ -783,104 +825,119 @@ document.addEventListener("DOMContentLoaded", () => {
   const editTaskForm = document.getElementById("editTaskForm");
   let currentEditingTaskId = null;
 
-// Open Edit Task Modal
-document.addEventListener("click", async (event) => {
-  const editButton = event.target.closest(".edit-task-btn");
-  if (editButton) {
-    const taskId = editButton.getAttribute("data-task-id");
+  // Open Edit Task Modal
+  document.addEventListener("click", async (event) => {
+    const editButton = event.target.closest(".edit-task-btn");
+    if (editButton) {
+      const taskId = editButton.getAttribute("data-task-id");
 
-    console.log("Editing Task ID:", taskId); // ✅ Debugging
+      console.log("Editing Task ID:", taskId); // ✅ Debugging
 
-    if (!taskId) {
-      console.error("No Task ID found!");
-      return;
-    }
-
-    // ✅ Store taskId for later use in the update function
-    currentEditingTaskId = taskId;
-
-    try {
-      const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
-
-      if (!response.ok) {
-        console.error("Error fetching task details:", await response.text());
+      if (!taskId) {
+        console.error("No Task ID found!");
         return;
       }
 
-      const task = await response.json();
+      // ✅ Store taskId for later use in the update function
+      currentEditingTaskId = taskId;
 
-      // ✅ Ensure task.dueDate exists before using .split()
-      if (!task || !task.dueDate) {
-        console.error("Task data is missing or invalid:", task);
-        alert("Error: Task data is missing. Please try again.");
-        return;
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
+
+        if (!response.ok) {
+          console.error("Error fetching task details:", await response.text());
+          return;
+        }
+
+        const task = await response.json();
+
+        // ✅ Ensure task.dueDate exists before using .split()
+        if (!task || !task.dueDate) {
+          console.error("Task data is missing or invalid:", task);
+          alert("Error: Task data is missing. Please try again.");
+          return;
+        }
+
+        // Populate the modal with task data
+        document.getElementById("editTaskTitle").value = task.title || "";
+        document.getElementById("editTaskDescription").value =
+          task.description || "";
+
+        // ✅ Ensure dueDate is valid
+        const taskDate = new Date(task.dueDate);
+        if (isNaN(taskDate.getTime())) {
+          console.error("Invalid date format:", task.dueDate);
+          alert("Error: Task has an invalid date.");
+          return;
+        }
+
+        document.getElementById("editTaskDate").value =
+          task.dueDate.split("T")[0];
+        document.getElementById("editTaskTime").value =
+          taskDate.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+        // Show the modal
+        document.getElementById("editTaskModal").classList.add("active");
+        document.body.style.overflow = "hidden";
+      } catch (error) {
+        console.error("Error fetching task details:", error);
       }
-
-      // Populate the modal with task data
-      document.getElementById("editTaskTitle").value = task.title || "";
-      document.getElementById("editTaskDescription").value = task.description || "";
-
-      // ✅ Ensure dueDate is valid
-      const taskDate = new Date(task.dueDate);
-      if (isNaN(taskDate.getTime())) {
-        console.error("Invalid date format:", task.dueDate);
-        alert("Error: Task has an invalid date.");
-        return;
-      }
-
-      document.getElementById("editTaskDate").value = task.dueDate.split("T")[0];
-      document.getElementById("editTaskTime").value = taskDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-      // Show the modal
-      document.getElementById("editTaskModal").classList.add("active");
-      document.body.style.overflow = "hidden";
-    } catch (error) {
-      console.error("Error fetching task details:", error);
-    }
-  }
-});
-
-  // Handle Edit Task Form Submission
-  document.getElementById("editTaskForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-  
-    if (!currentEditingTaskId) return;
-  
-    const taskDateInput = document.getElementById("editTaskDate").value;
-    const taskDueDate = new Date(taskDateInput);
-  
-    const selectedEventId = document.querySelector(".event-dropdown-task").value;
-    const eventDate = eventDates[selectedEventId]; // Get event date
-  
-    if (taskDueDate > eventDate) {
-      alert("Task due date cannot be later than the event date.");
-      return;
-    }
-  
-    const updatedTask = {
-      title: document.getElementById("editTaskTitle").value,
-      description: document.getElementById("editTaskDescription").value,
-      dueDate: new Date(`${taskDateInput}T${document.getElementById("editTaskTime").value}`).toISOString(),
-    };
-  
-    try {
-      const response = await fetch(`${apiUrl}/api/tasks/${currentEditingTaskId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTask),
-      });
-  
-      if (response.ok) {
-        alert("Task updated successfully!");
-        document.getElementById("editTaskModal").classList.remove("active");
-        loadTasksForEvent(selectedEventId);
-      } else {
-        console.error("Failed to update task:", await response.text());
-      }
-    } catch (error) {
-      console.error("Error updating task:", error);
     }
   });
+
+  // Handle Edit Task Form Submission
+  document
+    .getElementById("editTaskForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!currentEditingTaskId) return;
+
+      const taskDateInput = document.getElementById("editTaskDate").value;
+      const taskDueDate = new Date(taskDateInput);
+
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
+      const eventDate = eventDates[selectedEventId]; // Get event date
+
+      if (taskDueDate > eventDate) {
+        alert("Task due date cannot be later than the event date.");
+        return;
+      }
+
+      const updatedTask = {
+        title: document.getElementById("editTaskTitle").value,
+        description: document.getElementById("editTaskDescription").value,
+        dueDate: new Date(
+          `${taskDateInput}T${document.getElementById("editTaskTime").value}`
+        ).toISOString(),
+      };
+
+      try {
+        const response = await fetch(
+          `${apiUrl}/api/tasks/${currentEditingTaskId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedTask),
+          }
+        );
+
+        if (response.ok) {
+          alert("Task updated successfully!");
+          document.getElementById("editTaskModal").classList.remove("active");
+          loadTasksForEvent(selectedEventId);
+        } else {
+          console.error("Failed to update task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
+    });
 
   // ============================
   // DELETE TASK FUNCTIONALITY
@@ -982,16 +1039,18 @@ document.addEventListener("click", async (event) => {
   categoryDropdown.addEventListener("change", async () => {
     const selectedCategory = categoryDropdown.value;
     if (!selectedCategory) return;
-  
+
     try {
-      const response = await fetch(`${apiUrl}/api/vendors?serviceType=${selectedCategory}`);
+      const response = await fetch(
+        `${apiUrl}/api/vendors?serviceType=${selectedCategory}`
+      );
       if (!response.ok) {
         console.error("Error fetching vendors:", await response.text());
         return;
       }
-  
+
       const vendors = await response.json();
-      
+
       // Populate Vendor Dropdown
       vendorDropdown.innerHTML = `<option disabled selected>Select Vendor</option>`;
       vendors.forEach((vendor) => {
@@ -1000,7 +1059,7 @@ document.addEventListener("click", async (event) => {
         option.textContent = vendor.name;
         vendorDropdown.appendChild(option);
       });
-  
+
       // Clear Venue Details when category changes
       document.getElementById("venueDetailsContainer").style.display = "none";
     } catch (error) {
@@ -1015,34 +1074,38 @@ document.addEventListener("click", async (event) => {
     console.log("Selected Vendor ID:", selectedVendorId); // Debugging
 
     try {
-        const response = await fetch(`${apiUrl}/api/vendors/${selectedVendorId}`);
-        if (!response.ok) {
-            console.error("Error fetching vendor details:", await response.text());
-            return;
-        }
+      const response = await fetch(`${apiUrl}/api/vendors/${selectedVendorId}`);
+      if (!response.ok) {
+        console.error("Error fetching vendor details:", await response.text());
+        return;
+      }
 
-        const vendor = await response.json();
-        console.log("Fetched Vendor Data:", vendor); // Debugging
+      const vendor = await response.json();
+      console.log("Fetched Vendor Data:", vendor); // Debugging
 
-        // Check if vendor is a Venue Manager and has venue details
-        if (vendor.serviceType === "Venue Manager" && vendor.venueDetails) {
-            console.log("Vendor is a Venue Manager. Showing details..."); // Debugging
-            document.getElementById("venueName").textContent = vendor.venueDetails.name || "N/A";
-            document.getElementById("venueLocation").textContent = vendor.venueDetails.location || "N/A";
-            document.getElementById("venueCapacity").textContent = vendor.venueDetails.capacity || "N/A";
-            document.getElementById("venueAmenities").textContent = vendor.venueDetails.amenities?.join(", ") || "None";
+      // Check if vendor is a Venue Manager and has venue details
+      if (vendor.serviceType === "Venue Manager" && vendor.venueDetails) {
+        console.log("Vendor is a Venue Manager. Showing details..."); // Debugging
+        document.getElementById("venueName").textContent =
+          vendor.venueDetails.name || "N/A";
+        document.getElementById("venueLocation").textContent =
+          vendor.venueDetails.location || "N/A";
+        document.getElementById("venueCapacity").textContent =
+          vendor.venueDetails.capacity || "N/A";
+        document.getElementById("venueAmenities").textContent =
+          vendor.venueDetails.amenities?.join(", ") || "None";
 
-            // Show venue details section
-            document.getElementById("venueDetailsContainer").style.display = "block";
-        } else {
-            console.log("Vendor is NOT a Venue Manager. Hiding details..."); // Debugging
-            document.getElementById("venueDetailsContainer").style.display = "none";
-        }
+        // Show venue details section
+        document.getElementById("venueDetailsContainer").style.display =
+          "block";
+      } else {
+        console.log("Vendor is NOT a Venue Manager. Hiding details..."); // Debugging
+        document.getElementById("venueDetailsContainer").style.display = "none";
+      }
     } catch (error) {
-        console.error("Error fetching vendor details:", error);
+      console.error("Error fetching vendor details:", error);
     }
-});
-
+  });
 
   // Handle Assign Vendor Confirmation
   confirmVendorBtn.addEventListener("click", async () => {
@@ -1072,12 +1135,19 @@ document.addEventListener("click", async (event) => {
       if (response.ok) {
         alert("Vendor request sent successfully!");
         requestVendorModal.style.display = "none";
-        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+        loadTasksForEvent(selectedEventId); // Reload tasks for the selected event
       } else {
-        console.error("Failed to send vendor request:", await response.text());
+        const errorData = await response.json(); // Read error response
+        if (response.status === 422) {
+          alert(errorData.message); // Display validation error
+        } else {
+          alert("Failed to send vendor request. Please try again.");
+          console.error("Error:", errorData);
+        }
       }
     } catch (error) {
       console.error("Error sending vendor request:", error);
+      alert("An error occurred while sending the request.");
     }
   });
 
@@ -1112,57 +1182,60 @@ document.addEventListener("click", async (event) => {
   });
 
   // HANDLE ADD TASK FORM SUBMISSION
-  document.getElementById("addTaskForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-  
-    const selectedEventId = document.querySelector(".event-dropdown-task").value;
-    if (!selectedEventId) {
-      alert("Please select an event first.");
-      return;
-    }
-  
-    const eventDate = eventDates[selectedEventId]; // Get event date
-    const taskDateInput = document.getElementById("taskDate").value;
-    const taskDueDate = new Date(taskDateInput);
-  
-    if (taskDueDate > eventDate) {
-      alert("Task due date cannot be later than the event date.");
-      return;
-    }
-  
-    const newTask = {
-      title: document.getElementById("taskTitle").value,
-      description: document.getElementById("taskDescription").value,
-      dueDate: new Date(`${taskDateInput}T${document.getElementById("taskTime").value}`).toISOString(),
-      eventId: selectedEventId,
-    };
-  
-    try {
-      const response = await fetch(`${apiUrl}/api/tasks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newTask),
-      });
-  
-      if (response.ok) {
-        alert("Task added successfully!");
-        document.getElementById("addTaskModal").classList.remove("active");
-        loadTasksForEvent(selectedEventId); // Refresh tasks
-      } else {
-        console.error("Failed to add task:", await response.text());
-      }
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
-  });
-  
+  document
+    .getElementById("addTaskForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-    // Close Modal on Cancel
-    addTaskModal
-    .querySelector(".btn-secondary")
-    .addEventListener("click", () => {
-      addTaskModal.classList.remove("active");
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
+      if (!selectedEventId) {
+        alert("Please select an event first.");
+        return;
+      }
+
+      const eventDate = eventDates[selectedEventId]; // Get event date
+      const taskDateInput = document.getElementById("taskDate").value;
+      const taskDueDate = new Date(taskDateInput);
+
+      if (taskDueDate > eventDate) {
+        alert("Task due date cannot be later than the event date.");
+        return;
+      }
+
+      const newTask = {
+        title: document.getElementById("taskTitle").value,
+        description: document.getElementById("taskDescription").value,
+        dueDate: new Date(
+          `${taskDateInput}T${document.getElementById("taskTime").value}`
+        ).toISOString(),
+        eventId: selectedEventId,
+      };
+
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newTask),
+        });
+
+        if (response.ok) {
+          alert("Task added successfully!");
+          document.getElementById("addTaskModal").classList.remove("active");
+          loadTasksForEvent(selectedEventId); // Refresh tasks
+        } else {
+          console.error("Failed to add task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
     });
+
+  // Close Modal on Cancel
+  addTaskModal.querySelector(".btn-secondary").addEventListener("click", () => {
+    addTaskModal.classList.remove("active");
+  });
 
   async function autoCompleteExpiredTasks() {
     try {
@@ -1240,7 +1313,6 @@ async function loadGuestEventDropdown() {
     eventDropdown.addEventListener("change", () => {
       loadGuestsForEvent(eventDropdown.value);
     });
-
   } catch (error) {
     console.error("Error fetching events:", error);
   }
@@ -1250,7 +1322,8 @@ async function loadGuestsForEvent(eventId) {
   const guestsTableBody = document.querySelector(".guest-table tbody");
 
   if (eventId === "") {
-    guestsTableBody.innerHTML = "<tr><td colspan='6'>No event selected</td></tr>";
+    guestsTableBody.innerHTML =
+      "<tr><td colspan='6'>No event selected</td></tr>";
     return;
   }
 
@@ -1267,7 +1340,9 @@ async function loadGuestsForEvent(eventId) {
         <td>${guest.email}</td>
         <td>${guest.phone || "-"}</td>
         <td>
-          <span class="status-badge status-${guest.status.toLowerCase()}">${guest.status}</span>
+          <span class="status-badge status-${guest.status.toLowerCase()}">${
+        guest.status
+      }</span>
         </td>
         <td>
           <button class="edit-guest-btn" data-guest-id="${guest._id}">
@@ -1280,7 +1355,6 @@ async function loadGuestsForEvent(eventId) {
       `;
       guestsTableBody.appendChild(row);
     });
-
   } catch (error) {
     console.error("Error fetching guests:", error);
   }
@@ -1289,17 +1363,18 @@ async function loadGuestsForEvent(eventId) {
 // Initialize Guest Event Dropdown
 loadGuestEventDropdown();
 
-
 // ==============================================
 // ADD GUEST FUNCTIONALITY
 // ==============================================
 
 document.querySelector(".add-guest-btn").addEventListener("click", () => {
-  const selectedEventId = document.querySelector(".event-dropdown-guests").value;
+  const selectedEventId = document.querySelector(
+    ".event-dropdown-guests"
+  ).value;
 
   if (!selectedEventId) {
-      alert("Please select an event first.");
-      return;
+    alert("Please select an event first.");
+    return;
   }
 
   // Reset form fields before opening the modal
@@ -1309,41 +1384,45 @@ document.querySelector(".add-guest-btn").addEventListener("click", () => {
   document.getElementById("addGuestModal").classList.add("active");
 });
 
-document.getElementById("addGuestForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+document
+  .getElementById("addGuestForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-  const selectedEventId = document.querySelector(".event-dropdown-guests").value;
-  if (!selectedEventId) {
+    const selectedEventId = document.querySelector(
+      ".event-dropdown-guests"
+    ).value;
+    if (!selectedEventId) {
       alert("Please select an event first.");
       return;
-  }
+    }
 
-  const newGuest = {
+    const newGuest = {
       name: document.getElementById("guestName").value,
       email: document.getElementById("guestEmail").value,
       phone: document.getElementById("guestPhone").value,
       status: document.getElementById("guestStatus").value,
       eventId: selectedEventId, // Assign guest to selected event
-  };
+    };
 
-  try {
+    try {
       const response = await fetch(`${apiUrl}/api/guests`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newGuest),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newGuest),
       });
 
       if (response.ok) {
-          alert("Guest added successfully!");
-          document.getElementById("addGuestModal").classList.remove("active");
-          loadGuestsForEvent(selectedEventId); // Refresh the guest list
+        alert("Guest added successfully!");
+        document.getElementById("addGuestModal").classList.remove("active");
+        loadGuestsForEvent(selectedEventId); // Refresh the guest list
       } else {
-          console.error("Failed to add guest:", await response.text());
+        console.error("Failed to add guest:", await response.text());
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Error adding guest:", error);
-  }
-});
+    }
+  });
 
 document.querySelectorAll(".cancel-modal").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -1357,80 +1436,88 @@ document.querySelectorAll(".cancel-modal").forEach((btn) => {
 let currentEditingGuestId = null;
 
 document.addEventListener("click", async (event) => {
-    if (event.target.closest(".edit-guest-btn")) {
-        const guestId = event.target.closest(".edit-guest-btn").getAttribute("data-guest-id");
-        currentEditingGuestId = guestId; // Store the guest ID for editing
+  if (event.target.closest(".edit-guest-btn")) {
+    const guestId = event.target
+      .closest(".edit-guest-btn")
+      .getAttribute("data-guest-id");
+    currentEditingGuestId = guestId; // Store the guest ID for editing
 
-        console.log(guestId);
+    console.log(guestId);
 
-        if (!guestId) {
-            console.error("No Guest ID found!");
-            return;
-        }
-
-        try {
-            const response = await fetch(`${apiUrl}/api/guests/guest/${guestId}`)
-
-            if (!response.ok) {
-                console.error("Error fetching guest details:", await response.text());
-                return;
-            }
-
-            const guest = await response.json();
-
-            // Populate the edit form with guest data
-            document.getElementById("editGuestName").value = guest.name;
-            document.getElementById("editGuestEmail").value = guest.email;
-            document.getElementById("editGuestPhone").value = guest.phone || "";
-            document.getElementById("editGuestStatus").value = guest.status;
-
-            // Show the modal
-            document.getElementById("editGuestModal").classList.add("active");
-
-        } catch (error) {
-            console.error("Error fetching guest details:", error);
-        }
+    if (!guestId) {
+      console.error("No Guest ID found!");
+      return;
     }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/guests/guest/${guestId}`);
+
+      if (!response.ok) {
+        console.error("Error fetching guest details:", await response.text());
+        return;
+      }
+
+      const guest = await response.json();
+
+      // Populate the edit form with guest data
+      document.getElementById("editGuestName").value = guest.name;
+      document.getElementById("editGuestEmail").value = guest.email;
+      document.getElementById("editGuestPhone").value = guest.phone || "";
+      document.getElementById("editGuestStatus").value = guest.status;
+
+      // Show the modal
+      document.getElementById("editGuestModal").classList.add("active");
+    } catch (error) {
+      console.error("Error fetching guest details:", error);
+    }
+  }
 });
 
 // Handle Guest Form Submission
-document.getElementById("editGuestForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+document
+  .getElementById("editGuestForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-  if (!currentEditingGuestId) {
+    if (!currentEditingGuestId) {
       console.error("No Guest ID found for editing!");
       return;
-  }
+    }
 
-  const updatedGuest = {
+    const updatedGuest = {
       name: document.getElementById("editGuestName").value,
       email: document.getElementById("editGuestEmail").value,
       phone: document.getElementById("editGuestPhone").value,
       status: document.getElementById("editGuestStatus").value,
-  };
+    };
 
-  try {
-      const response = await fetch(`${apiUrl}/api/guests/${currentEditingGuestId}`, {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/guests/${currentEditingGuestId}`,
+        {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedGuest),
-      });
+        }
+      );
 
       if (response.ok) {
-          alert("Guest information updated successfully!");
-          document.getElementById("editGuestModal").classList.remove("active");
-          loadGuestsForEvent(document.querySelector(".event-dropdown-guests").value); // Refresh guest list
+        alert("Guest information updated successfully!");
+        document.getElementById("editGuestModal").classList.remove("active");
+        loadGuestsForEvent(
+          document.querySelector(".event-dropdown-guests").value
+        ); // Refresh guest list
       } else {
-          console.error("Failed to update guest:", await response.text());
+        console.error("Failed to update guest:", await response.text());
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Error updating guest:", error);
-  }
-});
+    }
+  });
 
 document.querySelectorAll(".cancel-modal").forEach((btn) => {
   btn.addEventListener("click", () => {
-      document.getElementById("editGuestModal").classList.remove("active");
+    document.getElementById("editGuestModal").classList.remove("active");
   });
 });
 
@@ -1439,30 +1526,36 @@ document.querySelectorAll(".cancel-modal").forEach((btn) => {
 // ==============================================
 document.addEventListener("click", async (event) => {
   if (event.target.closest(".delete-guest-btn")) {
-      const guestId = event.target.closest(".delete-guest-btn").getAttribute("data-guest-id");
+    const guestId = event.target
+      .closest(".delete-guest-btn")
+      .getAttribute("data-guest-id");
 
-      if (!guestId) {
-          console.error("No Guest ID found for deletion!");
-          return;
+    if (!guestId) {
+      console.error("No Guest ID found for deletion!");
+      return;
+    }
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this guest?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`${apiUrl}/api/guests/${guestId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        alert("Guest deleted successfully!");
+        loadGuestsForEvent(
+          document.querySelector(".event-dropdown-guests").value
+        ); // Refresh guest list
+      } else {
+        console.error("Failed to delete guest:", await response.text());
       }
-
-      const confirmDelete = confirm("Are you sure you want to delete this guest?");
-      if (!confirmDelete) return;
-
-      try {
-          const response = await fetch(`${apiUrl}/api/guests/${guestId}`, {
-              method: "DELETE",
-          });
-
-          if (response.ok) {
-              alert("Guest deleted successfully!");
-              loadGuestsForEvent(document.querySelector(".event-dropdown-guests").value); // Refresh guest list
-          } else {
-              console.error("Failed to delete guest:", await response.text());
-          }
-      } catch (error) {
-          console.error("Error deleting guest:", error);
-      }
+    } catch (error) {
+      console.error("Error deleting guest:", error);
+    }
   }
 });
 
@@ -1471,26 +1564,25 @@ document.addEventListener("click", async (event) => {
 // ==============================================
 async function loadRequestEventDropdown() {
   try {
-      const response = await fetch(`${apiUrl}/api/events`);
-      const events = await response.json();
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
 
-      const eventDropdown = document.querySelector(".event-name-dropdown");
-      eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+    const eventDropdown = document.querySelector(".event-name-dropdown");
+    eventDropdown.innerHTML = `<option value="">Select Event</option>`;
 
-      events.forEach((event) => {
-          const option = document.createElement("option");
-          option.value = event._id;
-          option.textContent = event.title;
-          eventDropdown.appendChild(option);
-      });
+    events.forEach((event) => {
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventDropdown.appendChild(option);
+    });
 
-      // Load requests when an event is selected
-      eventDropdown.addEventListener("change", () => {
-          loadRequestsForEvent(eventDropdown.value);
-      });
-
+    // Load requests when an event is selected
+    eventDropdown.addEventListener("change", () => {
+      loadRequestsForEvent(eventDropdown.value);
+    });
   } catch (error) {
-      console.error("Error fetching events:", error);
+    console.error("Error fetching events:", error);
   }
 }
 
@@ -1501,68 +1593,76 @@ async function loadRequestsForEvent(eventId) {
   const requestsTableBody = document.querySelector(".requests-table tbody");
 
   if (!eventId) {
-      requestsTableBody.innerHTML = "<tr><td colspan='5'>No event selected</td></tr>";
-      return;
+    requestsTableBody.innerHTML =
+      "<tr><td colspan='5'>No event selected</td></tr>";
+    return;
   }
 
   try {
-      const response = await fetch(`${apiUrl}/api/requests/${eventId}`);
-      const requests = await response.json();
+    const response = await fetch(`${apiUrl}/api/requests/${eventId}`);
+    const requests = await response.json();
 
-      requestsTableBody.innerHTML = ""; // Clear previous data
+    requestsTableBody.innerHTML = ""; // Clear previous data
 
-      requests.forEach((request) => {
-          const isPending = request.status === "pending";
-          const cancelBtn = isPending
-              ? `<button class="cancel-request-btn" data-request-id="${request._id}">
+    requests.forEach((request) => {
+      const isPending = request.status === "pending";
+      const cancelBtn = isPending
+        ? `<button class="cancel-request-btn" data-request-id="${request._id}">
                    <i class="fa-solid fa-ban"></i> Cancel
                  </button>`
-              : `<button class="disabled-btn" disabled>
+        : `<button class="disabled-btn" disabled>
                    <i class="fa-solid fa-lock"></i> Cannot Cancel
                  </button>`;
 
-          const row = document.createElement("tr");
-          row.innerHTML = `
+      const row = document.createElement("tr");
+      row.innerHTML = `
               <td>${request.taskName}</td>
               <td>${request.vendorName}</td>
               <td>${request.serviceType}</td>
-              <td><span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span></td>
+              <td><span class="status-badge status-${request.status.toLowerCase()}">${
+        request.status
+      }</span></td>
               <td>${cancelBtn}</td>
           `;
-          requestsTableBody.appendChild(row);
-      });
-
+      requestsTableBody.appendChild(row);
+    });
   } catch (error) {
-      console.error("Error fetching requests:", error);
+    console.error("Error fetching requests:", error);
   }
 }
 
 document.addEventListener("click", async (event) => {
   if (event.target.closest(".cancel-request-btn")) {
-      const requestId = event.target.closest(".cancel-request-btn").getAttribute("data-request-id");
+    const requestId = event.target
+      .closest(".cancel-request-btn")
+      .getAttribute("data-request-id");
 
-      if (!requestId) {
-          console.error("No Request ID found!");
-          return;
+    if (!requestId) {
+      console.error("No Request ID found!");
+      return;
+    }
+
+    const confirmCancel = confirm(
+      "Are you sure you want to cancel this request?"
+    );
+    if (!confirmCancel) return;
+
+    try {
+      const response = await fetch(`${apiUrl}/api/requests/${requestId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        alert("Request canceled successfully!");
+        loadRequestsForEvent(
+          document.querySelector(".event-name-dropdown").value
+        ); // Refresh requests list
+      } else {
+        console.error("Failed to cancel request:", await response.text());
       }
-
-      const confirmCancel = confirm("Are you sure you want to cancel this request?");
-      if (!confirmCancel) return;
-
-      try {
-          const response = await fetch(`${apiUrl}/api/requests/${requestId}`, {
-              method: "DELETE",
-          });
-
-          if (response.ok) {
-              alert("Request canceled successfully!");
-              loadRequestsForEvent(document.querySelector(".event-name-dropdown").value); // Refresh requests list
-          } else {
-              console.error("Failed to cancel request:", await response.text());
-          }
-      } catch (error) {
-          console.error("Error canceling request:", error);
-      }
+    } catch (error) {
+      console.error("Error canceling request:", error);
+    }
   }
 });
 
