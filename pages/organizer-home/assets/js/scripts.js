@@ -183,53 +183,68 @@ async function fetchEvents() {
 // Fetch Tasks and Requests for a Specific Event
 async function fetchEventDetails(eventId) {
   const tasksContainer = document.querySelector(".tasks .task-attribute-list");
-  const requestsContainer = document.querySelector(
-    ".requests .task-attribute-list"
-  );
+  const requestsContainer = document.querySelector(".requests .task-attribute-list");
+  const guestsContainer = document.querySelector(".guests .task-attribute-list");
 
   // If the user selects "Select Event", clear the content
   if (eventId === "") {
     tasksContainer.innerHTML = "";
     requestsContainer.innerHTML = "";
+    guestsContainer.innerHTML = "";
     return; // Stop the function here
   }
 
   try {
-    // Fetch Tasks
+    // 🔹 Fetch Tasks
     const tasksResponse = await fetch(`${apiUrl}/api/tasks/${eventId}`);
     const tasks = await tasksResponse.json();
 
     tasksContainer.innerHTML = ""; // Clear previous tasks
-
     tasks.forEach((task) => {
       const taskDiv = document.createElement("div");
       taskDiv.classList.add("task-attribute");
-      taskDiv.innerHTML = `<p>${task.title}</p><p>${new Date(
-        task.dueDate
-      ).toLocaleDateString()}</p>`;
+      taskDiv.innerHTML = `<p>${task.title}</p><p>${new Date(task.dueDate).toLocaleDateString()}</p>`;
       tasksContainer.appendChild(taskDiv);
     });
 
-    // Fetch Requests Related to the Event (With Vendor Names)
+    // 🔹 Fetch Requests Related to the Event (With Vendor Names)
     const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
     const vendorRequests = await requestsResponse.json();
 
-    console.log(eventId);
-    console.log("Vendor Requests:", vendorRequests); // Debugging line
-
     requestsContainer.innerHTML = ""; // Clear previous requests
-
     vendorRequests.forEach((request) => {
       const requestDiv = document.createElement("div");
       requestDiv.classList.add("task-attribute");
-      requestDiv.innerHTML = `<p> ${request.vendorName}</p><p> ${request.status}</p>`;
+      requestDiv.innerHTML = `<p>${request.vendorName}</p><p>${request.status}</p>`;
       requestsContainer.appendChild(requestDiv);
+    });
+
+    // 🔹 Fetch Guests and Count Their Statuses
+    const guestsResponse = await fetch(`${apiUrl}/api/guests/${eventId}`);
+    const guests = await guestsResponse.json();
+
+    // Count guest statuses
+    const statusCounts = { confirmed: 0, pending: 0, declined: 0 };
+    guests.forEach((guest) => {
+      if (statusCounts.hasOwnProperty(guest.status)) {
+        statusCounts[guest.status]++;
+      }
+    });
+
+    // Update Guest Count Display
+    guestsContainer.innerHTML = ""; // Clear previous counts
+    Object.entries(statusCounts).forEach(([status, count]) => {
+      const guestDiv = document.createElement("div");
+      guestDiv.classList.add("task-attribute");
+      guestDiv.innerHTML = `<p>${status.charAt(0).toUpperCase() + status.slice(1)}</p><p>${count}</p>`;
+      guestsContainer.appendChild(guestDiv);
     });
 
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
 }
+
 
 // Initial Fetch
 fetchEvents();

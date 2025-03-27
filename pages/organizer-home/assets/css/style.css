@@ -461,7 +461,7 @@ select option {
 }
 
 /* Tasks Overview */
-.tasks, .requests {
+.tasks, .requests, .guests {
     background-color: var(--task-bg);
     width: 500px;
     border-radius: 30px;
@@ -470,14 +470,7 @@ select option {
     border: 1px solid #e0e0e0;
 }
 
-.tasks h1 {
-    font-size: 32px;
-    font-weight: 350;
-    margin-left: 20px;
-    color: var(--text-color);
-}
-
-.requests h1 {
+.tasks h1, .requests h1, .guests h1 {
     font-size: 32px;
     font-weight: 350;
     margin-left: 20px;
@@ -799,7 +792,7 @@ hr {
         font-size: 24px;
     }
 
-    .tasks, .requests {
+    .tasks, .requests, .guests {
         width: 600px;
         height: 450px;
     }
@@ -864,7 +857,7 @@ hr {
         font-size: 20px;
     }
 
-    .tasks, .requests {
+    .tasks, .requests, .guests {
         width: 500px;
         height: 400px;
     }
@@ -995,7 +988,7 @@ hr {
         padding: 0 10px;
     }
 
-    .tasks, .requests {
+    .tasks, .requests, .guests {
         width: 450px;
         height: auto;
         min-height: 250px;
@@ -1005,15 +998,7 @@ hr {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .tasks h1 {
-        font-size: 24px;
-        margin-left: 0;
-        margin-bottom: 15px;
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-
-    .requests h1 {
+    .tasks h1, .guests h1, .requests h1 {
         font-size: 24px;
         margin-left: 0;
         margin-bottom: 15px;
@@ -1242,19 +1227,14 @@ hr {
         margin: 10px auto;
     }
 
-    .tasks, .requests {
+    .tasks, .requests, .guests {
         width: 100%;
         min-height: 180px;
         padding: 12px;
         border-radius: 12px;
     }
 
-    .tasks h1 {
-        font-size: 20px;
-        margin-bottom: 12px;
-    }
-
-    .requests h1 {
+    .tasks h1, .guests h1, .requests h1 {
         font-size: 20px;
         margin-bottom: 12px;
     }
@@ -1493,7 +1473,7 @@ hr {
         padding: 0 8px;
     }
 
-    .tasks, .requests {
+    .tasks, .requests, .guests {
         width: 100%;
         min-height: 200px;
     }
