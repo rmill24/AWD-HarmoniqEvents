@@ -297,7 +297,7 @@ nav a:hover::after {
 /* Image Styling */
 .about img, .mission img, .vision img, .story img {
     max-width: 45%;
-    height: auto;
+    height: 80%;
     border-radius: 10px;
     object-fit: cover;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -346,7 +346,7 @@ nav a:hover::after {
 }
  
 .team-member h3 {
-    font-size: 25px;
+    font-size: 1.5em;
     margin-top: 15px;
     margin-bottom: 5px;
 }
@@ -442,49 +442,48 @@ nav a:hover::after {
 .footer {
     background-color: #51938B;
     color: white;
-    padding: 40px 0 0 0;
 }
  
 .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    padding-top: 3%;
 }
  
 /* Footer logo and sections */
 .footer-logo {
-    max-width: 240px;
+    max-width: 226px;
+    max-height: 132px;
 }
- 
+
 .footer-title {
     font-size: 2.5em;
     margin-bottom: 20px;
     font-weight: bold;
 }
- 
+
 .footer-section h3 {
-    font-size: 1.2em;
+    font-size: 1.5em;
     margin-bottom: 15px;
 }
- 
+
 /* Footer navigation */
 .footer-section ul {
     list-style: none;
 }
- 
+
 .footer-section ul li {
     margin-bottom: 8px;
 }
- 
+
 .footer-section ul li a {
     color: white;
     text-decoration: none;
-    font-size: 1em;
+    font-family: var(--font-primary);
 }
- 
+
 .footer-section ul li a:hover {
     text-decoration: underline;
 }
@@ -514,23 +513,21 @@ nav a:hover::after {
     align-items: center;
     margin-top: 20px;
 }
- 
-.copyright {
-    font-size: 0.9em;
+.bottom-bar p{
+    font-size: 0.8em;
 }
- 
-.terms a {
-    color: white;
-    text-decoration: none;
+
+.bottom-bar a {
+    font-size: 0.8em;
+    gap: 10px;
 }
- 
+
 /* Back to Top Button */
 .back-to-top {
     display: flex;
     align-items: center;
     color: white;
     text-decoration: none;
-    gap: 10px
 }
  /* ============================================
    7. MEDIA QUERIES
@@ -675,10 +672,10 @@ nav a:hover::after {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-around;
         align-items: flex-start;
+        margin: 0 15px;
     }
-   
+    
     /* First section (logo) */
     .footer-container > div:first-child {
         width: 100%;
@@ -686,59 +683,38 @@ nav a:hover::after {
         text-align: center;
         margin-bottom: 15px;
     }
-   
+    
     /* Other sections */
     .footer-section:not(:first-child) {
         width: 30%;
         text-align: center;
         margin-bottom: 10px;
     }
-   
-    .footer-title {
-        font-size: 1.4em;
-    }
-   
+    
     .footer-section h3 {
-        font-size: 0.95em;
+        font-size: 1em;
         margin-bottom: 8px;
         text-align: left;
     }
-   
+    
     .footer-section ul li {
         margin-bottom: 4px;
         font-size: 0.7em;
         text-align: left;
     }
-   
-    .footer-section img {
-        height: 100px;
-        width: 100px;
+    
+    .footer-logo {
+        height: 66px;
+        width: 113px;
     }
-   
-    .social-icons {
-        justify-content: center;
-    }
-   
-    .social-icon {
-        width: 18px;
-        height: 18px;
-    }
-   
-    .bottom-bar {
-        flex-direction: row;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 10px 8px;
-    }
- 
-    .bottom-bar p, a{
+
+    .bottom-bar p {
         font-size: 0.7em;
     }
-   
-    .back-to-top-icon {
-        width: 22px;
-        height: 22px;
+    
+    .social-icon {
+        width: 15px;
+        height: 15px;
     }
    
     /* Very small screens */
@@ -785,6 +761,11 @@ nav a:hover::after {
         flex-direction: row;
         text-align: left;
         align-items: flex-start;
+    }
+
+    .footer-logo {
+        height: 88px;
+        width: 150px;
     }
 }
  
@@ -1024,7 +1005,7 @@ nav a:hover::after {
     }
    
     .about img, .mission img, .vision img, .story img {
-        max-width: 100%;
+        max-width: 80%;
     }
 }
  
