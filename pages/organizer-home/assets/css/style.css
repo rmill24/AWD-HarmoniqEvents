@@ -1406,7 +1406,6 @@ hr {
     }
 }
 
-/* Add new styles for task status indicators */
 .task-attribute[data-status="pending"] p:last-child {
     color: var(--status-pending);
 }
@@ -1419,7 +1418,6 @@ hr {
     color: var(--status-declined);
 }
 
-/* Remove old title-cell styles */
 .title-cell {
     padding: 15px 20px;
 }
@@ -1452,6 +1450,52 @@ hr {
 
 .tab-content.active {
     display: block;
+}
+
+#AddEventModal .modal-content {
+    width: 80% !important;
+    height: 600px !important;
+    margin: 60px auto 50px !important;
+    border-radius: 12px !important;
+}
+
+#addGuestForm{
+    padding: 20px !important;
+}
+
+.form-group label {
+    font-size: 14px !important;
+    margin-bottom: 5px !important;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 10px !important;
+    font-size: 14px !important;
+}
+
+.date-time-inputs {
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.character-count {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+}
+
+.modal-actions button {
+    padding: 10px !important;
+    font-size: 14px !important;
+}
+
+.form-group textarea {
+    height: 50px !important;
+}
+
+#addGuestModal .modal-content {
+    height: 520px !important;
 }
 
 /* ======================================
