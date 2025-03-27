@@ -1541,6 +1541,26 @@ hr {
     font-weight: 500;
 }
 
+#addGuestModal .modal-content {
+    height: auto !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    width: 90% !important;
+    max-width: 450px !important;
+    margin: 30px auto !important;
+}
+
+#addGuestModal .modal-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    padding: 18px !important;
+}
+
+#addGuestForm {
+    padding: 24px !important;
+}
+
 #addTaskForm,
 #editTaskForm,
 #addEventForm,
