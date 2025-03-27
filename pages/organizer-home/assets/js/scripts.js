@@ -1501,7 +1501,7 @@ async function loadRequestsForEvent(eventId) {
   const requestsTableBody = document.querySelector(".requests-table tbody");
 
   if (!eventId) {
-      requestsTableBody.innerHTML = "<tr><td colspan='4'>No event selected</td></tr>";
+      requestsTableBody.innerHTML = "<tr><td colspan='5'>No event selected</td></tr>";
       return;
   }
 
@@ -1523,6 +1523,7 @@ async function loadRequestsForEvent(eventId) {
 
           const row = document.createElement("tr");
           row.innerHTML = `
+              <td>${request.taskName}</td>
               <td>${request.vendorName}</td>
               <td>${request.serviceType}</td>
               <td><span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span></td>
