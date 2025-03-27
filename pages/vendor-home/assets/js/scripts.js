@@ -191,6 +191,10 @@ document.getElementById("edit-venue-btn").addEventListener("click", async functi
   }
 });
 
+document.getElementById("close-btn").addEventListener("click", function () {
+  document.getElementById("venue-modal").style.display = "none";
+});
+
 async function fetchVendorRequests() {
   const vendorId = localStorage.getItem("vendorId");
 

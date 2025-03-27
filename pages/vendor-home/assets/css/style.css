@@ -428,3 +428,16 @@ MODAL CSS
     text-align: left;
     font-size: 1em;
 }
+
+#close-btn {
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    visibility: visible;
+    opacity: 1;
+    margin-top: 5%;
+    text-align: left;
+    font-size: 1em;
+    color: white;
+}
