@@ -1051,13 +1051,22 @@ hr {
         white-space: nowrap;
     }
 
-    .actions-bar {
+    #tasks .actions-bar {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         gap: 15px;
         margin-bottom: 20px;
-        padding: 0 10px;
+        margin-right: 100px;
+    }
+
+    #guests .actions-bar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 20px;
+        margin-right: 200px;
     }
 
     .event-dropdown, .event-dropdown-task, .event-dropdown-guests{
