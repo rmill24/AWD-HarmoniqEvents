@@ -1146,7 +1146,7 @@ document.addEventListener("click", async (event) => {
   
       if (response.ok) {
         alert("Task added successfully!");
-        document.getElementById("addTaskModal").style.display = "none";
+        document.getElementById("addTaskModal").classList.remove("active");
         loadTasksForEvent(selectedEventId); // Refresh tasks
       } else {
         console.error("Failed to add task:", await response.text());
@@ -1565,8 +1565,6 @@ document.addEventListener("click", async (event) => {
       }
   }
 });
-
-
 
 // ==============================================
 // SIDEBAR NAVIGATION
