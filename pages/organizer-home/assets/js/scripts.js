@@ -225,6 +225,7 @@ async function fetchEventDetails(eventId) {
       requestDiv.innerHTML = `<p> ${request.vendorName}</p><p> ${request.status}</p>`;
       requestsContainer.appendChild(requestDiv);
     });
+
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
@@ -1982,29 +1983,3 @@ editGuestModal.addEventListener("click", function (event) {
   }
 });
 
-// // Delete Guests Modal
-// const deleteGuestsButton = document.querySelector(".delete-guests-btn");
-// const deleteGuestsModal = document.getElementById("deleteGuestsModal");
-// const deleteGuestsCancelButton =
-//   deleteGuestsModal.querySelector(".cancel-modal");
-// const confirmDeleteButton = deleteGuestsModal.querySelector(".confirm-delete");
-
-// // When you click the delete button
-// deleteGuestsButton.addEventListener("click", function () {
-//   deleteGuestsModal.classList.add("active");
-//   document.body.style.overflow = "hidden";
-// });
-
-// // When you click the cancel button
-// deleteGuestsCancelButton.addEventListener("click", function () {
-//   deleteGuestsModal.classList.remove("active");
-//   document.body.style.overflow = "";
-// });
-
-// // When you click outside the modal
-// deleteGuestsModal.addEventListener("click", function (event) {
-//   if (event.target === deleteGuestsModal) {
-//     deleteGuestsModal.classList.remove("active");
-//     document.body.style.overflow = "";
-//   }
-// });

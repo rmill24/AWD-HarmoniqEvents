@@ -1477,7 +1477,7 @@ hr {
     }
     
     .form-group textarea {
-        height: 50px !important;
+        height: 100px !important;
     }
 
     #addGuestModal .modal-content {
@@ -1606,10 +1606,6 @@ hr {
 .modal-actions button {
     padding: 10px !important;
     font-size: 14px !important;
-}
-
-.form-group textarea {
-    height: 50px !important;
 }
 
 #addGuestModal .modal-content {
