@@ -812,7 +812,7 @@ input {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin: 0 auto;
+    margin: 0;
   }
   
 
