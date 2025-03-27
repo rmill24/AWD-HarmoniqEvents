@@ -599,7 +599,7 @@ hr {
     background-color: var(--status-pending);
 }
 
-.status-accepted {
+.status-accepted, .status-confirmed {
     background-color: var(--status-accepted);
 }
 
