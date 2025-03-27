@@ -386,8 +386,104 @@ function initPasswordToggle() {
 // Signup Redirect Function
 // ============================================
 function redirectToSignup() {
-    window.location.href = "index.html#signup-form";
+    window.location.href = "index.html#signup-section";
 }
+
+// ============================================
+// Signup Form Handling
+// ============================================
+function capitalizeWords(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+document.getElementById("signup-form").addEventListener("submit", async (e) => {
+  e.preventDefault(); // Prevent form submission
+
+  let name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const selectedUserType = document.querySelector('input[name="type"]:checked').value;
+
+  // Capitalize the name
+  name = capitalizeWords(name);
+
+  const url =
+    selectedUserType === "organizer"
+      ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers"
+      : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors";
+  
+  const requestBody = { name, email, password };
+  
+  if (selectedUserType === "vendor") {
+    const serviceType = document.getElementById("service-type").value;
+
+    if (!serviceType) {
+      alert("Please select a service type.");
+      return;
+    }
+
+    requestBody.serviceType = serviceType;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Signup successful!");
+      document.getElementById("signup-form").reset();
+      console.log("Response:", result);
+    } else {
+      alert("Signup failed. Please try again.");
+      document.getElementById("signup-form").reset();
+      console.error("Error:", result);
+    }
+  } catch (error) {
+    alert("Network Error. Please check your connection and try again.");
+    console.error("Network Error:", error);
+  }
+});
+
+// Show/Hide dropdown based on user type selection
+document.querySelectorAll('input[name="type"]').forEach((radio) => {
+  radio.addEventListener("change", () => {
+    const isVendor = document.querySelector('input[name="type"]:checked').value === "vendor";
+    document.getElementById("vendor-options").style.display = isVendor ? "block" : "none";
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const vendorRadio = document.querySelector('input[name="type"][value="vendor"]');
+  const organizerRadio = document.querySelector('input[name="type"][value="organizer"]');
+  const vendorOptions = document.getElementById("vendor-options");
+  const serviceTypeSelect = document.getElementById("service-type");
+
+  // Function to toggle visibility and required attribute
+  const toggleVendorOptions = () => {
+      if (vendorRadio.checked) {
+          vendorOptions.style.display = "block";
+          serviceTypeSelect.setAttribute("required", "required");
+      } else {
+          vendorOptions.style.display = "none";
+          serviceTypeSelect.removeAttribute("required");
+      }
+  };
+
+  // Add event listeners to radio buttons
+  vendorRadio.addEventListener("change", toggleVendorOptions);
+  organizerRadio.addEventListener("change", toggleVendorOptions);
+
+  // Initialize on page load
+  toggleVendorOptions();
+});
+
 // ============================================
 // Initialize Everything When DOM is Ready
 // ============================================
