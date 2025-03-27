@@ -314,6 +314,7 @@ p {
 .device-mockup img {
     width: auto;
     height: 600px;
+    margin-left: 50%;
 }
 
 #device {
@@ -1091,6 +1092,7 @@ footer {
     .device-mockup img {
         height: 150px;
         max-width: 100%;
+        margin-left: 25%;
     }
     
     /* Feature Cards - Mobile */
@@ -1344,6 +1346,7 @@ footer {
     .device-mockup img {
         width: auto;
         height: 310px !important;
+        margin-left: 40%;
     }
     
     h1 {
@@ -1374,12 +1377,6 @@ footer {
     .form-container {
         max-width: 350px;
         padding: 25px;
-    }
-
-    .device-mockup img {
-        width: auto;
-        height: 400px;
-        margin-left: 50%;
     }
 }
 
