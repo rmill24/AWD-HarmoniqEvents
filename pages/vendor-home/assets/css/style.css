@@ -398,6 +398,7 @@ MODAL CSS
     border-radius: 25px;
     transition: all 0.2s ease;
     font-size: 1em;
+    width: 30%;
 }
 
 .form-group button:hover {
@@ -427,17 +428,4 @@ MODAL CSS
     margin-top: 5%;
     text-align: left;
     font-size: 1em;
-}
-
-#close-btn {
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    visibility: visible;
-    opacity: 1;
-    margin-top: 5%;
-    text-align: left;
-    font-size: 1em;
-    color: white;
 }
