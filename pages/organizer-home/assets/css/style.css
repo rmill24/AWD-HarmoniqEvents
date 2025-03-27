@@ -496,6 +496,10 @@ hr {
     color: var(--text-color);
 }
 
+.task-attribute p:last-child {
+    color: var(--primary-color);
+}
+
 /* ======================================
    6. EVENTS SECTION
    ====================================== */
@@ -1268,6 +1272,7 @@ hr {
 
     .task-attribute p:last-child {
         font-size: 12px;
+        color: var(--primary-color);
     }
 
     .events-table,
