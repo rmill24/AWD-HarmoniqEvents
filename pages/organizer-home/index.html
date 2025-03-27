@@ -225,11 +225,11 @@
  <section id="tasks" class="content-section">
     <div class="actions-bar">
             <select class="event-dropdown-task"></select>
-            <span id="event-date-display"></span>
         <button class="add-task-btn">
             <i class="fa-solid fa-plus"></i>
-            Add Task
+           <span> Add Task </span>
         </button>
+        <span id="event-date-display"></span>
     </div>
     <!-- Task Modal -->
 <div class="modal" id="addTaskModal">
@@ -403,7 +403,7 @@
                 <div class="action-buttons">
                     <button class="add-guest-btn">
                         <i class="fa-solid fa-plus"></i>
-                        Add Guest
+                        <span>Add Guest</span>
                     </button>
                 </div>
             </div>
@@ -434,7 +434,7 @@
                             <label for="guestStatus">Status</label>
                             <select id="guestStatus" name="guestStatus" required>
                                 <option value="pending">Pending</option>
-                                <option value="confirmed">Confirmed</option>
+                                <option value="accepted">Confirmed</option>
                                 <option value="declined">Declined</option>
                             </select>
                         </div>
