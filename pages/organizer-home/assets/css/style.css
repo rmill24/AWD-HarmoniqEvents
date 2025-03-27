@@ -1283,13 +1283,18 @@ hr {
         height: 40px;
     }
 
-    .event-dropdown-task {
+    .event-dropdown-guests, .event-dropdown-task {
         width: 55px !important;
         max-width: none !important;
         padding: 20px !important;
     }
     #tasks .add-task-btn {
         width: 100% !important;
+        justify-content: center !important;
+    }
+
+    #guests .add-guest-btn {
+        width: 250px !important;
         justify-content: center !important;
     }
 
