@@ -1167,7 +1167,6 @@ footer {
     .radio-group {
         display: flex;
         gap: 30px;
-        margin: 0 auto;
     }
     
     /* Footer - Mobile */
