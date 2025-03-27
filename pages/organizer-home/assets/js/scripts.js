@@ -314,6 +314,7 @@ async function populateEventTables(events) {
           <td>${eventDate} ${eventTime}</td>
           <td>${event.venue || "<i>Venue not assigned</i>"}</td>
           <td>${event.expectedGuests || "Not Specified"}</td>
+          <td>${event.guestCount || "-"}</td>
           <td>
               ${
                 event.status === "pending"
