@@ -1171,6 +1171,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!selectedEventId) {
       alert("Please select an event first.");
+      addTaskModal.classList.remove("active");
       return;
     }
 
