@@ -1338,10 +1338,17 @@ async function loadGuestEventDropdown() {
 
 async function loadGuestsForEvent(eventId) {
   const guestsTableBody = document.querySelector(".guest-table tbody");
+  const guestCountList = document.querySelector(".guest-count-list");
 
   if (eventId === "") {
-    guestsTableBody.innerHTML =
-      "<tr><td colspan='6'>No event selected</td></tr>";
+    guestsTableBody.innerHTML = "<tr><td colspan='6'>No event selected</td></tr>";
+    guestCountList.innerHTML = `
+      <div class="guest-attribute">
+        <p>0</p>
+        <p>0</p>
+        <p>0</p>
+      </div>
+    `;
     return;
   }
 
@@ -1349,8 +1356,25 @@ async function loadGuestsForEvent(eventId) {
     const response = await fetch(`${apiUrl}/api/guests/${eventId}`);
     const guests = await response.json();
 
-    guestsTableBody.innerHTML = ""; // Clear previous data
+    // 🔹 Count guests based on status
+    const statusCounts = { confirmed: 0, pending: 0, declined: 0 };
+    guests.forEach((guest) => {
+      if (statusCounts.hasOwnProperty(guest.status)) {
+        statusCounts[guest.status]++;
+      }
+    });
 
+    // 🔹 Update the guest count display
+    guestCountList.innerHTML = `
+      <div class="guest-attribute">
+        <p>${statusCounts.confirmed}</p>
+        <p>${statusCounts.pending}</p>
+        <p>${statusCounts.declined}</p>
+      </div>
+    `;
+
+    // 🔹 Populate the guest table
+    guestsTableBody.innerHTML = ""; // Clear previous data
     guests.forEach((guest) => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -1358,25 +1382,25 @@ async function loadGuestsForEvent(eventId) {
         <td>${guest.email}</td>
         <td>${guest.phone || "-"}</td>
         <td>
-          <span class="status-badge status-${guest.status.toLowerCase()}">${
-        guest.status
-      }</span>
+          <span class="status-badge status-${guest.status.toLowerCase()}">${guest.status}</span>
         </td>
         <td>
           <button class="edit-guest-btn" data-guest-id="${guest._id}">
             <i class="fa-regular fa-pen-to-square"></i>
           </button>
-            <button class="delete-guest-btn" data-guest-id="${guest._id}">
+          <button class="delete-guest-btn" data-guest-id="${guest._id}">
             <i class="fa-solid fa-trash"></i>
           </button>
         </td>
       `;
       guestsTableBody.appendChild(row);
     });
+
   } catch (error) {
     console.error("Error fetching guests:", error);
   }
 }
+
 
 // Initialize Guest Event Dropdown
 loadGuestEventDropdown();
