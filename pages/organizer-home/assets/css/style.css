@@ -1176,21 +1176,20 @@ hr {
     }
 
     .content-section {
-        margin-top: 45px;
+        margin-top: 15px;
         padding: 10px;
     }
 
     .welcome {
-        padding: 5px;
+        padding: 3px;
     }
 
     .welcome h1 {
-        font-size: 24px;
-        margin-top: 3px;
+        font-size: 40px;
     }
 
     .welcome h3 {
-        font-size: 14px;
+        font-size: 20px;
     }
 
     select {
@@ -1319,6 +1318,52 @@ hr {
         flex-direction: column;
         gap: 15px;
         padding: 0 8px;
+    }
+
+    #AddEventModal .modal-content {
+        width: 80% !important;
+        height: 600px !important;
+        margin: 60px auto 50px !important;
+        border-radius: 12px !important;
+    }
+
+   #addGuestForm{
+        padding: 20px !important;
+    }
+    
+    .form-group label {
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px 10px !important;
+        font-size: 14px !important;
+    }
+    
+    .date-time-inputs {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .character-count {
+        font-size: 11px !important;
+        margin-top: 4px !important;
+    }
+    
+    .modal-actions button {
+        padding: 10px !important;
+        font-size: 14px !important;
+    }
+    
+    .form-group textarea {
+        height: 50px !important;
+    }
+
+    #addGuestModal .modal-content {
+        height: 520px !important;
     }
 }
 
@@ -1536,7 +1581,6 @@ hr {
     cursor: pointer;
 }
 
-/* Updated cancel button for better visibility */
 .modal-actions .btn-secondary {
     background: #E0E0E0;
     color: #444444;
@@ -1647,7 +1691,6 @@ hr {
     margin-top: 32px;
 }
 
-/* Updated styles for improved visibility */
 #requestVendorModal .btn-secondary {
     background: #E0E0E0;
     color: #444444;
