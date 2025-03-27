@@ -826,6 +826,10 @@ hr {
         font-size: 16px;
     }
 
+    #tasksTableBody {
+        min-width: 300px;
+    }
+
     #tasks .actions-bar {
         margin: 0 auto 20px !important;
     }
@@ -835,7 +839,7 @@ hr {
 @media screen and (max-width: 1440px) {
     .content-section {
         width: calc(100% - 300px);
-        max-width: 1200px;
+        min-width: 1200px;
         padding: 30px;
     }
 
@@ -884,7 +888,7 @@ hr {
     .requests-table td,
     .guest-table td {
         padding: 15px;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     #tasks .actions-bar {
