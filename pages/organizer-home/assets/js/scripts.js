@@ -294,6 +294,25 @@ function startEventTabs() {
     }
   }
 
+// ============================================
+// Sign Out Button
+// ============================================
+document.querySelector(".sign-out").addEventListener("click", () => {
+    // Clear stored data
+    localStorage.removeItem("vendorId");
+    localStorage.removeItem("organizerId");
+   
+    // Redirect to login page
+    window.location.href = "/index.html";
+  });
+   
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM loaded");
+    initThemeToggle();
+    initMobileMenu();
+  });
+
   // ==============================================
 // START THE APPLICATION
 // ==============================================
