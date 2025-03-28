@@ -528,4 +528,57 @@ hr {
     margin-right: 30px;
 }
  
+ /* ======================================
+   7. TABLES & DATA DISPLAY
+   ====================================== */
+.table-container {
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+ 
+/* Common Table Styles */
+.events-table,
+.tasks-table,
+.requests-table,
+.guest-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+ 
+/* Table Headers */
+.events-table th,
+.tasks-table th,
+.requests-table th,
+.guest-table th {
+    text-align: left;
+    padding: 15px 20px;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 14px;
+}
+ 
+/* Table Cells */
+.events-table td,
+.tasks-table td,
+.requests-table td,
+.guest-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+ 
+/* remove bottom border from last row */
+.events-table tr:last-child td,
+.tasks-table tr:last-child td,
+.requests-table tr:last-child td,
+.guest-table tr:last-child td {
+    border-bottom: none;
+}
  
