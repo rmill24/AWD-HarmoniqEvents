@@ -1577,19 +1577,19 @@ document.addEventListener("DOMContentLoaded", () => {
   async function autoCompleteExpiredTasks() {
     try {
       console.log("Checking for expired tasks...");
- 
+
       const response = await fetch(`${apiUrl}/api/tasks`);
       if (!response.ok) {
         console.error("Error fetching tasks:", await response.text());
         return;
       }
- 
+
       const tasks = await response.json();
       const today = new Date();
- 
+
       for (const task of tasks) {
         const taskDueDate = new Date(task.dueDate);
- 
+
         // If the task is pending and past due, update it to completed
         if (task.status === "pending" && taskDueDate < today) {
           await updateTaskStatus(task._id, "completed");
@@ -1597,7 +1597,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log(`Updated Task ${task._id} to Completed`);
         }
       }
- 
+
       // Refresh task lists
       loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
     } catch (error) {
@@ -1605,5 +1605,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  
+  // Function to update a task's status
+  async function updateTaskStatus(taskId, newStatus) {
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to update task ${taskId} to ${newStatus}`);
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  }
+
+  // Run the function every minute to check for expired tasks
+  autoCompleteExpiredTasks();
+  setInterval(autoCompleteExpiredTasks, 60000);
 });
