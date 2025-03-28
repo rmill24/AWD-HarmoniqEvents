@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else if (!localStorage.getItem(`venueSetUp_${vendorId}`)) {
         // Only show modal if it's the first login AND venue details are missing
         venueModal.style.display = "flex";
-        console.log("❌ No venue details found, modal SHOULD show.");
+        console.log("No venue details found, modal SHOULD show.");
       }
     } else {
       venueDetailsSection.style.display = "none";
@@ -140,7 +140,7 @@ document
     const vendorId = localStorage.getItem("vendorId");
 
     if (!vendorId) {
-      console.error("❌ Vendor ID not found in localStorage!");
+      console.error("Vendor ID not found in localStorage!");
       alert("Vendor ID not found. Please log in again.");
       return;
     }
@@ -187,7 +187,7 @@ document
           )}
       `;
     } catch (error) {
-      console.error("❌ Error updating venue details:", error);
+      console.error("Error updating venue details:", error);
     }
   });
 
@@ -198,7 +198,7 @@ document
     const vendorId = localStorage.getItem("vendorId");
 
     if (!vendorId) {
-      console.error("❌ Vendor ID not found in localStorage!");
+      console.error("Vendor ID not found in localStorage!");
       alert("Vendor ID not found. Please log in again.");
       return;
     }
@@ -228,7 +228,88 @@ document
       // Show the modal for editing
       document.getElementById("venue-modal").style.display = "flex";
     } catch (error) {
-      console.error("❌ Error fetching venue details for editing:", error);
+      console.error("Error fetching venue details for editing:", error);
       alert("Failed to fetch venue details. Please try again.");
     }
   });
+
+document.getElementById("close-btn").addEventListener("click", function () {
+  document.getElementById("venue-modal").style.display = "none";
+});
+
+async function fetchVendorRequests() {
+  const vendorId = localStorage.getItem("vendorId");
+
+  if (!vendorId) {
+    console.error("Vendor ID not found in localStorage!");
+    alert("Vendor ID not found. Please log in again.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/api/requests/vendor/${vendorId}`);
+    const requests = await response.json();
+
+    console.log("Fetched Vendor Requests:", requests);
+
+    const requestsList = document.getElementById("requests-list");
+    requestsList.innerHTML = ""; // Clear previous content
+
+    if (requests.length === 0) {
+      requestsList.innerHTML = "<p>No requests found.</p>";
+      return;
+    }
+
+    requests.forEach((request) => {
+      const requestItem = document.createElement("div");
+      requestItem.classList.add("request-item");
+
+      // Check if the request has been accepted or declined
+      const isDisabled = request.status !== "pending";
+
+      requestItem.innerHTML = `
+                  <div class="request-info">
+                      <p class="request-title"><strong>Event: </strong>${
+                        request.eventTitle
+                      }</p>
+                      <p><strong>Task:</strong> ${request.taskTitle}</p>
+                      <p><strong>Organizer:</strong> ${
+                        request.organizerName
+                      } (${request.organizerEmail})</p>
+                      <p><strong>Status:</strong> <span id="request-status-${
+                        request._id
+                      }">${request.status}</span></p>
+                  </div>
+                  <div class="request-actions">
+                      <button class="btn-accept" data-request-id="${
+                        request._id
+                      }" ${
+        isDisabled ? 'style="display:none;"' : ""
+      }>Accept</button>
+                      <button class="btn-reject" data-request-id="${
+                        request._id
+                      }" ${
+        isDisabled ? 'style="display:none;"' : ""
+      }>Reject</button>
+                  </div>
+              `;
+
+      requestsList.appendChild(requestItem);
+    });
+
+    // Attach event listeners to buttons
+    document.querySelectorAll(".btn-accept").forEach((button) => {
+      button.addEventListener("click", () =>
+        handleRequestAction(button.dataset.requestId, "accepted")
+      );
+    });
+
+    document.querySelectorAll(".btn-reject").forEach((button) => {
+      button.addEventListener("click", () =>
+        handleRequestAction(button.dataset.requestId, "declined")
+      );
+    });
+  } catch (error) {
+    console.error("Error fetching requests:", error);
+  }
+}
