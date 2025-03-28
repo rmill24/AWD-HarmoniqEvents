@@ -611,40 +611,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-  // Populate event tables dynamically
-  async function populateEventTables(events) {
-    const pendingTable = document.querySelector("#pending tbody");
-    const completedTable = document.querySelector("#completed tbody");
-   
-    pendingTable.innerHTML = "";
-    completedTable.innerHTML = "";
-   
-    const today = new Date().toISOString().split("T")[0]; // Get today's date
-   
-    events.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort events by date
-   
-    for (const event of events) {
-      const row = document.createElement("tr");
-   
-      let eventDateTime = event.date ? new Date(event.date) : null;
-      let eventDate = eventDateTime
-        ? eventDateTime.toLocaleDateString("en-CA")
-        : "N/A";
-      let eventTime = eventDateTime
-        ? eventDateTime.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })
-        : "N/A";
-   
-      // If event is pending but past today, auto-mark it as completed
-      if (event.status === "pending" && eventDate < today) {
-        await updateEventStatus(event._id, "completed");
-        event.status = "completed";
-      }
-   
-      row.innerHTML = `
+// Populate event tables dynamically
+async function populateEventTables(events) {
+  const pendingTable = document.querySelector("#pending tbody");
+  const completedTable = document.querySelector("#completed tbody");
+
+  pendingTable.innerHTML = "";
+  completedTable.innerHTML = "";
+
+  const today = new Date().toISOString().split("T")[0]; // Get today's date
+
+  events.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort events by date
+
+  for (const event of events) {
+    const row = document.createElement("tr");
+
+    let eventDateTime = event.date ? new Date(event.date) : null;
+    let eventDate = eventDateTime
+      ? eventDateTime.toLocaleDateString("en-CA")
+      : "N/A";
+    let eventTime = eventDateTime
+      ? eventDateTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : "N/A";
+
+    // If event is pending but past today, auto-mark it as completed
+    if (event.status === "pending" && eventDate < today) {
+      await updateEventStatus(event._id, "completed");
+      event.status = "completed";
+    }
+
+    row.innerHTML = `
             <td>${event.title}</td>
             <td>${event.description || "-"}</td>
             <td>${eventDate} ${eventTime}</td>
@@ -664,11 +664,97 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </button>
             </td>
         `;
-   
-      if (event.status === "pending") {
-        pendingTable.appendChild(row);
-      } else if (event.status === "completed") {
-        completedTable.appendChild(row);
-      }
+
+    if (event.status === "pending") {
+      pendingTable.appendChild(row);
+    } else if (event.status === "completed") {
+      completedTable.appendChild(row);
     }
   }
+}
+
+//  Add Event Modal
+const addEventButton = document.querySelector(".add-event-btn");
+const addEventModal = document.getElementById("addEventModal");
+const eventCancelButton = addEventModal.querySelector(".cancel-modal");
+const eventForm = document.getElementById("addEventForm");
+const eventDescription = document.getElementById("eventDescription");
+const eventDescriptionCounter = document.getElementById(
+  "eventDescriptionCount"
+);
+
+// Open Add Event Modal
+addEventButton.addEventListener("click", () => {
+  addEventModal.classList.add("active");
+  document.body.style.overflow = "hidden";
+});
+
+// Close Add Event Modal
+eventCancelButton.addEventListener("click", closeAddEventModal);
+
+function closeAddEventModal() {
+  addEventModal.classList.remove("active");
+  document.body.style.overflow = "";
+  eventForm.reset();
+  eventDescriptionCounter.textContent = "0";
+}
+
+//  Handle Adding an Event
+document
+  .getElementById("addEventForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const organizerId = localStorage.getItem("organizerId");
+
+    if (!organizerId) {
+      alert("You must be logged in to add an event.");
+      return;
+    }
+
+    const dateValue = document.getElementById("eventDate").value;
+    const timeValue = document.getElementById("eventTime").value;
+
+    // Convert user input time to UTC before storing
+    const fullDateTime =
+      dateValue && timeValue
+        ? new Date(`${dateValue}T${timeValue}`).toISOString()
+        : null;
+
+    const eventData = {
+      organizerId: organizerId,
+      title: document.getElementById("eventTitle").value,
+      description: document.getElementById("eventDescription").value,
+      date: fullDateTime,
+      expectedGuests: document.getElementById("eventGuests").value,
+      status: "pending",
+    };
+
+    try {
+      const response = await fetch(
+        "https://event-management-api-racelle-millagracias-projects.vercel.app/api/events",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(eventData),
+        }
+      );
+
+      if (response.ok) {
+        addEventModal.classList.remove("active");
+        alert("Event created successfully!");
+
+        // Fetch and refresh the events
+        const organizerId = localStorage.getItem("organizerId");
+        const eventsResponse = await fetch(
+          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        );
+        const events = await eventsResponse.json();
+        populateEventTables(events); // Refresh the event tables
+      } else {
+        alert("Error adding event.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  });
