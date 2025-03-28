@@ -130,3 +130,63 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error fetching vendor data:", error);
   }
 });
+
+// Handle venue form submission
+document
+  .getElementById("venue-form")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const vendorId = localStorage.getItem("vendorId");
+
+    if (!vendorId) {
+      console.error("❌ Vendor ID not found in localStorage!");
+      alert("Vendor ID not found. Please log in again.");
+      return;
+    }
+
+    const venueDetails = {
+      name: document.getElementById("venue-name").value,
+      location: document.getElementById("venue-location").value,
+      capacity: document.getElementById("venue-capacity").value,
+      amenities: document
+        .getElementById("venue-amenities")
+        .value.split(",")
+        .map((a) => a.trim()),
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}/api/vendors/${vendorId}/venue`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(venueDetails),
+      });
+
+      if (!response.ok) throw new Error("Failed to update venue");
+
+      // Fetch updated data to ensure latest venue details are displayed
+      const updatedResponse = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
+      const updatedData = await updatedResponse.json();
+
+      console.log("Updated Vendor Data:", updatedData);
+
+      alert("Venue details updated successfully!");
+      localStorage.setItem("venueSetUp", "true");
+
+      // Hide modal
+      document.getElementById("venue-modal").style.display = "none";
+      location.reload();
+
+      // Update UI with new values
+      document.getElementById("venue-details-content").innerHTML = `
+          <strong>Name:</strong> ${updatedData.venueDetails.name}<br>
+          <strong>Location:</strong> ${updatedData.venueDetails.location}<br>
+          <strong>Capacity:</strong> ${updatedData.venueDetails.capacity}<br>
+          <strong>Amenities:</strong> ${updatedData.venueDetails.amenities.join(
+            ", "
+          )}
+      `;
+    } catch (error) {
+      console.error("❌ Error updating venue details:", error);
+    }
+  });
