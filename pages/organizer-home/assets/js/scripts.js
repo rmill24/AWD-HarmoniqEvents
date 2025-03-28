@@ -1728,66 +1728,157 @@ loadGuestEventDropdown();
 // ==============================================
 // ADD GUEST FUNCTIONALITY
 // ==============================================
- 
+
 document.querySelector(".add-guest-btn").addEventListener("click", () => {
+  const selectedEventId = document.querySelector(
+    ".event-dropdown-guests"
+  ).value;
+
+  if (!selectedEventId) {
+    alert("Please select an event first.");
+    return;
+  }
+
+  // Reset form fields before opening the modal
+  document.getElementById("addGuestForm").reset();
+
+  // Show modal
+  document.getElementById("addGuestModal").classList.add("active");
+});
+
+document
+  .getElementById("addGuestForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
+
     const selectedEventId = document.querySelector(
       ".event-dropdown-guests"
     ).value;
-   
     if (!selectedEventId) {
       alert("Please select an event first.");
       return;
     }
-   
-    // Reset form fields before opening the modal
-    document.getElementById("addGuestForm").reset();
-   
-    // Show modal
-    document.getElementById("addGuestModal").classList.add("active");
+
+    const newGuest = {
+      name: document.getElementById("guestName").value,
+      email: document.getElementById("guestEmail").value,
+      phone: document.getElementById("guestPhone").value,
+      status: document.getElementById("guestStatus").value,
+      eventId: selectedEventId, // Assign guest to selected event
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}/api/guests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newGuest),
+      });
+
+      if (response.ok) {
+        alert("Guest added successfully!");
+        document.getElementById("addGuestModal").classList.remove("active");
+        loadGuestsForEvent(selectedEventId); // Refresh the guest list
+      } else {
+        console.error("Failed to add guest:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error adding guest:", error);
+    }
   });
-   
-  document
-    .getElementById("addGuestForm")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-   
-      const selectedEventId = document.querySelector(
-        ".event-dropdown-guests"
-      ).value;
-      if (!selectedEventId) {
-        alert("Please select an event first.");
+
+document.querySelectorAll(".cancel-modal").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("addGuestModal").classList.remove("active");
+  });
+});
+
+// ==============================================
+// EDIT GUEST FUNCTIONALITY
+// ==============================================
+let currentEditingGuestId = null;
+
+document.addEventListener("click", async (event) => {
+  if (event.target.closest(".edit-guest-btn")) {
+    const guestId = event.target
+      .closest(".edit-guest-btn")
+      .getAttribute("data-guest-id");
+    currentEditingGuestId = guestId; // Store the guest ID for editing
+
+    console.log(guestId);
+
+    if (!guestId) {
+      console.error("No Guest ID found!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/guests/guest/${guestId}`);
+
+      if (!response.ok) {
+        console.error("Error fetching guest details:", await response.text());
         return;
       }
-   
-      const newGuest = {
-        name: document.getElementById("guestName").value,
-        email: document.getElementById("guestEmail").value,
-        phone: document.getElementById("guestPhone").value,
-        status: document.getElementById("guestStatus").value,
-        eventId: selectedEventId, // Assign guest to selected event
-      };
-   
-      try {
-        const response = await fetch(`${apiUrl}/api/guests`, {
-          method: "POST",
+
+      const guest = await response.json();
+
+      // Populate the edit form with guest data
+      document.getElementById("editGuestName").value = guest.name;
+      document.getElementById("editGuestEmail").value = guest.email;
+      document.getElementById("editGuestPhone").value = guest.phone || "";
+      document.getElementById("editGuestStatus").value = guest.status;
+
+      // Show the modal
+      document.getElementById("editGuestModal").classList.add("active");
+    } catch (error) {
+      console.error("Error fetching guest details:", error);
+    }
+  }
+});
+
+// Handle Guest Form Submission
+document
+  .getElementById("editGuestForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!currentEditingGuestId) {
+      console.error("No Guest ID found for editing!");
+      return;
+    }
+
+    const updatedGuest = {
+      name: document.getElementById("editGuestName").value,
+      email: document.getElementById("editGuestEmail").value,
+      phone: document.getElementById("editGuestPhone").value,
+      status: document.getElementById("editGuestStatus").value,
+    };
+
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/guests/${currentEditingGuestId}`,
+        {
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newGuest),
-        });
-   
-        if (response.ok) {
-          alert("Guest added successfully!");
-          document.getElementById("addGuestModal").classList.remove("active");
-          loadGuestsForEvent(selectedEventId); // Refresh the guest list
-        } else {
-          console.error("Failed to add guest:", await response.text());
+          body: JSON.stringify(updatedGuest),
         }
-      } catch (error) {
-        console.error("Error adding guest:", error);
+      );
+
+      if (response.ok) {
+        alert("Guest information updated successfully!");
+        document.getElementById("editGuestModal").classList.remove("active");
+        loadGuestsForEvent(
+          document.querySelector(".event-dropdown-guests").value
+        ); // Refresh guest list
+      } else {
+        console.error("Failed to update guest:", await response.text());
       }
-    });
-   
-  document.querySelectorAll(".cancel-modal").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.getElementById("addGuestModal").classList.remove("active");
-    });
+    } catch (error) {
+      console.error("Error updating guest:", error);
+    }
   });
+
+document.querySelectorAll(".cancel-modal").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("editGuestModal").classList.remove("active");
+  });
+});
