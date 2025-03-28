@@ -213,6 +213,25 @@ nav a:hover::after {
 .menu-toggle {
     display: none;
 }
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+ 
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+ 
+.nav-links li {
+    margin: 0;
+}
 /* ============================================
    4. ABOUT PAGE SPECIFIC
 ============================================ */
@@ -236,14 +255,18 @@ nav a:hover::after {
     max-width: 50%;
 }
  
-.text h1 {
+.text h1, .team-section h1 {
     font-size: 2.5em;
     margin-bottom: 1rem;
 }
  
-.text p {
+.text p, .team-section p {
     font-size: 1.5em;
     line-height: 1.5;
+}
+
+.team-section p {
+    margin-bottom: 2rem;
 }
  
 /* Image Styling */
@@ -263,16 +286,6 @@ nav a:hover::after {
     padding: 50px;
     color: var(--text-color2);
 }
- 
-.team-section p {
-    margin-bottom: 2%;
-    font-size: 1.1em;
-}
-
-.team-section h1{
-    font-size: 2em;
-    margin-bottom: 10px;
-} 
  
 /* Fix the container to spread items evenly */
 .team-container {
@@ -418,28 +431,6 @@ nav a:hover::after {
 /* ============================================
    7. MEDIA QUERIES
 ============================================ */
-/* Navigation Links */
-.nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    align-items: center;
-}
- 
-.nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    align-items: center;
-}
- 
-.nav-links li {
-    margin: 0;
-}
-
-/* ============================================
-   MEDIA QUERIES
-============================================ */
 
 /* Mobile (max-width: 667px) */
 @media (max-width: 667px) {
@@ -532,7 +523,7 @@ nav a:hover::after {
 
     .text p, .team-section p {
         font-size: 1rem;
-        margin-bottom: 15%;
+        margin-bottom: 25px;
     }
 
     .about img, .mission img, .vision img, .story img {
@@ -631,11 +622,11 @@ nav a:hover::after {
         font-size: 1em;
     }
 
-    .text h1 {
+    .text h1, .team-section h1 {
         font-size: 1.5rem;
     }
 
-    .text p {
+    .text p, .team-section p {
         font-size: 1rem;
     }
 
