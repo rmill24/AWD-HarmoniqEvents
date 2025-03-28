@@ -245,6 +245,55 @@ function startSidebarNavigation() {
     }
   }
 
+  // ==============================================
+// EVENT TABS FUNCTIONALITY
+// ==============================================
+ 
+// Function to start the event tabs
+function startEventTabs() {
+    // Get all tab buttons
+    var tabButtons = document.querySelectorAll(".tab");
+   
+    // Check if we found any tabs
+    if (!tabButtons || tabButtons.length === 0) {
+      console.log("No event tabs found");
+      return;
+    }
+   
+    // Add click events to all tabs
+    for (var i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].addEventListener("click", function () {
+        handleTabClick(this, tabButtons);
+      });
+    }
+  }
+   
+  // Function to handle tab clicks
+  function handleTabClick(clickedTab, allTabs) {
+    // Remove active class from all tabs
+    for (var i = 0; i < allTabs.length; i++) {
+      allTabs[i].classList.remove("active");
+    }
+   
+    // Add active class to clicked tab
+    clickedTab.classList.add("active");
+   
+    // Get the content to show
+    var tabId = clickedTab.getAttribute("data-tab");
+   
+    // Hide all tab contents
+    var contents = document.querySelectorAll(".tab-content");
+    for (var i = 0; i < contents.length; i++) {
+      contents[i].classList.remove("active");
+    }
+   
+    // Show the selected content
+    var selectedContent = document.getElementById(tabId);
+    if (selectedContent) {
+      selectedContent.classList.add("active");
+    }
+  }
+
 // ============================================
 // Welcome message
 // ============================================
