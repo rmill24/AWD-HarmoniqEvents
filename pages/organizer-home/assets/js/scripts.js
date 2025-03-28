@@ -1882,3 +1882,41 @@ document.querySelectorAll(".cancel-modal").forEach((btn) => {
     document.getElementById("editGuestModal").classList.remove("active");
   });
 });
+
+// ==============================================
+// DELETE GUEST FUNCTIONALITY
+// ==============================================
+document.addEventListener("click", async (event) => {
+    if (event.target.closest(".delete-guest-btn")) {
+      const guestId = event.target
+        .closest(".delete-guest-btn")
+        .getAttribute("data-guest-id");
+   
+      if (!guestId) {
+        console.error("No Guest ID found for deletion!");
+        return;
+      }
+   
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this guest?"
+      );
+      if (!confirmDelete) return;
+   
+      try {
+        const response = await fetch(`${apiUrl}/api/guests/${guestId}`, {
+          method: "DELETE",
+        });
+   
+        if (response.ok) {
+          alert("Guest deleted successfully!");
+          loadGuestsForEvent(
+            document.querySelector(".event-dropdown-guests").value
+          ); // Refresh guest list
+        } else {
+          console.error("Failed to delete guest:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error deleting guest:", error);
+      }
+    }
+  });
