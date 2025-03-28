@@ -9,8 +9,6 @@
    7. MEDIA QUERIES (CONSOLIDATED)
       - Mobile (up to 667px)
       - Tablet (668px - 1024px)
-      - Medium (1025px - 1440px)
-      - Large (1441px+)
 ============================================ */
  
 /* ============================================
@@ -211,54 +209,9 @@ nav a:hover::after {
     display: none; /* Hidden on desktop */
     padding: 0 25px;
 }
- 
-@media (max-width: 768px) {
-    header {
-        padding: 15px;
-    }
-   
-    nav {
-        position: static;
-    }
-   
-    .nav-links {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        flex-direction: column;
-        background-color: var(--bg-color);
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        width: 250px;
-        display: none;
-        z-index: 200;
-        gap: 20px;
-    }
-   
-    .nav-links.active {
-        display: flex;
-    }
-   
-    .menu-toggle {
-        display: block;
-        cursor: pointer;
-        font-size: 1.5em;
-        color: #51938b;
-    }
-   
-    /* Show mobile theme switch in hamburger menu, hide desktop one */
-    .mobile-theme-option {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-    }
-   
-    .desktop-theme-switch {
-        display: none;
-    }
+
+.menu-toggle {
+    display: none;
 }
 /* ============================================
    4. ABOUT PAGE SPECIFIC
@@ -269,7 +222,7 @@ nav a:hover::after {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    height: 50vh;
+    height: auto;
     padding: 60px 40px 70px;
     color: var(--text-color2);
 }
@@ -284,14 +237,13 @@ nav a:hover::after {
 }
  
 .text h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
+    font-size: 2.5em;
+    margin-bottom: 1rem;
 }
  
 .text p {
-    font-size: 1.1em;
+    font-size: 1.5em;
     line-height: 1.5;
-    font-family: var(--font-primary);
 }
  
 /* Image Styling */
@@ -369,69 +321,6 @@ nav a:hover::after {
 /* Add hover effect */
 .team-member:hover img {
     transform: translateY(-5px);
-}
- 
-/* Small phones (375px) */
-@media (max-width: 480px) {
-    .team-container {
-        gap: 20px;
-        padding: 0 10px;
-    }
-   
-    .team-member {
-        padding: 15px;
-    }
-   
-    .team-member img {
-        max-width: 180px;
-        max-height: 180px;
-    }
-   
-    .team-member h3 {
-        font-size: 16px;
-    }
-   
-    .team-member p {
-        font-size: 12px;
-    }
-}
- 
- 
- 
-/* Responsive adjustments for team section */
-@media (max-width: 992px) {
-    .team-container {
-        justify-content: center;
-        gap: 30px;
-    }
-   
-    .team-member {
-        flex: 0 1 calc(50% - 20px);
-    }
-}
- 
-@media (max-width: 667px) {
-    .team-section {
-        padding: 30px 20px;
-    }
-
-    .team-section h1 {
-        font-size: 1.5em;
-    }
-   
-    .team-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
-    }
-   
-    .team-member {
-        flex: 0 1 100%;
-    }
-   
-    .team-member img {
-        height: 350px;
-    }
 }
 /* ============================================
    6. FOOTER
@@ -526,12 +415,35 @@ nav a:hover::after {
     color: white;
     text-decoration: none;
 }
- /* ============================================
+/* ============================================
    7. MEDIA QUERIES
 ============================================ */
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+ 
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+ 
+.nav-links li {
+    margin: 0;
+}
+
+/* ============================================
+   MEDIA QUERIES
+============================================ */
+
 /* Mobile (max-width: 667px) */
 @media (max-width: 667px) {
-    /* Header & Navigation - Mobile */
+    /* Header & Navigation */
     header {
         padding: 10px 15px;
         display: grid;
@@ -539,7 +451,7 @@ nav a:hover::after {
         grid-template-areas: "menu logo theme";
         align-items: center;
     }
-   
+
     .logo {
         grid-area: logo;
         width: 80px;
@@ -547,14 +459,14 @@ nav a:hover::after {
         margin: 0 auto;
         justify-self: center;
     }
-   
+
     .theme-switch {
         grid-area: theme;
         justify-self: end;
         margin-right: 0;
         gap: 5px;
     }
-   
+
     .menu-toggle {
         display: block;
         grid-area: menu;
@@ -563,27 +475,25 @@ nav a:hover::after {
         z-index: 1000;
         cursor: pointer;
     }
-   
-    /* Theme Switch sizing */
+
     .switch {
         width: 50px;
         height: 26px;
     }
-   
+
     .switch-circle {
         height: 22px;
         width: 22px;
     }
-   
+
     [data-theme="light"] .switch-circle {
         transform: translateX(24px);
     }
-   
+
     .theme-icon {
         font-size: 1.2em;
     }
-   
-    /* Mobile navigation */
+
     .nav-links {
         position: fixed;
         flex-direction: column;
@@ -600,105 +510,92 @@ nav a:hover::after {
         z-index: 900;
         display: flex;
     }
-   
+
     .nav-links.active {
         left: 0;
     }
-   
-    /* Theme switching */
-    .mobile-theme-option {
-        display: none;
-    }
-   
-    .desktop-theme-switch {
-        display: flex;
-    }
-   
-   
+
     /* About Us Sections */
     .about, .mission, .vision, .story {
         flex-direction: column;
-        height: auto;
         padding: 40px 20px;
         text-align: center;
     }
-   
+
     .text {
-        max-width: 100%;
-        margin-bottom: 30px;
+        max-width: 80%;
     }
-   
-    .text h1 {
-        font-size: 1.8em;
+
+    .text h1, .team-section h1 {
+        font-size: 1.6rem;
     }
-   
+
+    .text p, .team-section p {
+        font-size: 1rem;
+        margin-bottom: 15%;
+    }
+
     .about img, .mission img, .vision img, .story img {
-        margin-top: 20px;
+        height: 200px;
+        width: 300px;
+        order: 2;
     }
-   
+
     /* Team Section */
     .team-section {
         padding: 30px 20px;
         text-align: center;
     }
- 
-    .team-section p {
-        margin-bottom: 10%;
-        font-size: 1em;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-   
+
     .team-container {
         flex-direction: column;
         align-items: center;
-        gap: 30px;
     }
-   
+
+    .team-member {
+        height: auto;
+        width: 250px;
+    }
+
     .team-member img {
-        width: 100%;
-        max-width: 150px;
-        height: 150px;
+        width: 200px;
+        height: 200px;
     }
-   
-   
-    /* Footer - Mobile */
-   
+
+    /* Footer */
     .footer-container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         align-items: flex-start;
-        margin: 0 15px;
+        margin: 0 5px;
     }
-    
-    /* First section (logo) */
+
     .footer-container > div:first-child {
         width: 100%;
         order: -1;
         text-align: center;
         margin-bottom: 15px;
     }
-    
-    /* Other sections */
+
     .footer-section:not(:first-child) {
         width: 30%;
         text-align: center;
         margin-bottom: 10px;
     }
-    
+
     .footer-section h3 {
         font-size: 1em;
         margin-bottom: 8px;
         text-align: left;
     }
-    
+
     .footer-section ul li {
         margin-bottom: 4px;
         font-size: 0.7em;
         text-align: left;
     }
-    
+
     .footer-logo {
         height: 66px;
         width: 113px;
@@ -707,57 +604,98 @@ nav a:hover::after {
     .bottom-bar p {
         font-size: 0.7em;
     }
-    
+
     .social-icon {
         width: 15px;
         height: 15px;
     }
-   
-    /* Very small screens */
-    @media (max-width: 375px) {
-        .nav-links {
-            width: 85%;
-            max-width: 260px;
-        }
-   
-        .menu-toggle {
-            font-size: 1.8em;
-        }
-    }
 }
- 
-/* Tablet (668px - 1024px) */
-@media (min-width: 668px) and (max-width: 1024px) {
-    main {
-        flex-direction: row;
-        text-align: left;
+
+/* Tablet (667px - 1024px) */
+@media (min-width: 667px) and (max-width: 1024px) {
+    /* Header & Navigation */
+    header {
+        padding: 15px;
     }
- 
-    .content {
-        max-width: 50%;
+
+    .logo {
+        width: 90px;
+        height: 55px;
     }
- 
-    .team-member {
-        height: 325px;
-        width: 250px;
+
+    nav {
+        gap: 25px;
     }
- 
-    .team-member img {
-        width: 100%;
-        max-width: 200px;
-        height: 200px;
+
+    nav a {
+        font-size: 1em;
+    }
+
+    .text h1 {
+        font-size: 1.5rem;
+    }
+
+    .text p {
+        font-size: 1rem;
+    }
+
+    .join-btn {
+        padding: 2px 18px;
+        font-size: 0.9em;
+    }
+
+    .switch {
+        width: 55px;
+        height: 28px;
+    }
+
+    .switch-circle {
+        height: 24px;
+        width: 24px;
+    }
+
+    [data-theme="light"] .switch-circle {
+        transform: translateX(27px);
+    }
+
+    .theme-icon {
+        font-size: 1.3em;
+    }
+
+    /* About Us Sections */
+    .about, .mission, .vision, .story {
+        padding: 50px 30px;
+    }
+
+    .text {
+        max-width: 55%;
     }
 
     .about img, .mission img, .vision img, .story img {
-        height: 250px;
-        width: 400px;
+        height: 150px;
+        width: 250px;
     }
- 
-   
-    h1 {
-        font-size: 2.8em;
+
+    /* Team Section */
+    .team-member {
+        height: auto;
+        width: 225px;
     }
-   
+
+    .team-member img {
+        width: 175px;
+        height: 175px;
+    }
+
+    .team-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .team-section p {
+        margin-bottom: 3%;
+    }
+
+    /* Footer */
     .footer-container {
         flex-direction: row;
         text-align: left;
@@ -769,285 +707,11 @@ nav a:hover::after {
         width: 150px;
     }
 }
- 
-/* Hamburger Menu Button */
-.menu-toggle {
-    display: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    z-index: 1000;
-}
- 
-/* Navigation Links */
-.nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    align-items: center;
-}
- 
-/* Responsive Navigation */
-@media (max-width: 1024px) {
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: white;
-        width: 220px;
-        padding: 12px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
- 
-    .nav-links.active {
-        display: flex;
-    }
- 
-    .menu-toggle {
-        display: block;
-    }
-}
- 
-@media (max-width: 768px) {
-    .nav-links {
-        position: fixed;
-        flex-direction: column;
-        background-color: var(--bg-color);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        top: 0;
-        height: 100vh;
-        width: 75%;
-        max-width: 280px;
-        padding-top: 80px;
-        padding-bottom: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 900;
-    }
- 
-    .nav-links.active {
-        right: 0;
-    }
- 
-    .nav-links li {
-        margin: 18px 0;
-    }
- 
-    header {
-        justify-content: space-between;
-    }
- 
-    .logo, .theme-switch {
-        z-index: 1000;
-    }
-}
- 
-@media (max-width: 375px) {
-    .nav-links {
-        width: 85%;
-        max-width: 260px;
-    }
- 
-    .menu-toggle {
-        font-size: 1.8em;
-    }
-}
- 
-/* Mobile Navigation Styles */
-.menu-toggle {
-    display: none;
-    font-size: 1.5em;
-    color: var(--accent-color);
-    cursor: pointer;
-    z-index: 1000;
-}
- 
-.nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    align-items: center;
-}
- 
-.nav-links li {
-    margin: 0;
-}
- 
-/* Mobile Menu Styles */
-@media (max-width: 767px) {
-    .menu-toggle {
-        display: block;
-    }
-   
-    .nav-links {
-        position: fixed;
-        flex-direction: column;
-        background-color: var(--bg-color);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        top: 0;
-        right: -100%;
-        height: 100vh;
-        width: 70%;
-        max-width: 300px;
-        padding-top: 80px;
-        padding-bottom: 20px;
-        transition: right 0.3s ease;
-        z-index: 900;
-    }
-   
-    .nav-links.active {
-        right: 0;
-    }
-   
-    .nav-links li {
-        margin: 15px 0;
-    }
-   
-    header {
-        justify-content: space-between;
-    }
-   
-    .logo {
-        z-index: 1000;
-    }
-   
-    .theme-switch {
-        z-index: 1000;
-    }
-}
- 
-/* Improved responsive styles for the about sections */
-@media (max-width: 992px) {
-    .about, .mission, .vision, .story {
-        height: auto;
-        padding: 50px 30px;
-    }
-   
-    .text {
-        max-width: 55%;
-    }
 
-}
- 
-@media (max-width: 768px) {
-    .about, .mission, .vision, .story {
-        flex-direction: column;
-        padding: 40px 20px;
-        text-align: center;
-    }
-   
-    .text {
-        max-width: 90%;
-        margin-bottom: 30px;
-        order: 1;
-    }
-   
+/* Medium Screens (1025px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
     .about img, .mission img, .vision img, .story img {
-        margin-top: 0;
-        margin-bottom: 30px;
-        order: 2;
-        height: 150px;
-        width: 250px;
-        
-    }
-   
-    /* Alternate image and text order for visual interest */
-    .mission .text, .story .text {
-        order: 2;
-        margin-bottom: 0;
-    }
-   
-    .mission img, .story img {
-        order: 1;
-        margin-bottom: 30px;
-        margin-top: 0;
+        height: 250px;
+        width: 350px;
     }
 }
- 
-@media (max-width: 480px) {
-    .about, .mission, .vision, .story {
-        padding: 30px 15px;
-    }
-   
-    .text h1 {
-        font-size: 1.5em;
-    }
-   
-    .text p {
-        font-size: 1em;
-    }
-
-}
- 
-/* Tablet Navigation (768px - 1024px) */
-@media (min-width: 668px) and (max-width: 1024px) {
-    /* Header & Navigation */
-    header {
-        padding: 15px;
-    }
-   
-    .logo {
-        width: 90px;
-        height: 55px;
-    }
-   
-    nav {
-        gap: 25px;
-    }
-   
-    nav a {
-        font-size: 1em;
-    }
-   
-    .join-btn {
-        padding: 2px 18px;
-        font-size: 0.9em;
-    }
-   
-    /* Theme Switch - slightly smaller for tablets */
-    .switch {
-        width: 55px;
-        height: 28px;
-    }
-   
-    .switch-circle {
-        height: 24px;
-        width: 24px;
-    }
-   
-    [data-theme="light"] .switch-circle {
-        transform: translateX(27px);
-    }
-   
-    .theme-icon {
-        font-size: 1.3em;
-    }
-   
-    /* Make sure the navigation is horizontal and visible */
-    .nav-links {
-        display: flex;
-        flex-direction: row;
-        position: static;
-        background: none;
-        width: auto;
-        padding: 0;
-        box-shadow: none;
-        gap: 20px;
-    }
-   
-    /* Hide the menu toggle button on tablet */
-    .menu-toggle {
-        display: none;
-    }
-   
-}
- 
-@media (width: 1920px) and (height: 1080px),
-       (min-width: 1920px) and (max-width: 1921px) {
-    /* Team Section specific styles */
-    .team-container{
-        width: 70%;
-        margin: 0 auto;
-    }
-}
- 
