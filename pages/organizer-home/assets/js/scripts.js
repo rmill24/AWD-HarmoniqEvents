@@ -303,7 +303,7 @@ document.querySelector(".sign-out").addEventListener("click", () => {
   localStorage.removeItem("organizerId");
 
   // Redirect to login page
-  window.location.href = "/index.html";
+  window.location.href = "/AWD-HarmoniqEvents/index.html";
 });
 
 // Initialize on page load
@@ -468,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!organizerId) {
     alert("You are not logged in. Please log in first.");
-    window.location.href = "/index.html"; // Redirect to login page
+    window.location.href = "/AWD-HarmoniqEvents/index.html"; // Redirect to login page
     return;
   }
 

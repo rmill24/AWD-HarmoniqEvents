@@ -46,7 +46,7 @@ document.querySelector(".sign-out").addEventListener("click", () => {
   }
 
   // Redirect to login page
-  window.location.href = "/index.html";
+  window.location.href = "/AWD-HarmoniqEvents/index.html";
 });
 
 // ============================================
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!vendorId) {
     alert("You are not logged in. Please log in first.");
-    window.location.href = "/index.html";
+    window.location.href = "/AWD-HarmoniqEvents/index.html";
     return;
   }
 
