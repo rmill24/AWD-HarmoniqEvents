@@ -759,7 +759,7 @@ document
     }
   });
 
-  //  Handle Edit Event Modal
+//  Handle Edit Event Modal
 const editEventModal = document.getElementById("editEventModal");
 const editEventCancelButton = editEventModal.querySelector(".cancel-modal");
 const editEventForm = document.getElementById("editEventForm");
@@ -914,72 +914,71 @@ function openEditModal(eventId) {
 
 // Handle deleting events
 document.addEventListener("click", async (event) => {
-    const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
-  
-    if (!deleteButton) return; // Exit if not clicking the delete button
-  
-    const eventId = deleteButton.dataset.eventId;
-  
-    if (!confirm("Are you sure you want to delete this event?")) return;
-  
-    try {
-      const response = await fetch(
-        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
-        {
-          method: "DELETE",
-        }
-      );
-  
-      if (response.ok) {
-        alert("Event deleted successfully!");
-        // Fetch and refresh the events
-        const organizerId = localStorage.getItem("organizerId");
-        const eventsResponse = await fetch(
-          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
-        );
-        const events = await eventsResponse.json();
-        populateEventTables(events); // Refresh the event tables
-      } else {
-        alert("Failed to delete event.");
+  const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
+
+  if (!deleteButton) return; // Exit if not clicking the delete button
+
+  const eventId = deleteButton.dataset.eventId;
+
+  if (!confirm("Are you sure you want to delete this event?")) return;
+
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "DELETE",
       }
-    } catch (error) {
-      console.error("Error deleting event:", error);
+    );
+
+    if (response.ok) {
+      alert("Event deleted successfully!");
+      // Fetch and refresh the events
+      const organizerId = localStorage.getItem("organizerId");
+      const eventsResponse = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+      );
+      const events = await eventsResponse.json();
+      populateEventTables(events); // Refresh the event tables
+    } else {
+      alert("Failed to delete event.");
     }
-  });
-  
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+});
 
 // ==============================================
 // TASKS MANAGEMENT
 // ==============================================
 let eventDates = {};
- 
+
 function formatDateTime(dateString) {
   const date = new Date(dateString);
- 
+
   // Extract individual parts
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const day = String(date.getDate()).padStart(2, "0");
- 
+
   let hours = date.getHours();
   const minutes = String(date.getMinutes()).padStart(2, "0");
   const ampm = hours >= 12 ? "PM" : "AM";
- 
+
   hours = hours % 12 || 12; // Convert 24-hour time to 12-hour format
- 
+
   return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
 }
- 
+
 // Fetch Events for Dropdown
 async function loadEventDropdown() {
   try {
     const response = await fetch(`${apiUrl}/api/events`);
     const events = await response.json();
- 
+
     const eventDropdown = document.querySelector(".event-dropdown-task");
     const eventDateDisplay = document.getElementById("event-date-display");
     eventDropdown.innerHTML = `<option value="">Select Event</option>`;
- 
+
     events.forEach((event) => {
       eventDates[event._id] = new Date(event.date); // Store event date
       const option = document.createElement("option");
@@ -987,7 +986,7 @@ async function loadEventDropdown() {
       option.textContent = event.title;
       eventDropdown.appendChild(option);
     });
- 
+
     // Listen for event selection change
     eventDropdown.addEventListener("change", () => {
       const selectedEventId = eventDropdown.value;
@@ -1008,92 +1007,92 @@ async function loadEventDropdown() {
 
 // Fetch Tasks for Selected Event
 async function loadTasksForEvent(eventId) {
-    const tasksTableBody = document.getElementById("tasksTableBody");
-    const completedTasksTableBody = document.querySelector(
-      "#completedTasks tbody"
-    );
-   
-    if (eventId === "") {
-      tasksTableBody.innerHTML = "";
-      completedTasksTableBody.innerHTML = "";
-      return;
-    }
-   
-    try {
-      // Fetch tasks
-      const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
-      let tasks = await response.json();
-   
-      // Fetch pending vendor requests for this event
-      const requestResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
-      const vendorRequests = await requestResponse.json();
-   
-      // Sort tasks by dueDate
-      tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-   
-      tasksTableBody.innerHTML = "";
-      completedTasksTableBody.innerHTML = "";
-   
-      const today = new Date();
-   
-      for (const task of tasks) {
-        const row = document.createElement("tr");
-   
-        const taskDueDate = new Date(task.dueDate);
-        const isPastCompleted =
-          task.status === "completed" && taskDueDate < today;
-   
-        let vendorDisplay = "";
-   
-        let requestedVendor = vendorRequests.find(
-          (req) => req.taskId === task._id.toString()
-        );
-   
-        if (task.assignedVendorId) {
-          // Vendor has accepted the request
-          try {
-            const vendorResponse = await fetch(
-              `${apiUrl}/api/vendors/${task.assignedVendorId}`
-            );
-            if (vendorResponse.ok) {
-              const vendorData = await vendorResponse.json();
-              vendorDisplay = `<span>${vendorData.name}</span>`;
-            } else {
-              vendorDisplay = `<span>Vendor Assigned</span>`;
-            }
-          } catch (error) {
-            console.error("Error fetching assigned vendor details:", error);
+  const tasksTableBody = document.getElementById("tasksTableBody");
+  const completedTasksTableBody = document.querySelector(
+    "#completedTasks tbody"
+  );
+
+  if (eventId === "") {
+    tasksTableBody.innerHTML = "";
+    completedTasksTableBody.innerHTML = "";
+    return;
+  }
+
+  try {
+    // Fetch tasks
+    const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+    let tasks = await response.json();
+
+    // Fetch pending vendor requests for this event
+    const requestResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
+    const vendorRequests = await requestResponse.json();
+
+    // Sort tasks by dueDate
+    tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+    tasksTableBody.innerHTML = "";
+    completedTasksTableBody.innerHTML = "";
+
+    const today = new Date();
+
+    for (const task of tasks) {
+      const row = document.createElement("tr");
+
+      const taskDueDate = new Date(task.dueDate);
+      const isPastCompleted =
+        task.status === "completed" && taskDueDate < today;
+
+      let vendorDisplay = "";
+
+      let requestedVendor = vendorRequests.find(
+        (req) => req.taskId === task._id.toString()
+      );
+
+      if (task.assignedVendorId) {
+        // Vendor has accepted the request
+        try {
+          const vendorResponse = await fetch(
+            `${apiUrl}/api/vendors/${task.assignedVendorId}`
+          );
+          if (vendorResponse.ok) {
+            const vendorData = await vendorResponse.json();
+            vendorDisplay = `<span>${vendorData.name}</span>`;
+          } else {
             vendorDisplay = `<span>Vendor Assigned</span>`;
           }
-        } else if (requestedVendor && requestedVendor.status === "pending") {
-          vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName} (${requestedVendor.serviceType})</span>`;
-        } else {
-          // No vendor assigned, show add vendor button
-          vendorDisplay = isPastCompleted
-            ? `<button class="disabled-btn" disabled>
+        } catch (error) {
+          console.error("Error fetching assigned vendor details:", error);
+          vendorDisplay = `<span>Vendor Assigned</span>`;
+        }
+      } else if (requestedVendor && requestedVendor.status === "pending") {
+        vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName} (${requestedVendor.serviceType})</span>`;
+      } else {
+        // No vendor assigned, show add vendor button
+        vendorDisplay = isPastCompleted
+          ? `<button class="disabled-btn" disabled>
                  <i class="fa-solid fa-ban"></i> Cannot Request Vendor
                </button>`
-            : `<button class="add-vendor" data-task-id="${task._id}">
+          : `<button class="add-vendor" data-task-id="${task._id}">
                  <i class="fa-solid fa-plus"></i> Request Vendor
                </button>`;
-        }
-   
-        // Toggle Task Status Button
-        const toggleStatusButton = isPastCompleted
-          ? `<button class="disabled-btn" disabled>
+      }
+
+      // Toggle Task Status Button
+      const toggleStatusButton = isPastCompleted
+        ? `<button class="disabled-btn" disabled>
                <i class="fa-solid fa-ban"></i> Cannot Revert
              </button>`
-          : `<button class="toggle-status-btn" data-task-id="${
-              task._id
-            }" data-status="${task.status}">
+        : `<button class="toggle-status-btn" data-task-id="${
+            task._id
+          }" data-status="${task.status}">
                ${
                  task.status === "completed"
                    ? `<i class="fa-solid fa-arrow-rotate-left"></i> Mark as Pending`
                    : `<i class="fa-solid fa-check"></i> Mark as Complete`
                }
              </button>`;
-   
-        row.innerHTML = `
+
+      row.innerHTML = `
           <td>${task.title}</td>
           <td>${task.description || "-"}</td>
           <td>${formatDateTime(task.dueDate)}</td>
@@ -1109,120 +1108,170 @@ async function loadTasksForEvent(eventId) {
             </button>
           </td>
         `;
-   
-        if (task.status === "completed") {
-          completedTasksTableBody.appendChild(row);
-        } else {
-          tasksTableBody.appendChild(row);
-        }
+
+      if (task.status === "completed") {
+        completedTasksTableBody.appendChild(row);
+      } else {
+        tasksTableBody.appendChild(row);
       }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
     }
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
   }
+}
 
 // Toggle Task Status (Complete ↔ Pending)
 document.addEventListener("click", async (event) => {
-    if (event.target.closest(".toggle-status-btn")) {
-      const button = event.target.closest(".toggle-status-btn");
-      const taskId = button.getAttribute("data-task-id");
-      const currentStatus = button.getAttribute("data-status");
-   
-      if (!taskId) {
-        console.error("No Task ID found!");
-        return;
-      }
-   
-      const newStatus = currentStatus === "completed" ? "pending" : "completed";
-   
-      try {
-        const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newStatus }),
-        });
-   
-        if (response.ok) {
-          alert(`Task marked as ${newStatus}`);
-          loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
-        } else {
-          console.error("Failed to update task status:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error updating task status:", error);
-      }
+  if (event.target.closest(".toggle-status-btn")) {
+    const button = event.target.closest(".toggle-status-btn");
+    const taskId = button.getAttribute("data-task-id");
+    const currentStatus = button.getAttribute("data-status");
+
+    if (!taskId) {
+      console.error("No Task ID found!");
+      return;
     }
-  });
+
+    const newStatus = currentStatus === "completed" ? "pending" : "completed";
+
+    try {
+      const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        alert(`Task marked as ${newStatus}`);
+        loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+      } else {
+        console.error("Failed to update task status:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  }
+});
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
 
 document.addEventListener("DOMContentLoaded", () => {
-    const editTaskModal = document.getElementById("editTaskModal");
-    const editTaskForm = document.getElementById("editTaskForm");
-    let currentEditingTaskId = null;
-   
-    // Open Edit Task Modal
-    document.addEventListener("click", async (event) => {
-      const editButton = event.target.closest(".edit-task-btn");
-      if (editButton) {
-        const taskId = editButton.getAttribute("data-task-id");
-   
-        console.log("Editing Task ID:", taskId); // Debugging
-   
-        if (!taskId) {
-          console.error("No Task ID found!");
+  const editTaskModal = document.getElementById("editTaskModal");
+  const editTaskForm = document.getElementById("editTaskForm");
+  let currentEditingTaskId = null;
+
+  // Open Edit Task Modal
+  document.addEventListener("click", async (event) => {
+    const editButton = event.target.closest(".edit-task-btn");
+    if (editButton) {
+      const taskId = editButton.getAttribute("data-task-id");
+
+      console.log("Editing Task ID:", taskId); // Debugging
+
+      if (!taskId) {
+        console.error("No Task ID found!");
+        return;
+      }
+
+      // Store taskId for later use in the update function
+      currentEditingTaskId = taskId;
+
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
+
+        if (!response.ok) {
+          console.error("Error fetching task details:", await response.text());
           return;
         }
-   
-        // Store taskId for later use in the update function
-        currentEditingTaskId = taskId;
-   
-        try {
-          const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
-   
-          if (!response.ok) {
-            console.error("Error fetching task details:", await response.text());
-            return;
-          }
-   
-          const task = await response.json();
-   
-          // Ensure task.dueDate exists before using .split()
-          if (!task || !task.dueDate) {
-            console.error("Task data is missing or invalid:", task);
-            alert("Error: Task data is missing. Please try again.");
-            return;
-          }
-   
-          // Populate the modal with task data
-          document.getElementById("editTaskTitle").value = task.title || "";
-          document.getElementById("editTaskDescription").value =
-            task.description || "";
-   
-          // Ensure dueDate is valid
-          const taskDate = new Date(task.dueDate);
-          if (isNaN(taskDate.getTime())) {
-            console.error("Invalid date format:", task.dueDate);
-            alert("Error: Task has an invalid date.");
-            return;
-          }
-   
-          document.getElementById("editTaskDate").value =
-            task.dueDate.split("T")[0];
-          document.getElementById("editTaskTime").value =
-            taskDate.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-   
-          // Show the modal
-          document.getElementById("editTaskModal").classList.add("active");
-          document.body.style.overflow = "hidden";
-        } catch (error) {
-          console.error("Error fetching task details:", error);
+
+        const task = await response.json();
+
+        // Ensure task.dueDate exists before using .split()
+        if (!task || !task.dueDate) {
+          console.error("Task data is missing or invalid:", task);
+          alert("Error: Task data is missing. Please try again.");
+          return;
         }
+
+        // Populate the modal with task data
+        document.getElementById("editTaskTitle").value = task.title || "";
+        document.getElementById("editTaskDescription").value =
+          task.description || "";
+
+        // Ensure dueDate is valid
+        const taskDate = new Date(task.dueDate);
+        if (isNaN(taskDate.getTime())) {
+          console.error("Invalid date format:", task.dueDate);
+          alert("Error: Task has an invalid date.");
+          return;
+        }
+
+        document.getElementById("editTaskDate").value =
+          task.dueDate.split("T")[0];
+        document.getElementById("editTaskTime").value =
+          taskDate.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+        // Show the modal
+        document.getElementById("editTaskModal").classList.add("active");
+        document.body.style.overflow = "hidden";
+      } catch (error) {
+        console.error("Error fetching task details:", error);
+      }
+    }
+  });
+
+  // Handle Edit Task Form Submission
+  document
+    .getElementById("editTaskForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!currentEditingTaskId) return;
+
+      const taskDateInput = document.getElementById("editTaskDate").value;
+      const taskDueDate = new Date(taskDateInput);
+
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
+      const eventDate = eventDates[selectedEventId]; // Get event date
+
+      if (taskDueDate > eventDate) {
+        alert("Task due date cannot be later than the event date.");
+        return;
+      }
+
+      const updatedTask = {
+        title: document.getElementById("editTaskTitle").value,
+        description: document.getElementById("editTaskDescription").value,
+        dueDate: new Date(
+          `${taskDateInput}T${document.getElementById("editTaskTime").value}`
+        ).toISOString(),
+      };
+
+      try {
+        const response = await fetch(
+          `${apiUrl}/api/tasks/${currentEditingTaskId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedTask),
+          }
+        );
+
+        if (response.ok) {
+          alert("Task updated successfully!");
+          document.getElementById("editTaskModal").classList.remove("active");
+          loadTasksForEvent(selectedEventId);
+        } else {
+          console.error("Failed to update task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error updating task:", error);
       }
     });
-   
-  });
+});
