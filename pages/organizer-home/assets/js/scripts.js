@@ -1370,4 +1370,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // Fetch Vendors Based on Selected Category
+  categoryDropdown.addEventListener("change", async () => {
+    const selectedCategory = categoryDropdown.value;
+    if (!selectedCategory) return;
+
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/vendors?serviceType=${selectedCategory}`
+      );
+      if (!response.ok) {
+        console.error("Error fetching vendors:", await response.text());
+        return;
+      }
+
+      const vendors = await response.json();
+
+      // Populate Vendor Dropdown
+      vendorDropdown.innerHTML = `<option disabled selected>Select Vendor</option>`;
+      vendors.forEach((vendor) => {
+        const option = document.createElement("option");
+        option.value = vendor._id;
+        option.textContent = vendor.name;
+        vendorDropdown.appendChild(option);
+      });
+
+      // Clear Venue Details when category changes
+      document.getElementById("venueDetailsContainer").style.display = "none";
+    } catch (error) {
+      console.error("Error fetching vendors by category:", error);
+    }
+  });
 });
