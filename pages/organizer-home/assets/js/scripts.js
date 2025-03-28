@@ -1658,6 +1658,7 @@ async function loadGuestEventDropdown() {
 async function loadGuestsForEvent(eventId) {
   const guestsTableBody = document.querySelector(".guest-table tbody");
   const guestCountList = document.querySelector(".guest-count-list");
+  const eventDateDisplay = document.getElementById("event-date-display-guest");
 
   if (eventId === "") {
     guestsTableBody.innerHTML =
@@ -1669,10 +1670,27 @@ async function loadGuestsForEvent(eventId) {
           <p>0</p>
         </div>
       `;
+    eventDateDisplay.textContent = "No event selected";
     return;
   }
 
   try {
+    // Fetch event details to get the date
+    const eventResponse = await fetch(`${apiUrl}/api/events/${eventId}`);
+    const eventData = await eventResponse.json();
+
+    if (!eventResponse.ok) {
+      throw new Error("Failed to fetch event details");
+    }
+
+    // Convert event date to MM/DD/YYYY format
+    const eventDate = new Date(eventData.date);
+    const formattedDate = `${eventDate.getMonth() + 1}/${eventDate.getDate()}/${eventDate.getFullYear()}`;
+
+    // Update event date display
+    eventDateDisplay.textContent = `Event Date: ${formattedDate}`;
+
+    // Fetch guests
     const response = await fetch(`${apiUrl}/api/guests/${eventId}`);
     const guests = await response.json();
 
@@ -1718,7 +1736,7 @@ async function loadGuestsForEvent(eventId) {
       guestsTableBody.appendChild(row);
     });
   } catch (error) {
-    console.error("Error fetching guests:", error);
+    console.error("Error fetching guests or event details:", error);
   }
 }
 
