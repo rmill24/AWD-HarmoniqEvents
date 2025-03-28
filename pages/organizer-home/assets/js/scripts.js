@@ -1442,4 +1442,55 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error fetching vendor details:", error);
     }
   });
+
+  // Handle Assign Vendor Confirmation
+  confirmVendorBtn.addEventListener("click", async () => {
+    if (!currentTaskForVendor) return;
+
+    const selectedVendorId = vendorDropdown.value;
+    if (!selectedVendorId) {
+      alert("Please select a vendor.");
+      return;
+    }
+
+    try {
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
+
+      const response = await fetch(`${apiUrl}/api/requests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vendorId: selectedVendorId,
+          eventId: selectedEventId,
+          taskId: currentTaskForVendor, // Ensure correct event association
+        }),
+      });
+
+      if (response.ok) {
+        alert("Vendor request sent successfully!");
+        requestVendorModal.style.display = "none";
+        loadTasksForEvent(selectedEventId); // Reload tasks for the selected event
+      } else {
+        const errorData = await response.json(); // Read error response
+        if (response.status === 422) {
+          alert(errorData.message); // Display validation error
+        } else {
+          alert("Failed to send vendor request. Please try again.");
+          console.error("Error:", errorData);
+        }
+      }
+    } catch (error) {
+      console.error("Error sending vendor request:", error);
+      alert("An error occurred while sending the request.");
+    }
+  });
+
+  // Close Modal on Cancel
+  requestVendorModal
+    .querySelector(".btn-secondary")
+    .addEventListener("click", () => {
+      requestVendorModal.classList.remove("active");
+    });
 });
