@@ -1573,4 +1573,37 @@ document.addEventListener("DOMContentLoaded", () => {
   addTaskModal.querySelector(".btn-secondary").addEventListener("click", () => {
     addTaskModal.classList.remove("active");
   });
+
+  async function autoCompleteExpiredTasks() {
+    try {
+      console.log("Checking for expired tasks...");
+ 
+      const response = await fetch(`${apiUrl}/api/tasks`);
+      if (!response.ok) {
+        console.error("Error fetching tasks:", await response.text());
+        return;
+      }
+ 
+      const tasks = await response.json();
+      const today = new Date();
+ 
+      for (const task of tasks) {
+        const taskDueDate = new Date(task.dueDate);
+ 
+        // If the task is pending and past due, update it to completed
+        if (task.status === "pending" && taskDueDate < today) {
+          await updateTaskStatus(task._id, "completed");
+          task.status = "completed"; // Reflect the change in local data
+          console.log(`Updated Task ${task._id} to Completed`);
+        }
+      }
+ 
+      // Refresh task lists
+      loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+    } catch (error) {
+      console.error("Error updating expired tasks:", error);
+    }
+  }
+
+  
 });
