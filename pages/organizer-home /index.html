@@ -230,6 +230,178 @@
                 </div>
             </div>
         </section>
+         <!-- TASKS SECTION -->
+ <section id="tasks" class="content-section">
+    <div class="actions-bar">
+            <select class="event-dropdown-task"></select>
+        <button class="add-task-btn">
+            <i class="fa-solid fa-plus"></i>
+           <span> Add Task </span>
+        </button>
+        <span id="event-date-display"></span>
+    </div>
+    <!-- Task Modal -->
+<div class="modal" id="addTaskModal">
+<div class="modal-content">
+    <div class="modal-header">
+        <h2>Add Task</h2>
+    </div>
+    <form id="addTaskForm">
+        <div class="form-group">
+            <label for="taskTitle">Title:</label>
+            <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Name" required>
+        </div>
+       
+        <div class="form-group">
+            <label for="taskDescription">Description:</label>
+            <textarea id="taskDescription" name="taskDescription" placeholder="Short description..." maxlength="200"></textarea>
+            <div class="character-count">
+                <span id="currentCount">0</span>
+                <span>/200</span>
+            </div>
+        </div>
+       
+        <div class="form-row">
+            <div class="form-group date-time">
+                <label>Date:</label>
+                <div class="date-time-inputs">
+                    <input type="date" id="taskDate" name="taskDate" required>
+                    <input type="time" id="taskTime" name="taskTime" required>
+                </div>
+            </div>
+        </div>
+       
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+</div>
+<!-- Edit Task Modal -->
+<div class="modal" id="editTaskModal">
+<div class="modal-content">
+    <div class="modal-header">
+        <h2>Edit Task</h2>
+    </div>
+    <form id="editTaskForm">
+        <div class="form-group">
+            <label for="editTaskTitle">Title:</label>
+            <input type="text" id="editTaskTitle" name="editTaskTitle" placeholder="Task Name" required>
+        </div>
+       
+        <div class="form-group">
+            <label for="editTaskDescription">Description:</label>
+            <textarea id="editTaskDescription" name="editTaskDescription" placeholder="Short description..." maxlength="200"></textarea>
+            <div class="character-count">
+                <span id="editCurrentCount">0</span>
+                <span>/200</span>
+            </div>
+        </div>
+       
+        <div class="form-row">
+            <div class="form-group date-time">
+                <label>Date and Time:</label>
+                <div class="date-time-inputs">
+                    <input type="date" id="editTaskDate" name="editTaskDate" required>
+                    <input type="time" id="editTaskTime" name="editTaskTime" required>
+                </div>
+            </div>
+        </div>
+       
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+</div>
+ 
+<!-- Request a Vendor Modal -->
+<div class="modal" id="requestVendorModal">
+<div class="modal-content">
+    <div class="modal-header">
+        <h2>Request a Vendor</h2>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Category:</label>
+            <div class="select-wrapper">
+                <select id="vendorCategory">
+                    <option disabled selected>Select Category</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Available Vendors:</label>
+            <div class="select-wrapper">
+                <select id="vendorList">
+                    <option disabled selected>Select Vendor</option>
+                </select>
+            </div>
+        </div>
+        <div id="venueDetailsContainer">
+            <h4>Venue Details</h4>
+            <p><strong>Name:</strong> <span id="venueName"></span></p>
+            <p><strong>Location:</strong> <span id="venueLocation"></span></p>
+            <p><strong>Capacity:</strong> <span id="venueCapacity"></span></p>
+            <p><strong>Amenities:</strong> <span id="venueAmenities"></span></p>
+          </div>
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary">Cancel</button>
+            <button type="button" class="btn-primary">Confirm</button>
+        </div>
+    </div>
+</div>
+</div>
+    <!-- Tasks Tab Navigation with Edit Button -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <div class="tab active" data-tab="pendingTasks">Pending</div>
+            <div class="tab" data-tab="completedTasks">Completed</div>
+        </div>
+    </div>
+   
+    <!-- Tab Content -->
+    <div class="tab-content active" id="pendingTasks">
+        <div class="table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th>Task Status</th>
+                        <th>Assigned Vendor</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tasksTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+    <div class="tab-content" id="completedTasks">
+        <div class="table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th>Task Status</th>
+                        <th>Assigned Vendor</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody id="tasksTableBody">
+            </table>
+        </div>
+    </div>
+</section>
+ 
     </main>
 </body>
 </html>
