@@ -268,4 +268,125 @@ body {
     display: block;
     opacity: 1;
 }
+ /* ======================================
+   4. COMMON UI COMPONENTS
+   ====================================== */
+/* Theme Switch */
+.theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+ 
+.theme-icon {
+    color: var(--primary-color);
+    font-size: 1.5em;
+}
+ 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: var(--primary-color);
+    border-radius: 34px;
+    cursor: pointer;
+}
+ 
+.switch-circle {
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
+}
+ 
+[data-theme="light"] .switch-circle {
+    transform: translateX(30px);
+}
+ 
+/* Dropdowns */
+.event-dropdown,
+.event-name-dropdown, .event-dropdown-task, .event-dropdown-guests {
+    background-color: var(--primary-color);
+    border-radius: 30px;
+    padding: 12px 24px;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+ 
+.event-dropdown h1, .event-dropdown-task h1, .event-dropdown-task h3,
+.event-name-dropdown h3, .event-dropdown-guests h3, .event-dropdown-guests h1 {
+    color: var(--font-light-color);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+ 
+.event-dropdown i,
+.event-name-dropdown i, .event-dropdown-task i, .event-dropdown-guests i {
+    color: var(--font-light-color);
+    font-size: 16px;
+}
+ 
+.event-dropdown:hover,
+.event-name-dropdown:hover, .event-dropdown-task:hover, .event-dropdown-guests:hover {
+    opacity: 0.9;
+}
+ 
+/* Tabs Container */
+.tabs-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+ 
+.tabs {
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+}
+ 
+/* Edit Button in Tabs Container */
+.tabs-container .edit-event-button, .delete-event-btn, .edit-task-btn, .delete-task-btn, .toggle-status-btn, .disabled-btn, .edit-guest-btn, .delete-guest-btn, .cancel-request-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+    visibility: visible;
+    opacity: 1;
+    margin-right: 10px;
+}
+ 
+.tabs-container .edit-event-button:hover, .delete-event-btn:hover, .edit-task-btn:hover, .delete-task-btn:hover, .toggle-status-btn:hover, .disabled-btn:hover, .edit-guest-btn:hover, .delete-guest-btn:hover, .cancel-request-btn:hover {
+    background-color: rgba(81, 147, 139, 0.1);
+    transform: translateY(-1px);
+}
+ 
+.tabs-container .edit-event-button:active, .delete-event-btn:active, .edit-task-btn:active, .delete-task-btn:active, .toggle-status-btn:active, .disabled-btn:active, .edit-guest-btn:active, .delete-guest-btn:active, .cancel-request-btn:active {
+    transform: translateY(0);
+}
+ 
+.tabs-container .edit-event-button i, .delete-event-btn i, .edit-task-btn i, .delete-task-btn i,.edit-guest-btn i, .delete-guest-btn i, .cancel-request-btn i {
+    font-size: 18px;
+}
  
