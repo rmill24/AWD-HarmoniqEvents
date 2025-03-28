@@ -1402,4 +1402,44 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error fetching vendors by category:", error);
     }
   });
+
+  vendorDropdown.addEventListener("change", async () => {
+    const selectedVendorId = vendorDropdown.value;
+    if (!selectedVendorId) return;
+
+    console.log("Selected Vendor ID:", selectedVendorId); // Debugging
+
+    try {
+      const response = await fetch(`${apiUrl}/api/vendors/${selectedVendorId}`);
+      if (!response.ok) {
+        console.error("Error fetching vendor details:", await response.text());
+        return;
+      }
+
+      const vendor = await response.json();
+      console.log("Fetched Vendor Data:", vendor); // Debugging
+
+      // Check if vendor is a Venue Manager and has venue details
+      if (vendor.serviceType === "Venue Manager" && vendor.venueDetails) {
+        console.log("Vendor is a Venue Manager. Showing details..."); // Debugging
+        document.getElementById("venueName").textContent =
+          vendor.venueDetails.name || "N/A";
+        document.getElementById("venueLocation").textContent =
+          vendor.venueDetails.location || "N/A";
+        document.getElementById("venueCapacity").textContent =
+          vendor.venueDetails.capacity || "N/A";
+        document.getElementById("venueAmenities").textContent =
+          vendor.venueDetails.amenities?.join(", ") || "None";
+
+        // Show venue details section
+        document.getElementById("venueDetailsContainer").style.display =
+          "block";
+      } else {
+        console.log("Vendor is NOT a Venue Manager. Hiding details..."); // Debugging
+        document.getElementById("venueDetailsContainer").style.display = "none";
+      }
+    } catch (error) {
+      console.error("Error fetching vendor details:", error);
+    }
+  });
 });
