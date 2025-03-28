@@ -1319,4 +1319,55 @@ document.addEventListener("DOMContentLoaded", () => {
       editTaskModal.classList.remove("active");
     });
   });
+
+  // ============================
+  // ADD VENDOR FUNCTIONALITY
+  // ============================
+  const requestVendorModal = document.getElementById("requestVendorModal");
+  const categoryDropdown = requestVendorModal.querySelector("#vendorCategory");
+  const vendorDropdown = requestVendorModal.querySelector("#vendorList");
+  const confirmVendorBtn = requestVendorModal.querySelector(".btn-primary");
+  let currentTaskForVendor = null;
+
+  // Open Add Vendor Modal
+  document.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("add-vendor")) {
+      currentTaskForVendor = event.target.getAttribute("data-task-id");
+
+      if (!currentTaskForVendor) {
+        console.error("No Task ID found for adding a vendor!");
+        return;
+      }
+
+      try {
+        // Fetch Unique Service Categories
+        const response = await fetch(`${apiUrl}/api/vendors`);
+        if (!response.ok) {
+          console.error("Error fetching vendors:", await response.text());
+          return;
+        }
+
+        const vendors = await response.json();
+
+        // Extract unique categories from vendors
+        const categories = [
+          ...new Set(vendors.map((vendor) => vendor.serviceType)),
+        ];
+
+        // Populate Category Dropdown
+        categoryDropdown.innerHTML = `<option disabled selected>Select Category</option>`;
+        categories.forEach((category) => {
+          const option = document.createElement("option");
+          option.value = category;
+          option.textContent = category;
+          categoryDropdown.appendChild(option);
+        });
+
+        // Show Modal
+        requestVendorModal.classList.add("active");
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    }
+  });
 });
