@@ -758,3 +758,156 @@ document
       console.error("Network error:", error);
     }
   });
+
+  //  Handle Edit Event Modal
+const editEventModal = document.getElementById("editEventModal");
+const editEventCancelButton = editEventModal.querySelector(".cancel-modal");
+const editEventForm = document.getElementById("editEventForm");
+
+// Handle Updating an Event
+document
+  .getElementById("editEventForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const eventId = e.target.dataset.eventId;
+
+    const dateValue = document.getElementById("editEventDate").value;
+    const timeValue = document.getElementById("editEventTime").value;
+
+    // Convert user input time to UTC before storing
+    const fullDateTime =
+      dateValue && timeValue
+        ? new Date(`${dateValue}T${timeValue}`).toISOString()
+        : null;
+
+    const updatedData = {
+      title: document.getElementById("editEventTitle").value,
+      description: document.getElementById("editEventDescription").value,
+      date: fullDateTime,
+      expectedGuests: document.getElementById("editEventGuests").value,
+    };
+
+    try {
+      const response = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (response.ok) {
+        closeEditEventModal();
+        alert("Event updated successfully!");
+
+        // Fetch and refresh the events
+        const organizerId = localStorage.getItem("organizerId");
+        const eventsResponse = await fetch(
+          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        );
+        const events = await eventsResponse.json();
+        populateEventTables(events); // Refresh the event tables
+      } else {
+        alert("Error updating event.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  });
+
+// Function to update event status in the backend
+async function updateEventStatus(eventId, newStatus) {
+  try {
+    const response = await fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Failed to update event ${eventId} to ${newStatus}`);
+    }
+  } catch (error) {
+    console.error("Error updating event status:", error);
+  }
+}
+
+// Prevent editing completed events
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".edit-event-button")) {
+    if (event.target.closest(".edit-event-button").hasAttribute("disabled")) {
+      alert("Completed events cannot be edited.");
+      return;
+    }
+    const eventId = event.target.closest(".edit-event-button").dataset.eventId;
+    openEditModal(eventId);
+  }
+});
+
+// Open Edit Event Modal
+document.addEventListener("click", (event) => {
+  const editButton = event.target.closest(".edit-event-button");
+
+  if (editButton) {
+    if (editButton.hasAttribute("disabled")) {
+      alert("Completed events cannot be edited.");
+      return;
+    }
+
+    const eventId = editButton.dataset.eventId;
+    openEditModal(eventId);
+  }
+});
+
+// Close Edit Event Modal
+editEventCancelButton.addEventListener("click", closeEditEventModal);
+
+function closeEditEventModal() {
+  editEventModal.classList.remove("active");
+  document.body.style.overflow = "";
+  editEventForm.reset();
+}
+
+// Open Edit Modal and Populate Fields
+function openEditModal(eventId) {
+  fetch(
+    `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`
+  )
+    .then((response) => response.json())
+    .then((event) => {
+      if (!event) {
+        alert("Event not found.");
+        return;
+      }
+
+      const eventDateTime = event.date ? new Date(event.date) : null;
+
+      document.getElementById("editEventTitle").value = event.title;
+      document.getElementById("editEventDescription").value =
+        event.description || "";
+      document.getElementById("editEventDate").value = eventDateTime
+        ? eventDateTime.toISOString().split("T")[0] // Convert UTC to YYYY-MM-DD
+        : "";
+
+      document.getElementById("editEventTime").value = eventDateTime
+        ? eventDateTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }) // Show in local time
+        : "";
+
+      document.getElementById("editEventGuests").value =
+        event.expectedGuests || "";
+      document.getElementById("editEventForm").dataset.eventId = eventId;
+
+      document.getElementById("editEventModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+    })
+    .catch((error) => console.error("Error fetching event details:", error));
+}
