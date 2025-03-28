@@ -911,3 +911,39 @@ function openEditModal(eventId) {
     })
     .catch((error) => console.error("Error fetching event details:", error));
 }
+
+// Handle deleting events
+document.addEventListener("click", async (event) => {
+    const deleteButton = event.target.closest(".delete-event-btn"); // Ensure it works even if clicking the icon inside
+  
+    if (!deleteButton) return; // Exit if not clicking the delete button
+  
+    const eventId = deleteButton.dataset.eventId;
+  
+    if (!confirm("Are you sure you want to delete this event?")) return;
+  
+    try {
+      const response = await fetch(
+        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+        {
+          method: "DELETE",
+        }
+      );
+  
+      if (response.ok) {
+        alert("Event deleted successfully!");
+        // Fetch and refresh the events
+        const organizerId = localStorage.getItem("organizerId");
+        const eventsResponse = await fetch(
+          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        );
+        const events = await eventsResponse.json();
+        populateEventTables(events); // Refresh the event tables
+      } else {
+        alert("Failed to delete event.");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  });
+  
