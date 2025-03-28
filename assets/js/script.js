@@ -538,10 +538,10 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 
         if (selectedUserType === "organizer"){
             localStorage.setItem("organizerId", result.organizerId);
-            window.location.href = "/pages/organizer-home/index.html";
+            window.location.href = "pages/organizer-home/index.html";
         } else {
             localStorage.setItem("vendorId", result.vendorId);
-            window.location.href = "/pages/vendor-home/index.html";
+            window.location.href = "pages/vendor-home/index.html";
         }
 
       } else {
