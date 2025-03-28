@@ -148,3 +148,103 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => console.error("Error fetching organizer data:", error));
   });
+
+// ============================================
+// Dashboard Tasks List
+// ============================================
+// API Base URL
+const apiUrl =
+  "https://event-management-api-racelle-millagracias-projects.vercel.app";
+ 
+// Fetch Events by Organizer
+async function fetchEvents() {
+  try {
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
+ 
+    const eventSelect = document.querySelector("select");
+    eventSelect.innerHTML = `<option value="">Select Event</option>`;
+ 
+    events.forEach((event) => {
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventSelect.appendChild(option);
+    });
+ 
+    eventSelect.addEventListener("change", () =>
+      fetchEventDetails(eventSelect.value)
+    );
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
+ 
+// Fetch Tasks and Requests for a Specific Event
+async function fetchEventDetails(eventId) {
+  const tasksContainer = document.querySelector(".tasks .task-attribute-list");
+  const requestsContainer = document.querySelector(".requests .task-attribute-list");
+  const guestsContainer = document.querySelector(".guests .task-attribute-list");
+ 
+  // If the user selects "Select Event", clear the content
+  if (eventId === "") {
+    tasksContainer.innerHTML = "";
+    requestsContainer.innerHTML = "";
+    guestsContainer.innerHTML = "";
+    return; // Stop the function here
+  }
+ 
+  try {
+    // Fetch Tasks
+    const tasksResponse = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+    const tasks = await tasksResponse.json();
+ 
+    tasksContainer.innerHTML = ""; // Clear previous tasks
+    tasks.forEach((task) => {
+      const taskDiv = document.createElement("div");
+      taskDiv.classList.add("task-attribute");
+      taskDiv.innerHTML = `<p>${task.title}</p><p>${new Date(task.dueDate).toLocaleDateString()}</p>`;
+      tasksContainer.appendChild(taskDiv);
+    });
+ 
+    // Fetch Requests Related to the Event (With Vendor Names)
+    const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
+    const vendorRequests = await requestsResponse.json();
+ 
+    requestsContainer.innerHTML = ""; // Clear previous requests
+    vendorRequests.forEach((request) => {
+      const requestDiv = document.createElement("div");
+      requestDiv.classList.add("task-attribute");
+      requestDiv.innerHTML = `<p>${request.vendorName}</p><p>${request.status}</p>`;
+      requestsContainer.appendChild(requestDiv);
+    });
+ 
+    // Fetch Guests and Count Their Statuses
+    const guestsResponse = await fetch(`${apiUrl}/api/guests/${eventId}`);
+    const guests = await guestsResponse.json();
+ 
+    // Count guest statuses
+    const statusCounts = { confirmed: 0, pending: 0, declined: 0 };
+    guests.forEach((guest) => {
+      if (statusCounts.hasOwnProperty(guest.status)) {
+        statusCounts[guest.status]++;
+      }
+    });
+ 
+    // Update Guest Count Display
+    guestsContainer.innerHTML = ""; // Clear previous counts
+    Object.entries(statusCounts).forEach(([status, count]) => {
+      const guestDiv = document.createElement("div");
+      guestDiv.classList.add("task-attribute");
+      guestDiv.innerHTML = `<p>${status.charAt(0).toUpperCase() + status.slice(1)}</p><p>${count}</p>`;
+      guestsContainer.appendChild(guestDiv);
+    });
+ 
+  } catch (error) {
+    console.error("Error fetching event details:", error);
+  }
+}
+ 
+ 
+// Initial Fetch
+fetchEvents();
