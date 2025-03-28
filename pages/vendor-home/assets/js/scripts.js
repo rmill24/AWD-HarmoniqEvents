@@ -50,9 +50,83 @@ document.querySelector(".sign-out").addEventListener("click", () => {
 });
 
 // ============================================
-
 // Initialize on page load
+// ============================================
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM loaded");
   initThemeToggle();
+});
+
+// ============================================
+// VENDOR DASHBOARD
+// ============================================
+// API Base URL
+const apiUrl =
+  "https://event-management-api-racelle-millagracias-projects.vercel.app";
+
+// Fetch vendor data
+document.addEventListener("DOMContentLoaded", async () => {
+  const vendorId = localStorage.getItem("vendorId");
+
+  if (!vendorId) {
+    alert("You are not logged in. Please log in first.");
+    window.location.href = "/index.html";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
+    const data = await response.json();
+
+    console.log("Fetched Vendor Data:", data);
+
+    document.getElementById("vendor-name").textContent = data.name;
+    document.getElementById("vendor-serviceType").textContent =
+      data.serviceType;
+
+    const venueDetailsSection = document.getElementById("venue-details");
+    const venueDetailsContent = document.getElementById(
+      "venue-details-content"
+    );
+    const venueModal = document.getElementById("venue-modal");
+    const editVenueBtn = document.getElementById("edit-venue-btn");
+
+    if (data.serviceType === "Venue Manager") {
+      const venueDetails = data.venueDetails;
+      const isVenueComplete =
+        venueDetails &&
+        venueDetails.name &&
+        venueDetails.location &&
+        venueDetails.capacity &&
+        Array.isArray(venueDetails.amenities) &&
+        venueDetails.amenities.length > 0;
+
+      if (isVenueComplete) {
+        // Venue details exist, show them
+        venueDetailsSection.style.display = "block";
+        venueDetailsContent.style.display = "block";
+        editVenueBtn.style.display = "block";
+        venueDetailsContent.innerHTML = `
+              <strong>Name:</strong> ${venueDetails.name}<br>
+              <strong>Location:</strong> ${venueDetails.location}<br>
+              <strong>Capacity:</strong> ${venueDetails.capacity}<br>
+              <strong>Amenities:</strong> ${venueDetails.amenities.join(", ")}
+            `;
+
+        venueModal.style.display = "none";
+        localStorage.setItem(`venueSetUp_${vendorId}`, "true"); // Set unique flag per vendor
+
+        console.log("Venue details exist, modal should NOT show.");
+      } else if (!localStorage.getItem(`venueSetUp_${vendorId}`)) {
+        // Only show modal if it's the first login AND venue details are missing
+        venueModal.style.display = "flex";
+        console.log("❌ No venue details found, modal SHOULD show.");
+      }
+    } else {
+      venueDetailsSection.style.display = "none";
+      venueModal.style.display = "none";
+    }
+  } catch (error) {
+    console.error("Error fetching vendor data:", error);
+  }
 });
