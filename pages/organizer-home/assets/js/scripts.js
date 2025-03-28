@@ -1493,4 +1493,28 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => {
       requestVendorModal.classList.remove("active");
     });
+
+  // ============================
+  // ADD TASK FUNCTIONALITY
+  // ============================
+  const addTaskModal = document.getElementById("addTaskModal");
+  const addTaskForm = document.getElementById("addTaskForm");
+  const eventDropdown = document.querySelector(".event-dropdown-task");
+
+  // OPEN ADD TASK MODAL
+  document.querySelector(".add-task-btn").addEventListener("click", () => {
+    const selectedEventId = eventDropdown.value;
+
+    if (!selectedEventId) {
+      alert("Please select an event first.");
+      addTaskModal.classList.remove("active");
+      return;
+    }
+
+    // Reset Form Fields
+    addTaskForm.reset();
+
+    // Show Modal
+    addTaskModal.classList.add("active");
+  });
 });
