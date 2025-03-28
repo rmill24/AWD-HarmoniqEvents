@@ -1005,3 +1005,118 @@ async function loadEventDropdown() {
     console.error("Error fetching events:", error);
   }
 }
+
+// Fetch Tasks for Selected Event
+async function loadTasksForEvent(eventId) {
+    const tasksTableBody = document.getElementById("tasksTableBody");
+    const completedTasksTableBody = document.querySelector(
+      "#completedTasks tbody"
+    );
+   
+    if (eventId === "") {
+      tasksTableBody.innerHTML = "";
+      completedTasksTableBody.innerHTML = "";
+      return;
+    }
+   
+    try {
+      // Fetch tasks
+      const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
+      let tasks = await response.json();
+   
+      // Fetch pending vendor requests for this event
+      const requestResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
+      const vendorRequests = await requestResponse.json();
+   
+      // Sort tasks by dueDate
+      tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+   
+      tasksTableBody.innerHTML = "";
+      completedTasksTableBody.innerHTML = "";
+   
+      const today = new Date();
+   
+      for (const task of tasks) {
+        const row = document.createElement("tr");
+   
+        const taskDueDate = new Date(task.dueDate);
+        const isPastCompleted =
+          task.status === "completed" && taskDueDate < today;
+   
+        let vendorDisplay = "";
+   
+        let requestedVendor = vendorRequests.find(
+          (req) => req.taskId === task._id.toString()
+        );
+   
+        if (task.assignedVendorId) {
+          // Vendor has accepted the request
+          try {
+            const vendorResponse = await fetch(
+              `${apiUrl}/api/vendors/${task.assignedVendorId}`
+            );
+            if (vendorResponse.ok) {
+              const vendorData = await vendorResponse.json();
+              vendorDisplay = `<span>${vendorData.name}</span>`;
+            } else {
+              vendorDisplay = `<span>Vendor Assigned</span>`;
+            }
+          } catch (error) {
+            console.error("Error fetching assigned vendor details:", error);
+            vendorDisplay = `<span>Vendor Assigned</span>`;
+          }
+        } else if (requestedVendor && requestedVendor.status === "pending") {
+          vendorDisplay = `<span>Request sent to: ${requestedVendor.vendorName} (${requestedVendor.serviceType})</span>`;
+        } else {
+          // No vendor assigned, show add vendor button
+          vendorDisplay = isPastCompleted
+            ? `<button class="disabled-btn" disabled>
+                 <i class="fa-solid fa-ban"></i> Cannot Request Vendor
+               </button>`
+            : `<button class="add-vendor" data-task-id="${task._id}">
+                 <i class="fa-solid fa-plus"></i> Request Vendor
+               </button>`;
+        }
+   
+        // Toggle Task Status Button
+        const toggleStatusButton = isPastCompleted
+          ? `<button class="disabled-btn" disabled>
+               <i class="fa-solid fa-ban"></i> Cannot Revert
+             </button>`
+          : `<button class="toggle-status-btn" data-task-id="${
+              task._id
+            }" data-status="${task.status}">
+               ${
+                 task.status === "completed"
+                   ? `<i class="fa-solid fa-arrow-rotate-left"></i> Mark as Pending`
+                   : `<i class="fa-solid fa-check"></i> Mark as Complete`
+               }
+             </button>`;
+   
+        row.innerHTML = `
+          <td>${task.title}</td>
+          <td>${task.description || "-"}</td>
+          <td>${formatDateTime(task.dueDate)}</td>
+          <td>${task.status}</td>
+          <td>${vendorDisplay}</td>
+          <td>
+            ${toggleStatusButton}
+            <button class="edit-task-btn" data-task-id="${task._id}">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="delete-task-btn" data-task-id="${task._id}">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+   
+        if (task.status === "completed") {
+          completedTasksTableBody.appendChild(row);
+        } else {
+          tasksTableBody.appendChild(row);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  }
