@@ -82,3 +82,37 @@ body {
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
 }
+
+/* ======================================
+   2. BASE LAYOUT & STRUCTURE
+   ====================================== */
+   main {
+    padding-top: 65px;
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+ 
+.content-section {
+    position: relative;
+    padding: 30px;
+    background-color: var(--bg-color);
+    min-height: calc(100vh - 65px);
+    width: calc(100% - 400px);
+    max-width: 1200px;
+    display: none;
+    margin: 0 auto;
+}
+ 
+.content-section.active {
+    display: block;
+}
+ 
+/* Section Header */
+.section-header {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: var(--font-dark-color);
+}
+ 
