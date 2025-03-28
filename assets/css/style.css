@@ -230,9 +230,6 @@ nav a:hover::after {
 /* Hamburger Menu Button */
 .menu-toggle {
     display: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    z-index: 1000;
 }
 
 /* Navigation Links for Mobile */
@@ -257,12 +254,6 @@ nav a:hover::after {
 .hero p {
     margin-bottom: 30px;
 }
-
-.content {
-    max-width: 50%;
-    color: var(--text-color);
-}
-
 /* Headings and text */
 h1 {
     font-size: 3.5em;
@@ -312,19 +303,10 @@ p {
 }
 
 .device-mockup img {
-    width: 800px;
+    width: 900px;
     height: auto;
-    margin-left: 50%;
 }
 
-#device {
-    max-width: 300px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    z-index: 1;
-}
 /* ============================================
    5. FEATURE CAROUSEL SECTION
 ============================================ */
@@ -479,6 +461,7 @@ p {
     background: white;
     transform-style: preserve-3d;
     width: calc((100% / var(--cards-to-show)) - var(--gap-calculated)); 
+    min-width: 300px;
 }
 
 /* Card hover effects */
@@ -728,7 +711,7 @@ p {
 }
 
 .form-container h2 {
-    font-size: 24px;
+    font-size: 2rem;
     margin-bottom: 20px;
     font-weight: bold;
     color: var(--quote-color);
@@ -772,6 +755,7 @@ label {
     font-family: var(--font-primary);
     color: var(--login-text-color);
     font-size: 1em;
+    font-weight: 600;
 }
 
 input {
@@ -839,6 +823,7 @@ input[type="radio"] {
     align-items: center;
     gap: 5px;
     margin: 0;
+    font-weight: 400;
   }
   
 
@@ -1012,17 +997,13 @@ footer {
     }
     
     .logo {
-        grid-area: logo;
         width: 80px;
         height: 50px;
-        margin: 0 auto;
-        justify-self: center;
     }
     
     .theme-switch {
         grid-area: theme;
         justify-self: end;
-        margin-right: 0;
         gap: 5px;
     }
     
@@ -1077,15 +1058,6 @@ footer {
         left: 0; 
     }
     
-    /* Theme switching */
-    .mobile-theme-option {
-        display: none; 
-    }
-    
-    .desktop-theme-switch {
-        display: flex; 
-    }
-    
     /* Hero Section - Mobile */
     .hero {
         flex-direction: column;
@@ -1108,15 +1080,9 @@ footer {
         font-size: 1em;
     }
     
-    .device-mockup {
-        max-width: 100%;
-        text-align: center;
-    }
-    
     .device-mockup img {
-        height: 100%;
-        width: 100%;
-        margin-left: 0;
+        height: 90%;
+        width: 90%;
     }
     
     /* Feature Cards - Mobile */
@@ -1126,17 +1092,9 @@ footer {
         height: 100%;
         margin: 0 auto;
     }
-    
-    .feature-visual {
-        border-radius: 20px 20px 0 0;
-    }
 
     .feature-visual img {
         height: 200px;
-    }
-    
-    h2 {
-        font-size: 1.8em;
     }
     
     /* Testimonials Carousel - Mobile */
@@ -1150,8 +1108,7 @@ footer {
     }
     
     .carousel-card {
-        width: 85%;
-        min-width: 250px;
+        width: 50%;
     }
     
     :root {
@@ -1246,28 +1203,6 @@ footer {
         width: 15px;
         height: 15px;
     }
-    
-    /* Very small screens */
-    @media (max-width: 375px) {
-        .nav-links {
-            width: 85%;
-            max-width: 260px;
-        }
-    
-        .menu-toggle {
-            font-size: 1.8em;
-        }
-
-        .device-mockup img {
-            width: auto;
-            height: 200px;
-            margin-left: 0;
-        }
-
-        .feature-info{
-            font-size: 0.8em;
-        }
-    }
 }
 
 /* Tablet (668px - 1024px) */
@@ -1275,51 +1210,12 @@ footer {
     /* Header & Navigation - Tablet */
     header {
         padding: 15px;
-        display: grid;
-        grid-template-columns: auto 1fr auto auto;
-        grid-template-areas: "logo nav theme menu";
     }
     
     .logo {
-        grid-area: logo;
         width: 90px;
         height: 55px;
     }
-    
-    nav {
-        grid-area: nav;
-        justify-content: center;
-        gap: 25px;
-    }
-    
-    .theme-switch {
-        grid-area: theme;
-        gap: 8px;
-    }
-    
-    .menu-toggle {
-        display: none; /* Hide hamburger on tablets */
-    }
-    
-    /* Navigation links - Tablet */
-    .nav-links {
-        display: flex;
-        flex-direction: row;
-        position: static;
-        background: none;
-        width: 100%;
-        max-width: none;
-        padding: 0;
-        box-shadow: none;
-        justify-content: center;
-        height: auto;
-        right: 0;
-    }
-    
-    .nav-links li {
-        margin: 0;
-    }
-    
     nav a {
         font-size: 1em;
     }
@@ -1348,28 +1244,12 @@ footer {
         font-size: 1.3em;
     }
     
-    .mobile-theme-option {
-        display: none;
-    }
-    
-    .desktop-theme-switch {
-        display: flex;
-    }
-    
     /* Content sections - Tablet */
-    main, .content, .device-mockup {
-        flex-direction: row;
-        text-align: left;
-    }
-    
-    .content {
-        max-width: 50%;
-    }
     
     .device-mockup img {
-        width: auto;
-        height: 310px !important;
-        margin-left: 40%;
+        width: 400px;
+        height: auto;
+        margin-left: 10%;
     }
     
     h1 {
@@ -1377,21 +1257,13 @@ footer {
     }
     
     /* Feature cards - Tablet */
-    .feature-card {
-        flex-direction: column;
-    }
-    
-    .feature-visual {
-        border-radius: 0 20px 20px 0;
+
+    .feature-visual img {
+        width: 100%;
+        height: 350px;
     }
     
     /* Footer - Tablet */
-    .footer-container {
-        flex-direction: row;
-        text-align: left;
-        align-items: flex-start;
-    }
-
     .footer-logo {
         height: 88px;
         width: 150px;
@@ -1405,34 +1277,14 @@ footer {
 
 /* Medium screens (1025px - 1440px) */
 @media (min-width: 1025px) and (max-width: 1440px) {
-    /* Medium screen styles */
-    .container {
-        padding: 0 30px;
-    }
-    
+    /* Medium screen styles */    
     h1 {
         font-size: 3em;
-    }
-    
-    .feature-card {
-        max-width: 900px;
-    }
-    
-    nav {
-        gap: 50px;
-    }
-    
-    .carousel-container {
-        max-width: 900px;
-    }
-    
-    .form-container {
-        max-width: 400px;
     }
 
     .device-mockup img {
         width: auto;
         height: 500px;
-        margin-left: 30%;
+        margin-left: 5%;
     }
 }
