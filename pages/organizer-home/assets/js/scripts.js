@@ -125,3 +125,26 @@ function initMobileMenu() {
     }, 250);
   });
 }
+
+// ============================================
+// Welcome message
+// ============================================
+document.addEventListener("DOMContentLoaded", () => {
+    const organizerId = localStorage.getItem("organizerId");
+   
+    if (!organizerId) {
+      alert("You are not logged in. Please log in first.");
+      window.location.href = "/index.html"; // Redirect to login page
+      return;
+    }
+   
+    fetch(
+      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/${organizerId}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Organizer Data:", data);
+        document.getElementById("user-name").textContent = `${data.name}`;
+      })
+      .catch((error) => console.error("Error fetching organizer data:", error));
+  });
