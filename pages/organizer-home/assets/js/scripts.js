@@ -947,3 +947,61 @@ document.addEventListener("click", async (event) => {
     }
   });
   
+
+// ==============================================
+// TASKS MANAGEMENT
+// ==============================================
+let eventDates = {};
+ 
+function formatDateTime(dateString) {
+  const date = new Date(dateString);
+ 
+  // Extract individual parts
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, "0");
+ 
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+ 
+  hours = hours % 12 || 12; // Convert 24-hour time to 12-hour format
+ 
+  return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+}
+ 
+// Fetch Events for Dropdown
+async function loadEventDropdown() {
+  try {
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
+ 
+    const eventDropdown = document.querySelector(".event-dropdown-task");
+    const eventDateDisplay = document.getElementById("event-date-display");
+    eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+ 
+    events.forEach((event) => {
+      eventDates[event._id] = new Date(event.date); // Store event date
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventDropdown.appendChild(option);
+    });
+ 
+    // Listen for event selection change
+    eventDropdown.addEventListener("change", () => {
+      const selectedEventId = eventDropdown.value;
+      if (selectedEventId) {
+        const eventDate = eventDates[selectedEventId];
+        eventDateDisplay.textContent = `Event Date: ${eventDate.toLocaleDateString()}`;
+        loadTasksForEvent(selectedEventId); // Load tasks
+      } else {
+        eventDateDisplay.textContent = ""; // Clear if no event selected
+        document.getElementById("tasksTableBody").innerHTML = "";
+        document.querySelector("#completedTasks tbody").innerHTML = "";
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
