@@ -1,0 +1,84 @@
+/*==================================================================
+   TABLE OF CONTENTS
+   =================================================================
+   1. Variables & Global Settings
+   2. Base Layout & Structure
+   3. Navigation Components
+   4. Common UI Components
+   5. Dashboard Section
+   6. Events Section
+   7. Tasks Section
+   8. Guests Section
+   9. Tables & Data Display
+   10. Status & Badges
+   11. Buttons & Actions
+   12. Responsive Design
+   13. Modal Components
+   ================================================================= */
+ 
+/* ======================================
+   1. VARIABLES & GLOBAL SETTINGS
+   ====================================== */
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Inter:ital,wght@0,100..900;1,100..900&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap');
+ 
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+ 
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #FFFFFF;
+    --text-color: #333333;
+    --primary-color: #51938B;
+    --secondary-color: #716f6f;
+    --accent-color: #B3D5D0;
+    --border-color: #EEEEEE;
+   
+    /* Component Colors */
+    --top-color: #FFFFFF;
+    --sidebar-color: #FFFFFF;
+    --task-bg: #FFFFFF;
+    --table-header-bg: #f9f9f9;
+    --table-border: #eee;
+   
+    /* Font Colors */
+    --font-light-color: #FFFFFF;
+    --font-dark-color: #000000;
+    --font-dark-color-2: #151515;
+    --table-header-color: #666666;
+   
+    /* Status Colors */
+    --status-pending: #e4c200;
+    --status-accepted: #46c955;
+    --status-declined: #e53f36;
+   
+    /* Misc */
+    --border-color2: #000;
+}
+ 
+/* Dark Theme Variables */
+[data-theme="dark"] {
+    --bg-color: #181818;
+    --text-color: #FFFFFF;
+    --border-color: #51938B;
+    --top-color: #232323;
+    --sidebar-color: #232323;
+    --task-bg: #252525;
+    --table-header-bg: #2a2a2a;
+    --table-border: #333;
+    --font-dark-color: #DDDDDD;
+    --font-dark-color-2: #FFFFFF;
+}
+ 
+/* Global styles */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
