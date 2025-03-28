@@ -1209,11 +1209,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("editTaskDate").value =
           task.dueDate.split("T")[0];
-        document.getElementById("editTaskTime").value =
-          taskDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
+          const hours = taskDate.getHours().toString().padStart(2, "0");
+          const minutes = taskDate.getMinutes().toString().padStart(2, "0");
+          
+          document.getElementById("editTaskTime").value = `${hours}:${minutes}`;
+          
 
         // Show the modal
         document.getElementById("editTaskModal").classList.add("active");
