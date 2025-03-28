@@ -1153,3 +1153,6 @@ document.addEventListener("click", async (event) => {
       }
     }
   });
+
+// Initialize Dropdown and Fetch Events
+loadEventDropdown();
