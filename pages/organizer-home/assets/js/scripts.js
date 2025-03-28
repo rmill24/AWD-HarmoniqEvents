@@ -294,6 +294,47 @@ function startEventTabs() {
     }
   }
 
+  // ==============================================
+// START THE APPLICATION
+// ==============================================
+ 
+// Function to set up the initial state
+function setupInitialState() {
+    // Find the active sidebar link
+    var activeLink = document.querySelector(".sidebar-tab.active");
+   
+    // If we found an active link, show its section
+    if (activeLink) {
+      var sectionId = activeLink.getAttribute("data-section");
+      var section = document.getElementById(sectionId);
+      if (section) {
+        section.classList.add("active");
+      }
+   
+      // Update the header title
+      var sectionTitle = document.getElementById("sectionTitle");
+      if (sectionTitle) {
+        sectionTitle.textContent = activeLink.textContent.trim();
+      }
+    }
+  }
+   
+  // Start everything when the page loads
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("Starting the application...");
+   
+    // Start the sidebar navigation
+    startSidebarNavigation();
+   
+    // Start the event tabs
+    startEventTabs();
+   
+    // Set up the initial state
+    setupInitialState();
+   
+    console.log("Application started successfully");
+  });
+
 // ============================================
 // Welcome message
 // ============================================
