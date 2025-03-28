@@ -1724,3 +1724,70 @@ async function loadGuestsForEvent(eventId) {
 
 // Initialize Guest Event Dropdown
 loadGuestEventDropdown();
+
+// ==============================================
+// ADD GUEST FUNCTIONALITY
+// ==============================================
+ 
+document.querySelector(".add-guest-btn").addEventListener("click", () => {
+    const selectedEventId = document.querySelector(
+      ".event-dropdown-guests"
+    ).value;
+   
+    if (!selectedEventId) {
+      alert("Please select an event first.");
+      return;
+    }
+   
+    // Reset form fields before opening the modal
+    document.getElementById("addGuestForm").reset();
+   
+    // Show modal
+    document.getElementById("addGuestModal").classList.add("active");
+  });
+   
+  document
+    .getElementById("addGuestForm")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+   
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-guests"
+      ).value;
+      if (!selectedEventId) {
+        alert("Please select an event first.");
+        return;
+      }
+   
+      const newGuest = {
+        name: document.getElementById("guestName").value,
+        email: document.getElementById("guestEmail").value,
+        phone: document.getElementById("guestPhone").value,
+        status: document.getElementById("guestStatus").value,
+        eventId: selectedEventId, // Assign guest to selected event
+      };
+   
+      try {
+        const response = await fetch(`${apiUrl}/api/guests`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newGuest),
+        });
+   
+        if (response.ok) {
+          alert("Guest added successfully!");
+          document.getElementById("addGuestModal").classList.remove("active");
+          loadGuestsForEvent(selectedEventId); // Refresh the guest list
+        } else {
+          console.error("Failed to add guest:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error adding guest:", error);
+      }
+    });
+   
+  document.querySelectorAll(".cancel-modal").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById("addGuestModal").classList.remove("active");
+    });
+  });
