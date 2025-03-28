@@ -581,4 +581,30 @@ hr {
 .guest-table tr:last-child td {
     border-bottom: none;
 }
+
+/* ======================================
+   8. STATUS & BADGES
+   ====================================== */
+   .status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+    color: white;
+}
+ 
+.status-pending {
+    background-color: var(--status-pending);
+}
+ 
+.status-accepted, .status-confirmed {
+    background-color: var(--status-accepted);
+}
+ 
+.status-declined {
+    background-color: var(--status-declined);
+}
  
