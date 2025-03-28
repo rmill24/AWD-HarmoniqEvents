@@ -312,8 +312,8 @@ p {
 }
 
 .device-mockup img {
-    width: auto;
-    height: 600px;
+    width: 800px;
+    height: auto;
     margin-left: 50%;
 }
 
@@ -805,10 +805,33 @@ input {
   .radio-group {
     display: flex;
     gap: 50px;
+    margin-bottom: 10px;
   }
 
-  input[type="radio"] {
-    margin-right: 5px; 
+ /* Hide default radio */
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+  }
+  
+  /* Style when checked */
+  input[type="radio"]:checked::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .radio-group label {
@@ -1091,9 +1114,9 @@ footer {
     }
     
     .device-mockup img {
-        height: 150px;
-        max-width: 100%;
-        margin-left: 25%;
+        height: 100%;
+        width: 100%;
+        margin-left: 0;
     }
     
     /* Feature Cards - Mobile */
@@ -1222,11 +1245,6 @@ footer {
     .social-icon {
         width: 15px;
         height: 15px;
-    }
-
-    .device-mockup img {
-        width: auto;
-        height: 300px;
     }
     
     /* Very small screens */

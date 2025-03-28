@@ -269,7 +269,7 @@ nav a:hover::after {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    height: 60vh;
+    height: 50vh;
     padding: 60px 40px 70px;
     color: var(--text-color2);
 }
@@ -296,8 +296,8 @@ nav a:hover::after {
  
 /* Image Styling */
 .about img, .mission img, .vision img, .story img {
-    max-width: 45%;
-    height: 80%;
+    height: 350px;
+    width: 500px;
     border-radius: 10px;
     object-fit: cover;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -340,8 +340,8 @@ nav a:hover::after {
     background-color: var(--container-bg2);
     padding: 20px;
     border-radius: 20px;
-    width: 325px;
-    height: 400px
+    height: 400px;
+    text-align: center;
  
 }
  
@@ -354,7 +354,6 @@ nav a:hover::after {
 .team-member p {
     font-size: 20px;
     margin-bottom: 15px;
-    text-align: center;
 }
  
 /* Fix the image styling */
@@ -380,7 +379,6 @@ nav a:hover::after {
     }
    
     .team-member {
-        width: 200px;
         padding: 15px;
     }
    
@@ -429,7 +427,6 @@ nav a:hover::after {
    
     .team-member {
         flex: 0 1 100%;
-        max-width: 350px;
     }
    
     .team-member img {
@@ -449,7 +446,7 @@ nav a:hover::after {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    padding-top: 3%;
+    padding-top: 2rem;
 }
  
 /* Footer logo and sections */
@@ -636,7 +633,6 @@ nav a:hover::after {
     }
    
     .about img, .mission img, .vision img, .story img {
-        max-width: 100%;
         margin-top: 20px;
     }
    
@@ -742,14 +738,19 @@ nav a:hover::after {
     }
  
     .team-member {
-        width: 270px;
         height: 325px;
+        width: 250px;
     }
  
     .team-member img {
         width: 100%;
         max-width: 200px;
         height: 200px;
+    }
+
+    .about img, .mission img, .vision img, .story img {
+        height: 250px;
+        width: 400px;
     }
  
    
@@ -766,30 +767,6 @@ nav a:hover::after {
     .footer-logo {
         height: 88px;
         width: 150px;
-    }
-}
- 
-/* Medium screens (1025px - 1440px) */
-@media (min-width: 1025px) and (max-width: 1440px) {
-    .container {
-        padding: 0 30px;
-    }
-   
-    h1 {
-        font-size: 3em;
-    }
-   
-    nav {
-        gap: 50px;
-    }
-
-}
-
-/* Large screens (1441px+) */
-@media (min-width: 1441px) {
-    .footer-container {
-        max-width: 1600px;
-        gap: 60px;
     }
 }
  
@@ -858,7 +835,6 @@ nav a:hover::after {
  
     header {
         justify-content: space-between;
-        position: relative;
     }
  
     .logo, .theme-switch {
@@ -929,7 +905,6 @@ nav a:hover::after {
    
     header {
         justify-content: space-between;
-        position: relative;
     }
    
     .logo {
@@ -951,10 +926,7 @@ nav a:hover::after {
     .text {
         max-width: 55%;
     }
-   
-    .about img, .mission img, .vision img, .story img {
-        max-width: 40%;
-    }
+
 }
  
 @media (max-width: 768px) {
@@ -962,7 +934,6 @@ nav a:hover::after {
         flex-direction: column;
         padding: 40px 20px;
         text-align: center;
-        height: auto;
     }
    
     .text {
@@ -972,10 +943,12 @@ nav a:hover::after {
     }
    
     .about img, .mission img, .vision img, .story img {
-        max-width: 90%;
         margin-top: 0;
         margin-bottom: 30px;
         order: 2;
+        height: 150px;
+        width: 250px;
+        
     }
    
     /* Alternate image and text order for visual interest */
@@ -1003,10 +976,7 @@ nav a:hover::after {
     .text p {
         font-size: 1em;
     }
-   
-    .about img, .mission img, .vision img, .story img {
-        max-width: 80%;
-    }
+
 }
  
 /* Tablet Navigation (768px - 1024px) */
