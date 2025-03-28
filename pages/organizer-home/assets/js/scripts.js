@@ -1517,4 +1517,60 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show Modal
     addTaskModal.classList.add("active");
   });
+
+  // HANDLE ADD TASK FORM SUBMISSION
+  document
+    .getElementById("addTaskForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const selectedEventId = document.querySelector(
+        ".event-dropdown-task"
+      ).value;
+      if (!selectedEventId) {
+        alert("Please select an event first.");
+        return;
+      }
+
+      const eventDate = eventDates[selectedEventId]; // Get event date
+      const taskDateInput = document.getElementById("taskDate").value;
+      const taskDueDate = new Date(taskDateInput);
+
+      if (taskDueDate > eventDate) {
+        alert("Task due date cannot be later than the event date.");
+        return;
+      }
+
+      const newTask = {
+        title: document.getElementById("taskTitle").value,
+        description: document.getElementById("taskDescription").value,
+        dueDate: new Date(
+          `${taskDateInput}T${document.getElementById("taskTime").value}`
+        ).toISOString(),
+        eventId: selectedEventId,
+      };
+
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newTask),
+        });
+
+        if (response.ok) {
+          alert("Task added successfully!");
+          document.getElementById("addTaskModal").classList.remove("active");
+          loadTasksForEvent(selectedEventId); // Refresh tasks
+        } else {
+          console.error("Failed to add task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
+    });
+
+  // Close Modal on Cancel
+  addTaskModal.querySelector(".btn-secondary").addEventListener("click", () => {
+    addTaskModal.classList.remove("active");
+  });
 });
