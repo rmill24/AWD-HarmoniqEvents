@@ -199,7 +199,7 @@ main, .top-navbar {
     font-weight: 500;
 }
  
-.sidebar .sign-out {
+.sidebar {
     position: absolute;
     bottom: 30px;
     width: 100%;
@@ -207,7 +207,7 @@ main, .top-navbar {
     padding-left: 25px;
 }
  
-.sidebar .sign-out i {
+.sidebar {
     font-size: 20px;
     color: var(--primary-color);
     cursor: pointer;
@@ -215,7 +215,7 @@ main, .top-navbar {
     transition: opacity 0.2s ease;
 }
  
-.sidebar .sign-out i:hover {
+.sidebar {
     opacity: 1;
 }
  
@@ -1300,7 +1300,7 @@ hr {
         margin: 5px 0;
     }
  
-    .sidebar .sign-out {
+    .sidebar {
         padding: 20px 25px;
     }
  
@@ -1557,7 +1557,7 @@ hr {
         font-size: 14px;
     }
 
-    .sidebar .sign-out {
+    .sidebar {
         padding: 15px 20px;
     }
 
