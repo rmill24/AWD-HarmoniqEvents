@@ -190,3 +190,45 @@ document
       console.error("❌ Error updating venue details:", error);
     }
   });
+
+// Handle edit venue form submission
+document
+  .getElementById("edit-venue-btn")
+  .addEventListener("click", async function () {
+    const vendorId = localStorage.getItem("vendorId");
+
+    if (!vendorId) {
+      console.error("❌ Vendor ID not found in localStorage!");
+      alert("Vendor ID not found. Please log in again.");
+      return;
+    }
+
+    try {
+      // Fetch the current venue details
+      const response = await fetch(`${apiUrl}/api/vendors/${vendorId}`);
+      const data = await response.json();
+
+      if (!data.venueDetails) {
+        alert("No venue details found to edit.");
+        return;
+      }
+
+      // Pre-fill the form fields with existing data
+      document.getElementById("venue-name").value =
+        data.venueDetails.name || "";
+      document.getElementById("venue-location").value =
+        data.venueDetails.location || "";
+      document.getElementById("venue-capacity").value =
+        data.venueDetails.capacity || "";
+      document.getElementById("venue-amenities").value = data.venueDetails
+        .amenities
+        ? data.venueDetails.amenities.join(", ")
+        : "";
+
+      // Show the modal for editing
+      document.getElementById("venue-modal").style.display = "flex";
+    } catch (error) {
+      console.error("❌ Error fetching venue details for editing:", error);
+      alert("Failed to fetch venue details. Please try again.");
+    }
+  });
