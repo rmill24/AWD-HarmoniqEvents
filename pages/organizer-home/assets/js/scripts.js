@@ -1156,3 +1156,73 @@ document.addEventListener("click", async (event) => {
 
 // Initialize Dropdown and Fetch Events
 loadEventDropdown();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const editTaskModal = document.getElementById("editTaskModal");
+    const editTaskForm = document.getElementById("editTaskForm");
+    let currentEditingTaskId = null;
+   
+    // Open Edit Task Modal
+    document.addEventListener("click", async (event) => {
+      const editButton = event.target.closest(".edit-task-btn");
+      if (editButton) {
+        const taskId = editButton.getAttribute("data-task-id");
+   
+        console.log("Editing Task ID:", taskId); // Debugging
+   
+        if (!taskId) {
+          console.error("No Task ID found!");
+          return;
+        }
+   
+        // Store taskId for later use in the update function
+        currentEditingTaskId = taskId;
+   
+        try {
+          const response = await fetch(`${apiUrl}/api/tasks/task/${taskId}`);
+   
+          if (!response.ok) {
+            console.error("Error fetching task details:", await response.text());
+            return;
+          }
+   
+          const task = await response.json();
+   
+          // Ensure task.dueDate exists before using .split()
+          if (!task || !task.dueDate) {
+            console.error("Task data is missing or invalid:", task);
+            alert("Error: Task data is missing. Please try again.");
+            return;
+          }
+   
+          // Populate the modal with task data
+          document.getElementById("editTaskTitle").value = task.title || "";
+          document.getElementById("editTaskDescription").value =
+            task.description || "";
+   
+          // Ensure dueDate is valid
+          const taskDate = new Date(task.dueDate);
+          if (isNaN(taskDate.getTime())) {
+            console.error("Invalid date format:", task.dueDate);
+            alert("Error: Task has an invalid date.");
+            return;
+          }
+   
+          document.getElementById("editTaskDate").value =
+            task.dueDate.split("T")[0];
+          document.getElementById("editTaskTime").value =
+            taskDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+   
+          // Show the modal
+          document.getElementById("editTaskModal").classList.add("active");
+          document.body.style.overflow = "hidden";
+        } catch (error) {
+          console.error("Error fetching task details:", error);
+        }
+      }
+    });
+   
+  });
