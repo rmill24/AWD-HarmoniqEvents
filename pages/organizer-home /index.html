@@ -401,6 +401,145 @@
         </div>
     </div>
 </section>
+         <!-- GUESTS SECTION -->
+         <section id="guests" class="content-section">
+            <div class="actions-bar">
+                <select class="event-dropdown-guests">
+                </select>
+ 
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="add-guest-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add Guest</span>
+                    </button>
+                </div>
+            </div>
+ 
+            <div class="guests-count">
+                <h1>Guest Count</h1>
+                <hr>
+                <div class="guest-attribute">
+                    <p>Confirmed</p>
+                    <p>Pending</p>
+                    <p>Declined</p>
+                </div>
+                <div class="guest-count-list"></div>
+            </div>
+           
+            <!-- Add Guest Modal -->
+            <div class="modal" id="addGuestModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add Guest</h2>
+                    </div>
+                    <form id="addGuestForm">
+                        <div class="form-group">
+                            <label for="guestName">Name</label>
+                            <input type="text" id="guestName" name="guestName" placeholder="Enter guest name" required>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="guestEmail">Email</label>
+                            <input type="email" id="guestEmail" name="guestEmail" placeholder="Enter email address" required>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="guestPhone">Phone Number</label>
+                            <input type="tel" id="guestPhone" name="guestPhone" placeholder="Enter phone number">
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="guestStatus">Status</label>
+                            <select id="guestStatus" name="guestStatus" required>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="declined">Declined</option>
+                            </select>
+                        </div>
+                       
+                        <div class="modal-actions">
+                            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                            <button type="submit" class="btn-primary">Add Guest</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+ 
+            <!-- Edit Guest Modal -->
+            <div class="modal" id="editGuestModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Edit Guest</h2>
+                    </div>
+                    <form id="editGuestForm">
+                        <div class="form-group">
+                            <label for="editGuestName">Name</label>
+                            <input type="text" id="editGuestName" name="editGuestName" placeholder="Enter guest name" required>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="editGuestEmail">Email</label>
+                            <input type="email" id="editGuestEmail" name="editGuestEmail" placeholder="Enter email address" required>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="editGuestPhone">Phone Number</label>
+                            <input type="tel" id="editGuestPhone" name="editGuestPhone" placeholder="Enter phone number">
+                        </div>
+                       
+                        <div class="form-group">
+                            <label for="editGuestStatus">Status</label>
+                            <select id="editGuestStatus" name="editGuestStatus" required>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="declined">Declined</option>
+                            </select>
+                        </div>
+                       
+                        <div class="modal-actions">
+                            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+           
+            <!-- Delete Guests Confirmation Modal -->
+            <div class="modal" id="deleteGuestsModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Delete Guests</h2>
+                    </div>
+                    <div class="modal-body" style="padding: 30px;">
+                        <p class="delete-message">Are you sure you want to delete the selected guests? This action cannot be undone.</p>
+                       
+                        <div class="modal-actions">
+                            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                            <button type="button" class="btn-primary confirm-delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Guest Data Table -->
+            <div class="table-container">
+                <table class="guest-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+           
+        </section>
  
     </main>
 </body>
