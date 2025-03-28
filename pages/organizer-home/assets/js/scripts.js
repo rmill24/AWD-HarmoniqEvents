@@ -1274,4 +1274,49 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error updating task:", error);
       }
     });
+
+  // ============================
+  // DELETE TASK FUNCTIONALITY
+  // ============================
+  document.addEventListener("click", async (event) => {
+    if (event.target.closest(".delete-task-btn")) {
+      const taskId = event.target.getAttribute("data-task-id");
+
+      console.log(taskId);
+
+      if (!taskId) {
+        console.error("No Task ID found for deletion!");
+        return;
+      }
+
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this task?"
+      );
+      if (!confirmDelete) return;
+
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          alert("Task deleted successfully!");
+          loadTasksForEvent(
+            document.querySelector(".event-dropdown-task").value
+          ); // Refresh task list
+        } else {
+          console.error("Failed to delete task:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    }
+  });
+
+  // Close Edit Modal
+  document.querySelectorAll(".cancel-modal").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      editTaskModal.classList.remove("active");
+    });
+  });
 });
