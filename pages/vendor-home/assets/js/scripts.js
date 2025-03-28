@@ -313,3 +313,44 @@ async function fetchVendorRequests() {
     console.error("Error fetching requests:", error);
   }
 }
+
+async function handleRequestAction(requestId, newStatus) {
+  const actionText = newStatus === "accepted" ? "accepting" : "declining";
+  const confirmation = confirm(
+    `Are you sure you want to proceed with ${actionText} this request? This action cannot be undone.`
+  );
+  if (!confirmation) return;
+
+  try {
+    const response = await fetch(`${apiUrl}/api/requests/${requestId}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok)
+      throw new Error(`Failed to update request status to ${newStatus}`);
+
+    console.log(`Request ${requestId} updated to ${newStatus}`);
+
+    // Update UI
+    document.getElementById(`request-status-${requestId}`).textContent =
+      newStatus;
+
+    // Hide buttons
+    document
+      .querySelectorAll(`[data-request-id="${requestId}"]`)
+      .forEach((button) => {
+        button.style.display = "none";
+      });
+
+    alert(
+      `Request has been successfully ${newStatus}. You can no longer change this decision.`
+    );
+  } catch (error) {
+    console.error("❌ Error updating request status:", error);
+  }
+}
+
+// Call the function on page load
+document.addEventListener("DOMContentLoaded", fetchVendorRequests);
