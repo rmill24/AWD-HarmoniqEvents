@@ -1630,27 +1630,97 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==============================================
 // GUESTS MANAGEMENT
 // ==============================================
- 
+
 async function loadGuestEventDropdown() {
-    try {
-      const response = await fetch(`${apiUrl}/api/events`);
-      const events = await response.json();
-   
-      const eventDropdown = document.querySelector(".event-dropdown-guests");
-      eventDropdown.innerHTML = `<option value="">Select Event</option>`;
-   
-      events.forEach((event) => {
-        const option = document.createElement("option");
-        option.value = event._id;
-        option.textContent = event.title;
-        eventDropdown.appendChild(option);
-      });
-   
-      // Load guests when an event is selected
-      eventDropdown.addEventListener("change", () => {
-        loadGuestsForEvent(eventDropdown.value);
-      });
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
+  try {
+    const response = await fetch(`${apiUrl}/api/events`);
+    const events = await response.json();
+
+    const eventDropdown = document.querySelector(".event-dropdown-guests");
+    eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+
+    events.forEach((event) => {
+      const option = document.createElement("option");
+      option.value = event._id;
+      option.textContent = event.title;
+      eventDropdown.appendChild(option);
+    });
+
+    // Load guests when an event is selected
+    eventDropdown.addEventListener("change", () => {
+      loadGuestsForEvent(eventDropdown.value);
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error);
   }
+}
+
+async function loadGuestsForEvent(eventId) {
+  const guestsTableBody = document.querySelector(".guest-table tbody");
+  const guestCountList = document.querySelector(".guest-count-list");
+
+  if (eventId === "") {
+    guestsTableBody.innerHTML =
+      "<tr><td colspan='6'>No event selected</td></tr>";
+    guestCountList.innerHTML = `
+        <div class="guest-attribute">
+          <p>0</p>
+          <p>0</p>
+          <p>0</p>
+        </div>
+      `;
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/api/guests/${eventId}`);
+    const guests = await response.json();
+
+    // Count guests based on status
+    const statusCounts = { confirmed: 0, pending: 0, declined: 0 };
+    guests.forEach((guest) => {
+      if (statusCounts.hasOwnProperty(guest.status)) {
+        statusCounts[guest.status]++;
+      }
+    });
+
+    // Update the guest count display
+    guestCountList.innerHTML = `
+        <div class="guest-attribute">
+          <p>${statusCounts.confirmed}</p>
+          <p>${statusCounts.pending}</p>
+          <p>${statusCounts.declined}</p>
+        </div>
+      `;
+
+    // Populate the guest table
+    guestsTableBody.innerHTML = ""; // Clear previous data
+    guests.forEach((guest) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td>${guest.name}</td>
+          <td>${guest.email}</td>
+          <td>${guest.phone || "-"}</td>
+          <td>
+            <span class="status-badge status-${guest.status.toLowerCase()}">${
+        guest.status
+      }</span>
+          </td>
+          <td>
+            <button class="edit-guest-btn" data-guest-id="${guest._id}">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <button class="delete-guest-btn" data-guest-id="${guest._id}">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+      guestsTableBody.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Error fetching guests:", error);
+  }
+}
+
+// Initialize Guest Event Dropdown
+loadGuestEventDropdown();
