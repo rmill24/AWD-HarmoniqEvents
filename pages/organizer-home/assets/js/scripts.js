@@ -1120,3 +1120,36 @@ async function loadTasksForEvent(eventId) {
       console.error("Error fetching tasks:", error);
     }
   }
+
+// Toggle Task Status (Complete ↔ Pending)
+document.addEventListener("click", async (event) => {
+    if (event.target.closest(".toggle-status-btn")) {
+      const button = event.target.closest(".toggle-status-btn");
+      const taskId = button.getAttribute("data-task-id");
+      const currentStatus = button.getAttribute("data-status");
+   
+      if (!taskId) {
+        console.error("No Task ID found!");
+        return;
+      }
+   
+      const newStatus = currentStatus === "completed" ? "pending" : "completed";
+   
+      try {
+        const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
+        });
+   
+        if (response.ok) {
+          alert(`Task marked as ${newStatus}`);
+          loadTasksForEvent(document.querySelector(".event-dropdown-task").value);
+        } else {
+          console.error("Failed to update task status:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error updating task status:", error);
+      }
+    }
+  });
