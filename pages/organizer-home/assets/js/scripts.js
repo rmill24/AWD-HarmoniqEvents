@@ -335,6 +335,112 @@ function setupInitialState() {
     console.log("Application started successfully");
   });
 
+// ==============================================
+// Modal Functionality
+// ==============================================
+ 
+const addButton = document.querySelector(".add-task-btn");
+const modal = document.getElementById("addTaskModal");
+const cancelButton = document.querySelector("#addTaskModal .cancel-modal");
+const form = document.getElementById("addTaskForm");
+const description = document.getElementById("taskDescription");
+const counter = document.getElementById("currentCount");
+ 
+// When you click the add button
+addButton.onclick = function () {
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+};
+ 
+// When you click the cancel button
+cancelButton.onclick = function () {
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
+  form.reset();
+  if (counter) counter.textContent = "0";
+};
+ 
+// When you click outside the modal
+modal.onclick = function (event) {
+  if (event.target == modal) {
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+    form.reset();
+    if (counter) counter.textContent = "0";
+  }
+};
+ 
+// Add Vendor Modal Functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const requestVendorModal = document.getElementById("requestVendorModal");
+ 
+  if (!requestVendorModal) {
+    console.error("Modal with id 'requestVendorModal' not found in the DOM.");
+    return;
+  }
+ 
+  // Open modal when Add Vendor button is clicked
+  document.addEventListener("click", (event) => {
+    const addVendorButton = event.target.closest(".add-vendor");
+    if (addVendorButton) {
+      console.log("Add Vendor button clicked.");
+      requestVendorModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  });
+ 
+  // Close modal when Cancel button is clicked
+  const cancelVendorButton = requestVendorModal.querySelector(".btn-secondary");
+  if (cancelVendorButton) {
+    cancelVendorButton.addEventListener("click", () => {
+      console.log("Cancel button clicked.");
+      requestVendorModal.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+  } else {
+    console.error("Cancel button not found inside the modal.");
+  }
+ 
+  // Close modal when clicking outside
+  requestVendorModal.addEventListener("click", (e) => {
+    if (e.target === requestVendorModal) {
+      console.log("Clicked outside modal content.");
+      requestVendorModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  });
+});
+ 
+// Edit Guest Modal
+const editGuestButtons = document.querySelectorAll("#guests .edit-guest-btn");
+const editGuestModal = document.getElementById("editGuestModal");
+const editGuestCancelButton = editGuestModal.querySelector(".cancel-modal");
+const editGuestForm = document.getElementById("editGuestForm");
+ 
+// When you click any edit button in the guests table
+editGuestButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    editGuestModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  });
+});
+ 
+// When you click the cancel button
+editGuestCancelButton.addEventListener("click", function () {
+  editGuestModal.classList.remove("active");
+  document.body.style.overflow = "";
+  editGuestForm.reset();
+});
+ 
+// When you click outside the modal
+editGuestModal.addEventListener("click", function (event) {
+  if (event.target === editGuestModal) {
+    editGuestModal.classList.remove("active");
+    document.body.style.overflow = "";
+    editGuestForm.reset();
+  }
+});
+
 // ============================================
 // Welcome message
 // ============================================
