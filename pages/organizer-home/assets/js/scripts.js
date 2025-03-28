@@ -1626,3 +1626,31 @@ document.addEventListener("DOMContentLoaded", () => {
   autoCompleteExpiredTasks();
   setInterval(autoCompleteExpiredTasks, 60000);
 });
+
+// ==============================================
+// GUESTS MANAGEMENT
+// ==============================================
+ 
+async function loadGuestEventDropdown() {
+    try {
+      const response = await fetch(`${apiUrl}/api/events`);
+      const events = await response.json();
+   
+      const eventDropdown = document.querySelector(".event-dropdown-guests");
+      eventDropdown.innerHTML = `<option value="">Select Event</option>`;
+   
+      events.forEach((event) => {
+        const option = document.createElement("option");
+        option.value = event._id;
+        option.textContent = event.title;
+        eventDropdown.appendChild(option);
+      });
+   
+      // Load guests when an event is selected
+      eventDropdown.addEventListener("change", () => {
+        loadGuestsForEvent(eventDropdown.value);
+      });
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  }
