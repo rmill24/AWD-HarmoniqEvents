@@ -54,7 +54,7 @@ body {
 .top-navbar h2 {
     font-weight: 450;
     color: var(--text-color);
-    margin: 0 auto;
+    margin-left: 2rem;
 }
  
 .user-controls {
@@ -69,6 +69,10 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5em;
+}
+
+.theme-icon {
+    color: var(--primary-color);
 }
  
 .switch {
@@ -131,11 +135,12 @@ main {
     height: 100%;
     margin: 0;
     padding: 2em;
+    
 }
  
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: 250px 1fr;
     gap: 2em;
     height: calc(100vh - 161px); /* Subtract new header height + padding */
 }
@@ -149,9 +154,8 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
+    height: 100vh;
     position: sticky;
-    top: 2em;
 }
  
 .vendor-info h3 {
@@ -162,18 +166,17 @@ main {
 }
  
 .sign-out {
-    margin-top: auto;
-}
- 
-.sign-out i {
-    font-size: 1.5em;
+    background: none;
+    border: none;
     color: var(--primary-color);
     cursor: pointer;
-    transition: opacity 0.2s;
-}
- 
-.sign-out i:hover {
-    opacity: 0.8;
+    transition: all 0.2s ease;
+    visibility: visible;
+    opacity: 1;
+    margin-top: 10%;
+    text-align: left;
+    font-size: 1em;
+    
 }
  
 /* Requests Section */
@@ -255,76 +258,6 @@ main {
 .btn-reject:hover {
     opacity: 0.9;
 }
- 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .dashboard-container {
-        padding: 1em;
-    }
- 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 1em;
-        height: auto;
-    }
- 
-    .vendor-card {
-        position: relative;
-        top: 0;
-        height: auto;
-        margin-bottom: 1em;
-    }
- 
-    .requests-section {
-        height: auto;
-        overflow-y: visible;
-    }
- 
-    .top-navbar {
-        padding: 1em;
-    }
- 
-    .vendor-card,
-    .requests-section {
-        padding: 1.5em;
-    }
- 
-    .request-item {
-        flex-direction: column;
-        gap: 1em;
-        align-items: flex-start;
-    }
- 
-    .request-actions {
-        width: 100%;
-        justify-content: flex-end;
-    }
-}
- 
-@media (max-width: 480px) {
-    .user-controls {
-        gap: 1em;
-    }
- 
-    .user-info {
-        display: none;
-    }
- 
-    .btn-accept,
-    .btn-reject {
-        padding: 0.5em 1em;
-    }
- 
-    .dashboard-grid {
-        gap: 1em;
-    }
- 
-    .vendor-card,
-    .requests-section {
-        padding: 1.5em;
-    }
-}
-
 /*============================================
 MODAL CSS
 ============================================ */
@@ -409,13 +342,6 @@ MODAL CSS
     display: none;
 }
  
-@media screen and (max-width: 375px) {
-    .modal-content {
-        width: 80%;
-    }
-   
-}
- 
 #edit-venue-btn{
     display: none;
     background: none;
@@ -425,8 +351,82 @@ MODAL CSS
     transition: all 0.2s ease;
     visibility: visible;
     opacity: 1;
-    margin-top: 5%;
+    margin-top: 10%;
     text-align: left;
     font-size: 1em;
 }
- 
+
+/* Mobile Responsive Styles */
+@media (max-width: 667px) {
+    /* Adjust the top navbar */
+    .top-navbar {
+        justify-content: space-between;
+    }
+
+    .top-navbar h2 {
+        display: none;
+    }
+
+    /* Adjust the dashboard grid */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1em;
+        height: auto;
+    }
+
+    /* Vendor card adjustments */
+    .vendor-card {
+        height: auto;
+        padding: 1em;
+    }
+
+    .vendor-info h3 {
+        font-size: 1.25rem;
+    }
+    
+    /* Requests section adjustments */
+    .requests-section {
+        padding: 1em;
+    }
+
+    .requests-section h2 {
+        font-size: 1.25rem;
+    }
+
+    .request-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1em;
+    }
+
+    .request-title {
+        font-size: 0.875em;
+    }
+
+    .request-actions {
+        justify-content: flex-start;
+    }
+
+    /* Buttons */
+    .btn-accept,
+    .btn-reject {
+        padding: 0.5em 1em;
+        font-size: 0.75em;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group button {
+        font-size: 0.875em;
+    }
+
+    .form-group button {
+        width: 100%;
+    }
+} 
