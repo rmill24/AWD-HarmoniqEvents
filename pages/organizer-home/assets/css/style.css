@@ -447,6 +447,11 @@ select option {
     padding: 20px;
     height: 450px;
     border: 1px solid #e0e0e0;
+    min-width: 22vw;
+}
+
+.tasks p, .requests p, .guests p {
+    text-wrap: nowrap;
 }
  
 .guests-count {
@@ -1256,8 +1261,8 @@ hr {
    10. RESPONSIVE DESIGN
    ====================================== */
    
-/* Tablet (1024x768) */
-@media screen and (max-width: 1024px) {
+/* Tablet*/
+@media screen and (max-width: 1080px) {
     .menu-toggle {
         display: block;
     }
