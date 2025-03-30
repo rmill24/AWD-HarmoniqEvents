@@ -514,7 +514,7 @@ async function fetchEvents() {
   }
 }
 
-// Fetch Tasks and Requests for a Specific Event
+// Fetch Tasks, Requests, and Guests for a Specific Event
 async function fetchEventDetails(eventId) {
   const tasksContainer = document.querySelector(".tasks .task-attribute-list");
   const requestsContainer = document.querySelector(
@@ -535,7 +535,10 @@ async function fetchEventDetails(eventId) {
   try {
     // Fetch Tasks
     const tasksResponse = await fetch(`${apiUrl}/api/tasks/${eventId}`);
-    const tasks = await tasksResponse.json();
+    let tasks = await tasksResponse.json();
+
+    // Sort tasks by dueDate (earliest first) and get only the first 5
+    tasks = tasks.sort((b, a) => new Date(b.dueDate) - new Date(a.dueDate)).slice(0, 5);
 
     tasksContainer.innerHTML = ""; // Clear previous tasks
     tasks.forEach((task) => {
@@ -549,7 +552,10 @@ async function fetchEventDetails(eventId) {
 
     // Fetch Requests Related to the Event (With Vendor Names)
     const requestsResponse = await fetch(`${apiUrl}/api/requests/${eventId}`);
-    const vendorRequests = await requestsResponse.json();
+    let vendorRequests = await requestsResponse.json();
+
+    // Sort requests by most recent and get only the first 5
+    vendorRequests = vendorRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
 
     requestsContainer.innerHTML = ""; // Clear previous requests
     vendorRequests.forEach((request) => {
@@ -581,6 +587,9 @@ async function fetchEventDetails(eventId) {
       }</p><p>${count}</p>`;
       guestsContainer.appendChild(guestDiv);
     });
+
+    // Update events if there are new entries
+    fetchEvents();
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
@@ -1019,6 +1028,9 @@ async function loadTasksForEvent(eventId) {
   }
 
   try {
+    // Fetch events if there are new entries
+    loadEventDropdown();
+
     // Fetch tasks
     const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
     let tasks = await response.json();
@@ -1655,6 +1667,10 @@ async function loadGuestEventDropdown() {
 }
 
 async function loadGuestsForEvent(eventId) {
+
+  // Fetch new events if there are new entries
+  loadGuestEventDropdown();
+
   const guestsTableBody = document.querySelector(".guest-table tbody");
   const guestCountList = document.querySelector(".guest-count-list");
   const eventDateDisplay = document.getElementById("event-date-display-guest");
@@ -1969,6 +1985,9 @@ async function loadRequestEventDropdown() {
   loadRequestEventDropdown();
    
   async function loadRequestsForEvent(eventId) {
+    // Fetch events if there are new entries
+    loadRequestEventDropdown();
+
     const requestsTableBody = document.querySelector(".requests-table tbody");
    
     if (!eventId) {
@@ -2044,12 +2063,3 @@ async function loadRequestEventDropdown() {
       }
     }
   });
-
-// Automatic reload of data
-setInterval(loadEventDropdown, 60000);
-setInterval(loadGuestEventDropdown, 60000);
-setInterval(loadGuestsForEvent, 60000);
-setInterval(loadRequestEventDropdown, 60000);
-setInterval(loadRequestsForEvent, 60000);
-setInterval(loadTasksForEvent, 60000);
-setInterval(populateEventTables, 60000);
