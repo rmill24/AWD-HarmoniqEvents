@@ -131,7 +131,6 @@ main, .top-navbar {
     padding: 15px;
     background-color: var(--top-color);
     position: fixed;
-    top: 15px;
 }
  
 .top-navbar h2 {
