@@ -102,7 +102,7 @@ main, .top-navbar {
     padding: 40px;
     background-color: var(--bg-color);
     min-height: calc(100vh - 65px);
-    width: calc(100% - 400px);
+    width: 80%;
     max-width: 1600px;
     display: none;
     margin: 0 auto;
@@ -462,7 +462,7 @@ select option {
 .tasks h1, .requests h1, .guests h1, .guests-count h1 {
     font-size: 32px;
     font-weight: 350;
-    margin-left: 20px;
+    text-align: left;
     color: var(--primary-color);
 }
  
