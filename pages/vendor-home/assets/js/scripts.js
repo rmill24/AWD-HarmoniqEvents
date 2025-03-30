@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============================================
 // API Base URL
 const apiUrl =
-  "https://event-management-api-racelle-millagracias-projects.vercel.app";
+  "https://event-management-api-snowy.vercel.app";
 
 // Fetch vendor data
 document.addEventListener("DOMContentLoaded", async () => {
@@ -252,7 +252,6 @@ async function fetchVendorRequests() {
 
     console.log("Fetched Vendor Requests:", requests);
 
-    const requestsTable = document.getElementById("requests-table");
     const requestsTableBody = document.querySelector("#requests-table tbody");
 
     requestsTableBody.innerHTML = ""; // Clear previous content
@@ -265,23 +264,35 @@ async function fetchVendorRequests() {
       return;
     }
 
+    // Sort requests: pending first, then accepted/declined
+    requests.sort((a, b) => {
+      if (a.status === "pending" && b.status !== "pending") return -1;
+      if (a.status !== "pending" && b.status === "pending") return 1;
+      return 0;
+    });
+
+    // Render sorted requests
     requests.forEach((request) => {
       const row = document.createElement("tr");
 
-      // Check if the request has been accepted or declined
-      const isDisabled = request.status !== "pending";
+      let actionButtons = "";
+      if (request.status === "pending") {
+        actionButtons = `
+          <button class="btn-accept" data-request-id="${request._id}">Accept</button>
+          <button class="btn-reject" data-request-id="${request._id}">Reject</button>
+        `;
+      } else {
+        actionButtons = `
+          <span>You have already ${request.status} this request.</span>
+        `;
+      }
 
       row.innerHTML = `
         <td>${request.eventTitle}</td>
         <td>${request.taskTitle}</td>
         <td>${request.organizerName} (${request.organizerEmail})</td>
         <td><span id="request-status-${request._id}">${request.status}</span></td>
-        <td>
-          <button class="btn-accept" data-request-id="${request._id}" 
-            ${isDisabled ? 'style="display:none;"' : ""}>Accept</button>
-          <button class="btn-reject" data-request-id="${request._id}" 
-            ${isDisabled ? 'style="display:none;"' : ""}>Reject</button>
-        </td>
+        <td>${actionButtons}</td>
       `;
 
       requestsTableBody.appendChild(row);
@@ -304,7 +315,6 @@ async function fetchVendorRequests() {
   }
 }
 
-
 async function handleRequestAction(requestId, newStatus) {
   const actionText = newStatus === "accepted" ? "accepting" : "declining";
   const confirmation = confirm(
@@ -325,15 +335,18 @@ async function handleRequestAction(requestId, newStatus) {
     console.log(`Request ${requestId} updated to ${newStatus}`);
 
     // Update UI
-    document.getElementById(`request-status-${requestId}`).textContent =
-      newStatus;
+    const statusElement = document.getElementById(`request-status-${requestId}`);
+    if (statusElement) {
+      statusElement.textContent = newStatus;
+    }
 
-    // Hide buttons
-    document
-      .querySelectorAll(`[data-request-id="${requestId}"]`)
-      .forEach((button) => {
-        button.style.display = "none";
-      });
+    // Replace buttons with a message
+    const actionCell = document.querySelector(
+      `td > [data-request-id="${requestId}"]`
+    ).parentElement;
+    if (actionCell) {
+      actionCell.innerHTML = `<span>You have already ${newStatus} this request.</span>`;
+    }
 
     alert(
       `Request has been successfully ${newStatus}. You can no longer change this decision.`
