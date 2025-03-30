@@ -25,7 +25,7 @@ function initThemeToggle() {
 function updateThemeIcon(theme) {
   const themeIcon = document.getElementById("themeIcon");
   if (themeIcon) {
-    themeIcon.textContent = theme === "dark" ? "☾" : "☀";
+    themeIcon.textContent = theme === "dark" ? "☾" : "☼";
   }
 }
 
@@ -252,49 +252,39 @@ async function fetchVendorRequests() {
 
     console.log("Fetched Vendor Requests:", requests);
 
-    const requestsList = document.getElementById("requests-list");
-    requestsList.innerHTML = ""; // Clear previous content
+    const requestsTable = document.getElementById("requests-table");
+    const requestsTableBody = document.querySelector("#requests-table tbody");
+
+    requestsTableBody.innerHTML = ""; // Clear previous content
 
     if (requests.length === 0) {
-      requestsList.innerHTML = "<p>No requests found.</p>";
+      requestsTableBody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center;">No requests found.</td>
+        </tr>`;
       return;
     }
 
     requests.forEach((request) => {
-      const requestItem = document.createElement("div");
-      requestItem.classList.add("request-item");
+      const row = document.createElement("tr");
 
       // Check if the request has been accepted or declined
       const isDisabled = request.status !== "pending";
 
-      requestItem.innerHTML = `
-                  <div class="request-info">
-                      <p class="request-title"><strong>Event: </strong>${
-                        request.eventTitle
-                      }</p>
-                      <p><strong>Task:</strong> ${request.taskTitle}</p>
-                      <p><strong>Organizer:</strong> ${
-                        request.organizerName
-                      } (${request.organizerEmail})</p>
-                      <p><strong>Status:</strong> <span id="request-status-${
-                        request._id
-                      }">${request.status}</span></p>
-                  </div>
-                  <div class="request-actions">
-                      <button class="btn-accept" data-request-id="${
-                        request._id
-                      }" ${
-        isDisabled ? 'style="display:none;"' : ""
-      }>Accept</button>
-                      <button class="btn-reject" data-request-id="${
-                        request._id
-                      }" ${
-        isDisabled ? 'style="display:none;"' : ""
-      }>Reject</button>
-                  </div>
-              `;
+      row.innerHTML = `
+        <td>${request.eventTitle}</td>
+        <td>${request.taskTitle}</td>
+        <td>${request.organizerName} (${request.organizerEmail})</td>
+        <td><span id="request-status-${request._id}">${request.status}</span></td>
+        <td>
+          <button class="btn-accept" data-request-id="${request._id}" 
+            ${isDisabled ? 'style="display:none;"' : ""}>Accept</button>
+          <button class="btn-reject" data-request-id="${request._id}" 
+            ${isDisabled ? 'style="display:none;"' : ""}>Reject</button>
+        </td>
+      `;
 
-      requestsList.appendChild(requestItem);
+      requestsTableBody.appendChild(row);
     });
 
     // Attach event listeners to buttons
@@ -313,6 +303,7 @@ async function fetchVendorRequests() {
     console.error("Error fetching requests:", error);
   }
 }
+
 
 async function handleRequestAction(requestId, newStatus) {
   const actionText = newStatus === "accepted" ? "accepting" : "declining";
@@ -354,3 +345,6 @@ async function handleRequestAction(requestId, newStatus) {
 
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", fetchVendorRequests);
+
+// Automatic fetching every 1 minute
+setInterval(fetchVendorRequests, 60000);
