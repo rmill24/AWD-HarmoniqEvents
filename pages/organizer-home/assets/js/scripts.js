@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   fetch(
-    `https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/${organizerId}`
+    `https://event-management-api-snowy.vercel.app/api/organizers/${organizerId}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -483,12 +483,45 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => console.error("Error fetching organizer data:", error));
 });
 
+// REFRESH EVENT DROPDOWNS //
+async function refreshEventDropdowns() {
+  try {
+      const response = await fetch(`${apiUrl}/api/events`);
+      const events = await response.json();
+
+      // Update the event dropdowns
+      const dropdownSelectors = [
+          ".event-name-dropdown", // For requests
+          ".event-dropdown-task", // For tasks
+          ".event-dropdown-guests", // For guests
+          ".event-dropdown-dashboard" // For dashboard
+      ];
+
+      dropdownSelectors.forEach((selector) => {
+          const dropdown = document.querySelector(selector);
+          if (dropdown) {
+              dropdown.innerHTML = `<option value="">Select Event</option>`;
+              events.forEach((event) => {
+                  const option = document.createElement("option");
+                  option.value = event._id;
+                  option.textContent = event.title;
+                  dropdown.appendChild(option);
+              });
+          }
+      });
+
+      console.log("Event dropdowns refreshed successfully.");
+  } catch (error) {
+      console.error("Error refreshing event dropdowns:", error);
+  }
+}
+
 // ============================================
 // Dashboard Tasks List
 // ============================================
 // API Base URL
 const apiUrl =
-  "https://event-management-api-racelle-millagracias-projects.vercel.app";
+  "https://event-management-api-snowy.vercel.app";
 
 // Fetch Events by Organizer
 async function fetchEvents() {
@@ -496,7 +529,7 @@ async function fetchEvents() {
     const response = await fetch(`${apiUrl}/api/events`);
     const events = await response.json();
 
-    const eventSelect = document.querySelector("select");
+    const eventSelect = document.querySelector(".event-dropdown-dashboard");
     eventSelect.innerHTML = `<option value="">Select Event</option>`;
 
     events.forEach((event) => {
@@ -588,8 +621,6 @@ async function fetchEventDetails(eventId) {
       guestsContainer.appendChild(guestDiv);
     });
 
-    // Update events if there are new entries
-    fetchEvents();
   } catch (error) {
     console.error("Error fetching event details:", error);
   }
@@ -606,7 +637,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const response = await fetch(
-      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+      `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
     );
     const events = await response.json();
 
@@ -741,7 +772,7 @@ document
 
     try {
       const response = await fetch(
-        "https://event-management-api-racelle-millagracias-projects.vercel.app/api/events",
+        "https://event-management-api-snowy.vercel.app/api/events",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -756,10 +787,11 @@ document
         // Fetch and refresh the events
         const organizerId = localStorage.getItem("organizerId");
         const eventsResponse = await fetch(
-          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+          `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
         );
         const events = await eventsResponse.json();
         populateEventTables(events); // Refresh the event tables
+        refreshEventDropdowns();
       } else {
         alert("Error adding event.");
       }
@@ -799,7 +831,7 @@ document
 
     try {
       const response = await fetch(
-        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+        `https://event-management-api-snowy.vercel.app/api/events/${eventId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -814,10 +846,11 @@ document
         // Fetch and refresh the events
         const organizerId = localStorage.getItem("organizerId");
         const eventsResponse = await fetch(
-          `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+          `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
         );
         const events = await eventsResponse.json();
         populateEventTables(events); // Refresh the event tables
+        refreshEventDropdowns();
       } else {
         alert("Error updating event.");
       }
@@ -830,7 +863,7 @@ document
 async function updateEventStatus(eventId, newStatus) {
   try {
     const response = await fetch(
-      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      `https://event-management-api-snowy.vercel.app/api/events/${eventId}`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -885,7 +918,7 @@ function closeEditEventModal() {
 // Open Edit Modal and Populate Fields
 function openEditModal(eventId) {
   fetch(
-    `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`
+    `https://event-management-api-snowy.vercel.app/api/events/${eventId}`
   )
     .then((response) => response.json())
     .then((event) => {
@@ -933,7 +966,7 @@ document.addEventListener("click", async (event) => {
 
   try {
     const response = await fetch(
-      `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events/${eventId}`,
+      `https://event-management-api-snowy.vercel.app/api/events/${eventId}`,
       {
         method: "DELETE",
       }
@@ -944,10 +977,11 @@ document.addEventListener("click", async (event) => {
       // Fetch and refresh the events
       const organizerId = localStorage.getItem("organizerId");
       const eventsResponse = await fetch(
-        `https://event-management-api-racelle-millagracias-projects.vercel.app/api/events?organizerId=${organizerId}`
+        `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
       );
       const events = await eventsResponse.json();
       populateEventTables(events); // Refresh the event tables
+      refreshEventDropdowns();
     } else {
       alert("Failed to delete event.");
     }
@@ -1028,8 +1062,6 @@ async function loadTasksForEvent(eventId) {
   }
 
   try {
-    // Fetch events if there are new entries
-    loadEventDropdown();
 
     // Fetch tasks
     const response = await fetch(`${apiUrl}/api/tasks/${eventId}`);
@@ -1279,6 +1311,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Task updated successfully!");
           document.getElementById("editTaskModal").classList.remove("active");
           loadTasksForEvent(selectedEventId);
+          refreshEventDropdowns();
         } else {
           console.error("Failed to update task:", await response.text());
         }
@@ -1316,6 +1349,7 @@ document.addEventListener("DOMContentLoaded", () => {
           loadTasksForEvent(
             document.querySelector(".event-dropdown-task").value
           ); // Refresh task list
+          refreshEventDropdowns();
         } else {
           console.error("Failed to delete task:", await response.text());
         }
@@ -1484,6 +1518,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Vendor request sent successfully!");
         requestVendorModal.style.display = "none";
         loadTasksForEvent(selectedEventId); // Reload tasks for the selected event
+        refreshEventDropdowns();
       } else {
         const errorData = await response.json(); // Read error response
         if (response.status === 422) {
@@ -1573,6 +1608,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Task added successfully!");
           document.getElementById("addTaskModal").classList.remove("active");
           loadTasksForEvent(selectedEventId); // Refresh tasks
+          refreshEventDropdowns();
         } else {
           console.error("Failed to add task:", await response.text());
         }
@@ -1667,9 +1703,6 @@ async function loadGuestEventDropdown() {
 }
 
 async function loadGuestsForEvent(eventId) {
-
-  // Fetch new events if there are new entries
-  loadGuestEventDropdown();
 
   const guestsTableBody = document.querySelector(".guest-table tbody");
   const guestCountList = document.querySelector(".guest-count-list");
@@ -1811,6 +1844,7 @@ document
         alert("Guest added successfully!");
         document.getElementById("addGuestModal").classList.remove("active");
         loadGuestsForEvent(selectedEventId); // Refresh the guest list
+        refreshEventDropdowns();
       } else {
         console.error("Failed to add guest:", await response.text());
       }
@@ -1902,6 +1936,7 @@ document
         loadGuestsForEvent(
           document.querySelector(".event-dropdown-guests").value
         ); // Refresh guest list
+        refreshEventDropdowns();
       } else {
         console.error("Failed to update guest:", await response.text());
       }
@@ -1945,6 +1980,7 @@ document.addEventListener("click", async (event) => {
           loadGuestsForEvent(
             document.querySelector(".event-dropdown-guests").value
           ); // Refresh guest list
+          refreshEventDropdowns();
         } else {
           console.error("Failed to delete guest:", await response.text());
         }
@@ -1985,8 +2021,6 @@ async function loadRequestEventDropdown() {
   loadRequestEventDropdown();
    
   async function loadRequestsForEvent(eventId) {
-    // Fetch events if there are new entries
-    loadRequestEventDropdown();
 
     const requestsTableBody = document.querySelector(".requests-table tbody");
    
