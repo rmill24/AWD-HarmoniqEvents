@@ -454,8 +454,8 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
 
   const url =
     selectedUserType === "organizer"
-      ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers"
-      : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors";
+      ? "https://event-management-api-snowy.vercel.app/api/organizers"
+      : "https://event-management-api-snowy.vercel.app/api/vendors";
   
   const requestBody = { name, email, password };
   
@@ -541,8 +541,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const selectedUserType = document.querySelector('input[name="type-login"]:checked').value;
   
     const url = selectedUserType === "organizer"
-      ? "https://event-management-api-racelle-millagracias-projects.vercel.app/api/organizers/login"
-      : "https://event-management-api-racelle-millagracias-projects.vercel.app/api/vendors/login";
+      ? "https://event-management-api-snowy.vercel.app/api/organizers/login"
+      : "https://event-management-api-snowy.vercel.app/api/vendors/login";
   
     try {
       const response = await fetch(url, {
