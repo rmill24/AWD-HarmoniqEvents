@@ -164,7 +164,7 @@ nav a:hover::after {
 }
 
 /* 'JOIN US' button Styles */
-.join-btn {
+.login-btn-nav {
     display: inline-block;
     padding: 8px 30px;
     background-color: #51938B;  
@@ -178,7 +178,7 @@ nav a:hover::after {
     font-family: var(--font-accent);
 }
 
-.join-btn:hover {
+.login-btn-nav:hover {
     background-color: #38A9A0;
     transform: scale(1.05);
 }
@@ -1220,7 +1220,7 @@ footer {
         font-size: 1em;
     }
     
-    .join-btn {
+    .login-btn-nav {
         padding: 2px 18px;
         font-size: 0.9em;
     }

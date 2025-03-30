@@ -40,7 +40,7 @@ function toggleTheme() {
 
 function updateThemeIcons(theme) {
     const moonIcon = '☾';
-    const sunIcon = '☀';
+    const sunIcon = '☼';
     
     if (themeIcon) {
         themeIcon.textContent = theme === 'dark' ? moonIcon : sunIcon;
@@ -383,11 +383,35 @@ function initPasswordToggle() {
 }
 
 // ============================================
-// Signup Redirect Function
+// Redirect Functions
 // ============================================
 function redirectToSignup() {
     window.location.href = "index.html#signup-section";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const ctaButton = document.getElementById("cta-button");
+    if (ctaButton) {
+        ctaButton.addEventListener("click", redirectToSignup);
+    } else {
+        console.error("Element with ID 'cta-button' not found.");
+    }
+
+    const loginButton = document.getElementById("login-btn-nav");
+    if (loginButton) {
+        loginButton.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const loginModal = document.getElementById("login-modal");
+            if (loginModal) {
+                loginModal.classList.remove("hidden");
+            } else {
+                console.error("Element with ID 'login-modal' not found.");
+            }
+        });
+    } else {
+        console.error("Element with ID 'login-btn-nav' not found.");
+    }
+});
 
 // ============================================
 // Signup Form Handling
@@ -491,7 +515,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // Show/Hide Login Modal
 const loginModal = document.getElementById("login-modal");
 const loginLink = document.getElementById("login-link");
-const closeModal = document.querySelector(".close");
 
 loginLink.addEventListener("click", (e) => {
   e.preventDefault();
@@ -499,15 +522,12 @@ loginLink.addEventListener("click", (e) => {
   loginModal.style.display = "flex"; // Important: Make sure the modal uses flex for centering
 });
 
-closeModal.addEventListener("click", () => {
-  loginModal.classList.add("hidden");
-  loginModal.style.display = "none";
-});
-
 // Close the modal when clicking outside of it
 window.addEventListener("click", (event) => {
   if (event.target === loginModal) {
+    loginModal.classList.add("hidden");
     loginModal.style.display = "none";
+    console.log("remove");
   }
 });
 

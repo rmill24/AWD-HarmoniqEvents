@@ -20,7 +20,7 @@
                 <li><a href="#">HOME</a></li>
                 <li><a href="#services">SERVICES</a></li>
                 <li><a href="./pages/about-us/index.html">ABOUT US</a></li>
-                <li><button class="join-btn" onclick="redirectToSignup()">JOIN US</button></li>
+                <li><button class="login-btn-nav" id="login-btn-nav">LOG IN</button></li>
                 <!-- Mobile-only theme switch that appears in hamburger menu -->
                 <li class="mobile-theme-option">
                     <span class="theme-icon" id="mobileThemeIcon">☾</span>
@@ -48,7 +48,7 @@
                 <article class="content">
                     <h1>EFFORTLESS EVENT PLANNING AT YOUR FINGERTIPS</h1>
                     <p>Streamline your events with powerful scheduling, guest tracking, and vendor coordination—all in one place!</p>
-                    <button class="cta-button">Get Started</button>
+                    <button class="cta-button" id="cta-button">Get Started</button>
                 </article>
         
                 <div id="device" class="device-mockup">
@@ -221,7 +221,6 @@
         <p class="login-text">Already a member? <a href="#" id="login-link">Log in</a></p>
         <div id="login-modal" class="modal hidden">
             <div class="modal-content">
-                <span class="close">&times;</span>
                 <h2>Login</h2>
                 <form id="login-form">
                     <label for="login-email">Email</label>
