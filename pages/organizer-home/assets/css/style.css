@@ -200,14 +200,6 @@ main, .top-navbar {
 }
  
 .sidebar {
-    position: absolute;
-    bottom: 30px;
-    width: 100%;
-    text-align: left;
-    padding-left: 25px;
-}
- 
-.sidebar {
     font-size: 20px;
     color: var(--primary-color);
     cursor: pointer;
@@ -1264,7 +1256,7 @@ hr {
 /* ======================================
    10. RESPONSIVE DESIGN
    ====================================== */
- 
+   
 /* Tablet (1024x768) */
 @media screen and (max-width: 1024px) {
     .menu-toggle {

@@ -40,7 +40,7 @@ function toggleTheme() {
 
 function updateThemeIcons(theme) {
   const moonIcon = "☾";
-  const sunIcon = "☀";
+  const sunIcon = "𖤓";
 
   if (themeIcon) {
     themeIcon.textContent = theme === "dark" ? moonIcon : sunIcon;
@@ -1624,7 +1624,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Run the function every minute to check for expired tasks
   autoCompleteExpiredTasks();
-  setInterval(autoCompleteExpiredTasks, 60000);
 });
 
 // ==============================================
@@ -2045,3 +2044,12 @@ async function loadRequestEventDropdown() {
       }
     }
   });
+
+// Automatic reload of data
+setInterval(loadEventDropdown, 60000);
+setInterval(loadGuestEventDropdown, 60000);
+setInterval(loadGuestsForEvent, 60000);
+setInterval(loadRequestEventDropdown, 60000);
+setInterval(loadRequestsForEvent, 60000);
+setInterval(loadTasksForEvent, 60000);
+setInterval(populateEventTables, 60000);
