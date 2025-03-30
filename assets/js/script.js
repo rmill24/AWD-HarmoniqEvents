@@ -404,6 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const loginModal = document.getElementById("login-modal");
             if (loginModal) {
                 loginModal.classList.remove("hidden");
+                loginModal.style.display = "flex";
             } else {
                 console.error("Element with ID 'login-modal' not found.");
             }
@@ -411,6 +412,26 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         console.error("Element with ID 'login-btn-nav' not found.");
     }
+});
+
+
+// Show/Hide Login Modal
+const loginModal = document.getElementById("login-modal");
+const loginLink = document.getElementById("login-link");
+
+loginLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  loginModal.classList.remove("hidden");
+  loginModal.style.display = "flex"; // Important: Make sure the modal uses flex for centering
+});
+
+// Close the modal when clicking outside of it
+window.addEventListener("click", (event) => {
+  if (event.target === loginModal) {
+    loginModal.classList.add("hidden");
+    loginModal.style.display = "none";
+    console.log("remove");
+  }
 });
 
 // ============================================
@@ -511,25 +532,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // ============================================
 // Login Form Handling
 // ============================================
-
-// Show/Hide Login Modal
-const loginModal = document.getElementById("login-modal");
-const loginLink = document.getElementById("login-link");
-
-loginLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  loginModal.classList.remove("hidden");
-  loginModal.style.display = "flex"; // Important: Make sure the modal uses flex for centering
-});
-
-// Close the modal when clicking outside of it
-window.addEventListener("click", (event) => {
-  if (event.target === loginModal) {
-    loginModal.classList.add("hidden");
-    loginModal.style.display = "none";
-    console.log("remove");
-  }
-});
 
 document.getElementById("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
