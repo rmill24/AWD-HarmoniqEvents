@@ -486,39 +486,48 @@ document.addEventListener("DOMContentLoaded", () => {
 // REFRESH EVENT DROPDOWNS //
 async function refreshEventDropdowns() {
   try {
-      const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
-      const events = await response.json();
+    const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
+    const events = await response.json();
 
-      // Clear and repopulate eventDates
-      eventDates = {}; // Reset eventDates
-      events.forEach((event) => {
-        eventDates[event._id] = new Date(event.date); // Store event date
-      });
+    // Clear and repopulate eventDates
+    eventDates = {}; // Reset eventDates
+    events.forEach((event) => {
+      eventDates[event._id] = new Date(event.date); // Store event date
+    });
 
-      // Update the event dropdowns
-      const dropdownSelectors = [
-          ".event-name-dropdown", // For requests
-          ".event-dropdown-task", // For tasks
-          ".event-dropdown-guests", // For guests
-          ".event-dropdown-dashboard" // For dashboard
-      ];
+    // Update the event dropdowns
+    const dropdownSelectors = [
+      ".event-name-dropdown", // For requests
+      ".event-dropdown-task", // For tasks
+      ".event-dropdown-guests", // For guests
+      ".event-dropdown-dashboard", // For dashboard
+    ];
 
-      dropdownSelectors.forEach((selector) => {
-          const dropdown = document.querySelector(selector);
-          if (dropdown) {
-              dropdown.innerHTML = `<option value="">Select Event</option>`;
-              events.forEach((event) => {
-                  const option = document.createElement("option");
-                  option.value = event._id;
-                  option.textContent = event.title;
-                  dropdown.appendChild(option);
-              });
-          }
-      });
+    dropdownSelectors.forEach((selector) => {
+      const dropdown = document.querySelector(selector);
+      if (dropdown) {
+        // Preserve the currently selected value
+        const currentValue = dropdown.value;
 
-      console.log("Event dropdowns refreshed successfully.");
+        // Clear and repopulate the dropdown
+        dropdown.innerHTML = `<option value="">Select Event</option>`;
+        events.forEach((event) => {
+          const option = document.createElement("option");
+          option.value = event._id;
+          option.textContent = event.title;
+          dropdown.appendChild(option);
+        });
+
+        // Restore the previously selected value
+        if (currentValue) {
+          dropdown.value = currentValue;
+        }
+      }
+    });
+
+    console.log("Event dropdowns refreshed successfully.");
   } catch (error) {
-      console.error("Error refreshing event dropdowns:", error);
+    console.error("Error refreshing event dropdowns:", error);
   }
 }
 
