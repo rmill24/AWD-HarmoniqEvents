@@ -489,6 +489,12 @@ async function refreshEventDropdowns() {
       const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
       const events = await response.json();
 
+      // Clear and repopulate eventDates
+      eventDates = {}; // Reset eventDates
+      events.forEach((event) => {
+        eventDates[event._id] = new Date(event.date); // Store event date
+      });
+
       // Update the event dropdowns
       const dropdownSelectors = [
           ".event-name-dropdown", // For requests
