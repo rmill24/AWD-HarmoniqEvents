@@ -463,8 +463,8 @@ editGuestModal.addEventListener("click", function (event) {
 // ============================================
 // Welcome message
 // ============================================
+const organizerId = localStorage.getItem("organizerId");
 document.addEventListener("DOMContentLoaded", () => {
-  const organizerId = localStorage.getItem("organizerId");
 
   if (!organizerId) {
     alert("You are not logged in. Please log in first.");
@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // REFRESH EVENT DROPDOWNS //
 async function refreshEventDropdowns() {
   try {
-      const response = await fetch(`${apiUrl}/api/events`);
+      const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
       const events = await response.json();
 
       // Update the event dropdowns
@@ -525,8 +525,9 @@ const apiUrl =
 
 // Fetch Events by Organizer
 async function fetchEvents() {
+  const organizerId = localStorage.getItem("organizerId");
   try {
-    const response = await fetch(`${apiUrl}/api/events`);
+    const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
     const events = await response.json();
 
     const eventSelect = document.querySelector(".event-dropdown-dashboard");
@@ -637,7 +638,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const response = await fetch(
-      `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
+      `https://event-management-api-snowy.vercel.app/api/events/organizer/${organizerId}`
     );
     const events = await response.json();
 
@@ -787,7 +788,7 @@ document
         // Fetch and refresh the events
         const organizerId = localStorage.getItem("organizerId");
         const eventsResponse = await fetch(
-          `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
+          `https://event-management-api-snowy.vercel.app/api/events/organizer/${organizerId}`
         );
         const events = await eventsResponse.json();
         populateEventTables(events); // Refresh the event tables
@@ -846,7 +847,7 @@ document
         // Fetch and refresh the events
         const organizerId = localStorage.getItem("organizerId");
         const eventsResponse = await fetch(
-          `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
+          `https://event-management-api-snowy.vercel.app/api/events/organizer/${organizerId}`
         );
         const events = await eventsResponse.json();
         populateEventTables(events); // Refresh the event tables
@@ -977,7 +978,7 @@ document.addEventListener("click", async (event) => {
       // Fetch and refresh the events
       const organizerId = localStorage.getItem("organizerId");
       const eventsResponse = await fetch(
-        `https://event-management-api-snowy.vercel.app/api/events?organizerId=${organizerId}`
+        `https://event-management-api-snowy.vercel.app/api/events/organizer/${organizerId}`
       );
       const events = await eventsResponse.json();
       populateEventTables(events); // Refresh the event tables
@@ -1015,7 +1016,7 @@ function formatDateTime(dateString) {
 // Fetch Events for Dropdown
 async function loadEventDropdown() {
   try {
-    const response = await fetch(`${apiUrl}/api/events`);
+    const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
     const events = await response.json();
 
     const eventDropdown = document.querySelector(".event-dropdown-task");
@@ -1680,7 +1681,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadGuestEventDropdown() {
   try {
-    const response = await fetch(`${apiUrl}/api/events`);
+    const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
     const events = await response.json();
 
     const eventDropdown = document.querySelector(".event-dropdown-guests");
@@ -1995,7 +1996,7 @@ document.addEventListener("click", async (event) => {
 // ==============================================
 async function loadRequestEventDropdown() {
     try {
-      const response = await fetch(`${apiUrl}/api/events`);
+      const response = await fetch(`${apiUrl}/api/events/organizer/${organizerId}`);
       const events = await response.json();
    
       const eventDropdown = document.querySelector(".event-name-dropdown");
