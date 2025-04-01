@@ -40,7 +40,7 @@ function toggleTheme() {
  
 function updateThemeIcons(theme) {
     const moonIcon = '☾';
-    const sunIcon = '☀';
+    const sunIcon = '𖤓';
    
     if (themeIcon) {
         themeIcon.textContent = theme === 'dark' ? moonIcon : sunIcon;
